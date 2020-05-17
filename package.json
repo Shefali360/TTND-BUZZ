@@ -1,0 +1,19 @@
+{
+  "name": "ttnd-buzz",
+  "version": "1.0.0",
+  "description": "A web application for TTN Digital Buzz.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Shefali360/TTND-BUZZ.git"
+  },
+  "author": "Shefali",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Shefali360/TTND-BUZZ/issues"
+  },
+  "homepage": "https://github.com/Shefali360/TTND-BUZZ#readme"
+}
