@@ -1,0 +1,18 @@
+.listItem{
+    border:1px solid #ccc;
+    border-radius: 3px;   
+}
+
+.element{
+    text-decoration: none;
+    color:#aaa;
+    font-weight: bold;
+    font-size:14px;
+    display: inline-block;
+    padding:15px;
+}
+
+.element:active,
+.element.active{
+   color:#D8763A;
+}
