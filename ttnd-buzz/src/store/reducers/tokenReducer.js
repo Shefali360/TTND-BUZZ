@@ -2,14 +2,12 @@ import * as actionTypes from '../actions/actionTypes';
 import {updateObject} from '../../shared/utility';
 
 const initialState={
-   token:null,
+    token:null,
     error:false
 }
 
 const tokenReceived=(state,action)=>{
-this.props.history.push({
-        pathname: "/buzz",
-      });
+    console.log(action.data);
 return(updateObject(state,{
        token:action.data
     }

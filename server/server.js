@@ -11,7 +11,6 @@ app.use(cors({
 }
 ));
 
-
 app.use(bodyParser.json());
 app.use(routes);
 // mongoose.connect("mongodb://localhost:27017/ttnd-buzz", {

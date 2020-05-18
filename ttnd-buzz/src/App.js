@@ -3,7 +3,7 @@ import './App.css';
 import {Route} from 'react-router-dom';
 import Login from './Login/Login';
 import wholePage from './wholePage/wholePage';
-import authTokenDemo from './authToken/authToken';
+import authTokenDemo from './authToken/authTokenDemo';
 
 function App() {
   return (

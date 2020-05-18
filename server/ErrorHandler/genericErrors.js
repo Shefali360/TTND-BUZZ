@@ -1,0 +1,1 @@
+module.exports.notFound = 'RESOURCE_NOT_FOUND'
