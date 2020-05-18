@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const {invalidTokenGrantCodeError,invalidRefreshTokenError,invalidTokenError}=require('../ErrorHandler/authExceptions');
 const {ResourceNotFound}=require('../ErrorHandler/genericExceptions');
 const {CustomExceptiontemplate}=require('../ErrorHandler/exceptionModel');
+const {RequiredFieldAbsent}=require('../ErrorHandler/validationExceptions');
 
 dotenv.config();
 
@@ -22,11 +23,13 @@ module.exports.handleAuthTokenRequest = async (req, res,next) => {
     console.log(token['data']);
     res.send(token['data']);
   } catch (err) {
-   next(new invalidTokenGrantCodeError("Invalid code for token access request",401,err['response']['data']));
+  return next(new invalidTokenGrantCodeError("Invalid code for token access request",401,err['response']['data']));
   }
 };
 
 module.exports.handleRefreshAuthTokenRequest = async (req, res,next) => {
+  if(!req.body || !req.body['refreshToken'])
+  return next(new RequiredFieldAbsent('refresh token is not present', 400));
   try {
     const token = await axios({
       url: 'https://oauth2.googleapis.com/token',
@@ -41,7 +44,7 @@ module.exports.handleRefreshAuthTokenRequest = async (req, res,next) => {
     console.log(token['data']);
     res.send(token['data']);
   } catch (err) {
-    next(new invalidRefreshTokenError("Invalid refresh token received",401,err['response']['data']));
+    return next(new invalidRefreshTokenError("Invalid refresh token received",401,err['response']['data']));
   }
   
 };
@@ -50,14 +53,16 @@ module.exports.verifyTokenMiddleware=async(req, res, next)=> {
   const accessToken = req.headers['authorization'].split(' ')[1];
   
   try{
-      const verificationResponse = await axios.get('https://oauth2.googleapis.com/tokeninfo' + `?access_token=${accessToken}`);
+      await axios.get('https://oauth2.googleapis.com/tokeninfo' + `?access_token=${accessToken}`);
       return next();
   } catch (err) {
-    next(new invalidRefreshTokenError("Invalid refresh token received",401,err['response']['data']));
+    return next(new invalidRefreshTokenError("Invalid refresh token received",401,err['response']['data']));
   }
 }
 
 module.exports.handleLogout = async (req, res,next) => {
+  if(!req.body || !req.body['refreshToken'])
+  return next(new RequiredFieldAbsent('refresh token is not present', 400));
   try {
    await axios({
       url: 'https://oauth2.googleapis.com/revoke'+`?token=${encodeURIComponent(req.body['refreshToken'])}`,
@@ -73,7 +78,7 @@ module.exports.handleLogout = async (req, res,next) => {
 
 
 module.exports.handleUnknownRequests=(req, res, next)=> {
-  next(new ResourceNotFound('requested resource not found', 404));
+  return next(new ResourceNotFound('requested resource not found', 404));
 }
 module.exports.errorHandlingMiddleware=(err, req, res, next)=> {
   res.status(err.responseCode || 400);
