@@ -1,6 +1,6 @@
 const axios = require("axios");
 const dotenv = require("dotenv");
-const {invalidTokenGrantCodeError,invalidTokenError}=require('../ErrorHandler/authExceptions');
+const {invalidTokenGrantCodeError,invalidRefreshTokenError,invalidTokenError}=require('../ErrorHandler/authExceptions');
 const {ResourceNotFound}=require('../ErrorHandler/genericExceptions');
 const {CustomExceptiontemplate}=require('../ErrorHandler/exceptionModel');
 
@@ -41,7 +41,7 @@ module.exports.handleRefreshAuthTokenRequest = async (req, res,next) => {
     console.log(token['data']);
     res.send(token['data']);
   } catch (err) {
-    next(new invalidTokenError("Invalid refresh token received",401,err['response']['data']));
+    next(new invalidRefreshTokenError("Invalid refresh token received",401,err['response']['data']));
   }
   
 };
@@ -53,9 +53,24 @@ module.exports.verifyTokenMiddleware=async(req, res, next)=> {
       const verificationResponse = await axios.get('https://oauth2.googleapis.com/tokeninfo' + `?access_token=${accessToken}`);
       return next();
   } catch (err) {
-    next(new invalidTokenError("Invalid refresh token received",401,err['response']['data']));
+    next(new invalidRefreshTokenError("Invalid refresh token received",401,err['response']['data']));
   }
 }
+
+module.exports.handleLogout = async (req, res,next) => {
+  try {
+   await axios({
+      url: 'https://oauth2.googleapis.com/revoke'+`?token=${encodeURIComponent(req.body['refreshToken'])}`,
+      method: "post",
+    });
+    res.send({"success":true});
+  } catch (err) {
+    next(new invalidTokenError("Invalid refresh token received or token has been expired",401,err['response']['data']));
+    console.log(err);
+  }
+  
+};
+
 
 module.exports.handleUnknownRequests=(req, res, next)=> {
   next(new ResourceNotFound('requested resource not found', 404));

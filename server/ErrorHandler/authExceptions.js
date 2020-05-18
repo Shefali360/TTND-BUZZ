@@ -9,12 +9,20 @@ class invalidTokenGrantCodeError extends CustomExceptionTemplate{
     this.stack=`${this.message}\n${new Error().stack}`
     }
 }
-class invalidTokenError extends CustomExceptionTemplate{
+class invalidRefreshTokenError extends CustomExceptionTemplate{
     constructor(message,responseCode,payload){
-    super(message,error.invalidTokenError,responseCode,payload);
-    this.name="InvalidTokenError";
+    super(message,error.invalidRefreshTokenError,responseCode,payload);
+    this.name="InvalidRefreshTokenError";
     this.stack=`${this.message}\n${new Error().stack}`
     }
 }
+
+class invalidTokenError extends CustomExceptionTemplate{
+    constructor(message,responseCode,payload){
+        super(message,error.invalidTokenError,responseCode,payload);
+        this.name="InvalidTokenError";
+        this.stack=`${this.message}\n${new Error().stack}`
+        }
+}
  
-module.exports={invalidTokenGrantCodeError,invalidTokenError};
+module.exports={invalidTokenGrantCodeError,invalidRefreshTokenError,invalidTokenError};
