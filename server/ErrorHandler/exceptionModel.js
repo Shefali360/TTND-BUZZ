@@ -1,4 +1,4 @@
-class CustomExceptionTemplate extends Error {
+class CustomExceptions extends Error {
     constructor(message, code, responseCode, payload) {
         super(message);
         this.code = code;
@@ -7,4 +7,4 @@ class CustomExceptionTemplate extends Error {
     }
 }
 
-module.exports=CustomExceptionTemplate;
+module.exports=CustomExceptions;

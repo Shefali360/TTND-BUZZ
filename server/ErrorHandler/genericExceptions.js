@@ -1,7 +1,7 @@
 const error=require("./genericErrors");
-const CustomExceptionTemplate=require("./exceptionModel");
+const CustomExceptions=require("./exceptionModel");
 
-class ResourceNotFound extends CustomExceptionTemplate {
+class ResourceNotFound extends CustomExceptions {
 
     constructor(message, responseCode, payload) {
         super(message, error.notFound, responseCode, payload);
@@ -10,4 +10,12 @@ class ResourceNotFound extends CustomExceptionTemplate {
     }
 }
 
-module.exports={ResourceNotFound};
+class ServerError extends CustomExceptions {
+    constructor(message, responseCode, payload) {
+        super(message, error.serverError, responseCode, payload);
+        this.name = 'ServerError';
+        this.stack = `${this.message}\n${new Error().stack}`;
+    }
+}
+
+module.exports={ResourceNotFound,ServerError};
