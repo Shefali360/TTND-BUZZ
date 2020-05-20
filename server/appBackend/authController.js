@@ -3,14 +3,10 @@ const dotenv = require("dotenv");
 const {buzz}=require('./model');  
 const {invalidTokenCodeError,invalidTokenError}=require('../ErrorHandler/authExceptions');
 const {ResourceNotFound}=require('../ErrorHandler/genericExceptions');
-const {CustomExceptions}=require('../ErrorHandler/exceptionModel');
 const {RequiredFieldAbsent}=require('../ErrorHandler/validationExceptions');
 
 dotenv.config();
 
-module.exports.user=(req,res)=>{
-  res.send({success:true});
-}
 module.exports.handleAuthTokenRequest = async (req, res,next) => {
   try {
     const token = await axios({

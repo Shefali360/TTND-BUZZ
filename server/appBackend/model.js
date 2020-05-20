@@ -12,7 +12,8 @@ const buzzSchema = new Schema({
     default:'Activity buzz',
   },
   images:[{
-    type:String
+    type:String,
+    data:Buffer
   }],
   likes: {
     type: Number,

@@ -4,7 +4,6 @@ const bodyParser = require('body-parser');
 const cors=require('cors');
 const routes = require('./appBackend/routes');
 const dotenv=require('dotenv');
-
 dotenv.config();
 
 const app = express();
@@ -16,6 +15,8 @@ app.use(cors({
 
 app.use(bodyParser.json());
 app.use(routes);
+app.use('/Images',express.static('Images'));
+
 const connection=process.env.DB_CONNECTION_STRING;
 mongoose.connect(connection, {
   useNewUrlParser: "true",
