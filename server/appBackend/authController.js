@@ -1,6 +1,5 @@
 const axios = require("axios");
-const dotenv = require("dotenv");
-const {buzz}=require('./model');  
+const dotenv = require("dotenv");  
 const {invalidTokenCodeError,invalidTokenError}=require('../ErrorHandler/authExceptions');
 const {ResourceNotFound}=require('../ErrorHandler/genericExceptions');
 const {RequiredFieldAbsent}=require('../ErrorHandler/validationExceptions');
@@ -23,7 +22,7 @@ module.exports.handleAuthTokenRequest = async (req, res,next) => {
     console.log(token['data']);
     res.send(token['data']);
   } catch (err) {
-  return next(new invalidTokenCodeError("Invalid code for token access request",401,err['response']['data']));
+  return next(new invalidTokenCodeError("Invalid code for token access request",401,err.response.data));
   }
 };
 
@@ -44,7 +43,7 @@ module.exports.handleRefreshAuthTokenRequest = async (req, res,next) => {
     console.log(token['data']);
     res.send(token['data']);
   } catch (err) {
-    return next(new invalidTokenError("Invalid refresh token received",401,err['response']['data']));
+    return next(new invalidTokenError("Invalid refresh token received",401,err.response.data));
   }
   
 };
@@ -60,7 +59,7 @@ module.exports.handleLogout = async (req, res,next) => {
     });
     res.send({"success":true});
   } catch (err) {
-    next(new invalidTokenError("Invalid token received or token has been expired",401,err['response']['data']));
+    next(new invalidTokenError("Invalid token received or token has been expired",401,err.response.data));
     console.log(err);
   }
   

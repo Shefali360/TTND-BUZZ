@@ -38,11 +38,14 @@ const adminSchema=new Schema({
     email:{
         type:String,
         lowercase:true,
-        required:true,
-        match:'/\S+@\S+\.\S+/'
+        required:true
     }
 })
 const complaintSchema=new Schema({
+      issueId:{
+        type:String,
+        required:true
+      },
       department:{
         type:String,
         enum:['Admin','IT','HR','Infra'],
@@ -57,18 +60,26 @@ const complaintSchema=new Schema({
         type:String,
         required:true
       },
+      assignedTo:{
+        type:String,
+        required:true
+      },
+      lockedBy:{
+        type:String,
+        required:true
+      },
       email:{
         type:String,
         lowercase:true,
-        required:true,
-        match:'/\S+@\S+\.\S+/'
+        required:true
       },
       concern:{
         type:String,
         required:true
       },
-      file:[{
-        type:String
+      files:[{
+        type:String,
+        data:Buffer
       }],
       status:{
         type:String,
@@ -77,14 +88,11 @@ const complaintSchema=new Schema({
       },
       estimatedTime:{
         value:{
-          type:Number,
-          required:true
+          type:Number
         },
         timeType:{
           type:String,
-          enum:['hours','days','weeks'],
-          default:'hours',
-          required:true
+          enum:['hours','days','weeks']
         }
       }
 })

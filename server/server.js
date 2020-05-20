@@ -20,7 +20,8 @@ app.use('/Images',express.static('Images'));
 const connection=process.env.DB_CONNECTION_STRING;
 mongoose.connect(connection, {
   useNewUrlParser: "true",
-  useFindAndModify:false
+  useFindAndModify:false,
+  useUnifiedTopology:true
 }).catch((error)=>{console.log(error)});
 
 mongoose.connection.on("error", err => {

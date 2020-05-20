@@ -8,6 +8,7 @@ const {
 } = require("../ErrorHandler/authExceptions");
 const { ServerError } = require("../ErrorHandler/genericExceptions");
 const multer = require("multer");
+const {getAdmin}=require("./adminServices");
 
 module.exports.verifyTokenMiddleware = async (req, res, next) => {
   try {
@@ -38,7 +39,7 @@ module.exports.verifyTokenMiddleware = async (req, res, next) => {
         new invalidTokenError(
           "Invalid refresh token received",
           401,
-          err["response"]["data"]
+          err.response.data
         )
       );
     }
@@ -74,7 +75,7 @@ module.exports.verifyTokenToGetUserData = async (req, res, next) => {
         new invalidTokenError(
           "Invalid id token received",
           401,
-          err["response"]["data"]
+          err.response.data
         )
       );
     }
@@ -83,7 +84,7 @@ module.exports.verifyTokenToGetUserData = async (req, res, next) => {
   }
 };
 
-module.exports.storage = multer.diskStorage({
+module.exports.imageStorage = multer.diskStorage({
   destination: function (req, files, callback) {
     callback(null, "./Images/");
   },
@@ -92,7 +93,16 @@ module.exports.storage = multer.diskStorage({
   },
 });
 
-module.exports.fileFilter = (req, files, callback) => {
+module.exports.fileStorage = multer.diskStorage({
+  destination: function (req, files, callback) {
+    callback(null, "./Attachments/");
+  },
+  filename: function (req, files, callback) {
+    callback(null, new Date().toISOString() + files.originalname);
+  },
+});
+
+module.exports.imageFileFilter = (req, files, callback) => {
   if (
     files.mimetype === "image/jpeg" ||
     files.mimetype === "image/png" ||
@@ -103,6 +113,18 @@ module.exports.fileFilter = (req, files, callback) => {
     callback(new InvalidFileFormat("Please insert images only",400),false);
   }
 };
+
+module.exports.checkAdminPrivileges= async (req,res,next)=>{
+  const userEmail=req.data.data.email;
+  const adminResponse = await getAdmin(userEmail);
+  if(adminResponse){
+    return next();
+  }else{
+    res.json({"error":"Not admin"});
+  }
+
+}
+
 module.exports.errorHandlingMiddleware = (err, req, res, next) => {
   res.status(err.responseCode || 400);
   res.json({

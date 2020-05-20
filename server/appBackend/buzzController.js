@@ -1,43 +1,29 @@
-const { buzz } = require("./model");
 const { ResourceNotFound,ServerError} = require("../ErrorHandler/genericExceptions");
-const {DataValidationFailed}=require('../ErrorHandler/buzzExceptions');
-const buzzService=require('./services');
+const buzzService=require('./buzzServices');
 
-module.exports.createBuzz = (req, res,next) => {
-  console.log("Images=====>",req.files,"Ending");
+module.exports.createBuzz = async(req, res,next) => {
   const paths=[];
   if(req.files){
   req.files.forEach(path=>{
     paths.push(path.path);
   })}
+  req.body.images=paths;
   const myuserdata = req.data;
-  try {
-    let buzzFeed = req.body;
-    let newPost = new buzz({
-      description: buzzFeed.description,
-      category: buzzFeed.category,
-      userId: myuserdata.data.email,
-      images:paths
-    });
-    newPost.save(function (err, buzzFeed) {
-      if (err) {
-        return next(new DataValidationFailed(err.message,401,err.errors));
-      } else
-        res.send({
-          message: "New post added",
-          success: true,
-          buzz: buzzFeed,
-        });
-    });
-  } catch (err) {
-    return next( new ServerError("Error",500));
+  req.body.userId=myuserdata.data.email;
+  try{
+    const response=await buzzService.createBuzz(req.body);
+    res.send(response);
+  }
+  catch (err) {
+   next(err);
   }
 };
 
 module.exports.getAll = async (req, res,next) => {
   try {
+    const limitCount=req.query.limit;
     const skipCount=req.query.skip;
-    const response = await buzzService.getAll(Number(skipCount));
+    const response = await buzzService.getAll(Number(limitCount,skipCount));
     res.send(response);
   } catch (err) {
     return next( new ServerError("Error",500));
