@@ -15,17 +15,21 @@ module.exports.createComplaint = async (data) => {
     }
   }
 };
-module.exports.getAllComplaints = async (limit, skip) => {
+module.exports.getAllComplaints = async (query, limit, skip) => {
   try {
     const userComplaints = await complaint
       .find(
-        {},
-        "department issueId lockedBy assignedTo status estimatedTime concern"
+        query,
+        "department issueId lockedBy assignedTo status estimatedTime concern timestamp"
       )
+      .sort({
+        timestamp: -1,
+      })
       .limit(limit ? limit : 0)
       .skip(skip ? skip : 0);
     return userComplaints;
   } catch (err) {
+    console.log(err);
     throw new ServerError("Error", 500);
   }
 };
@@ -34,7 +38,9 @@ module.exports.getComplaintsByUserEmail = async (email, limit, skip) => {
   try {
     const userComplaint = await complaint
       .find(
-        { email: email },
+        {
+          email: email,
+        },
         "department issueId assignedTo status estimatedTime concern"
       )
       .limit(limit ? limit : 0)
@@ -42,5 +48,18 @@ module.exports.getComplaintsByUserEmail = async (email, limit, skip) => {
     return userComplaint;
   } catch (err) {
     throw new ServerError("Error", 500);
+  }
+};
+
+module.exports.updateComplaintStatusById = async (id, complaintData) => {
+  try {
+  const response=await complaint.findByIdAndUpdate(id, {
+    $set: complaintData,
+  }, {runValidators: true}).exec();
+    return response;
+  } catch (err) {
+    if (err.name === "ValidationError")
+      throw new DataValidationFailed(err.message, 400);
+    else throw new InternalServerError("Error", 500);
   }
 };

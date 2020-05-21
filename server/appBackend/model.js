@@ -38,7 +38,9 @@ const adminSchema=new Schema({
     email:{
         type:String,
         lowercase:true,
-        required:true
+        required:true,
+        unique:true,
+        immutable:true
     }
 })
 const complaintSchema=new Schema({
@@ -86,13 +88,19 @@ const complaintSchema=new Schema({
         enum:['Open','In Progress','Closed'],
         default:'Open'
       },
+      timestamp:{
+        type:Number,
+        default:Date.now()
+      },
       estimatedTime:{
         value:{
-          type:Number
+          type:Number,
+          default:0
         },
         timeType:{
           type:String,
-          enum:['hours','days','weeks']
+          enum:['hours','days','weeks'],
+          default:'hours'
         }
       }
 })

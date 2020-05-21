@@ -8,8 +8,8 @@ module.exports.createAdmin = async (data) => {
     await adminRole.save();
     return adminRole;
   } catch (err) {
-    if (err.name === "ValidationError") {
-      throw new DataValidationFailed(err.message, 400);
+    if (err) {
+      throw new DataValidationFailed("Duplicate email entered", 400,err.errmsg);
     } else {
       throw new ServerError("Error", 500);
     }
@@ -17,9 +17,14 @@ module.exports.createAdmin = async (data) => {
 };
 
 module.exports.getAdmin = async (email) => {
-  const adminPresent = await admin.findOne({ email: email });
+  try{
+    const adminPresent = await admin.findOne({ email: email });
   if (adminPresent !== null){ return true;}
   else{ return false;}
+}
+  catch{
+    throw new ServerError("Error", 500);
+  }
 };
 
 module.exports.delete = async ({ id }) => {

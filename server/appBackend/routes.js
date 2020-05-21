@@ -1,7 +1,7 @@
 const auth = require("./authController");
 const buzz = require("./buzzController");
 const complaint = require("./complaintController");
-const admin=require("./adminController");
+const admin = require("./adminController");
 const midware = require("./midwares");
 const router = require("express").Router();
 const multer = require("multer");
@@ -48,9 +48,15 @@ router.get(
   midware.verifyTokenToGetUserData,
   complaint.getComplaintsByUserEmail
 );
-router.post("/admin", midware.verifyTokenToGetUserData,admin.createAdmin);
-router.get("/admin",midware.verifyTokenToGetUserData,admin.getAdmin);
-router.delete('/admin/:id', admin.delete);
+router.patch(
+ "/complaint/:id",
+ midware.verifyTokenToGetUserData,
+ midware.checkAdminPrivileges,
+complaint.updateComplaintStatusById
+);
+router.post("/admin", midware.verifyTokenToGetUserData, admin.createAdmin);
+router.get("/admin", midware.verifyTokenToGetUserData, admin.getAdmin);
+router.delete("/admin/:id", admin.delete);
 router.use(auth.handleUnknownRequests);
 router.use(midware.errorHandlingMiddleware);
 

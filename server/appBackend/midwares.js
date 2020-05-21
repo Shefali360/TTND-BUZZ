@@ -9,6 +9,7 @@ const {
 const { ServerError } = require("../ErrorHandler/genericExceptions");
 const multer = require("multer");
 const {getAdmin}=require("./adminServices");
+const {UnauthorizedAccess}=require('../ErrorHandler/adminExceptions');
 
 module.exports.verifyTokenMiddleware = async (req, res, next) => {
   try {
@@ -115,12 +116,15 @@ module.exports.imageFileFilter = (req, files, callback) => {
 };
 
 module.exports.checkAdminPrivileges= async (req,res,next)=>{
-  const userEmail=req.data.data.email;
+ try{ const userEmail=req.data.data.email;
   const adminResponse = await getAdmin(userEmail);
   if(adminResponse){
     return next();
   }else{
-    res.json({"error":"Not admin"});
+    return next(new UnauthorizedAccess("You need admin privileges to access this data.",400));
+  }}catch(err){
+    console.log(err);
+    return next(new ServerError("Error"), 500);
   }
 
 }

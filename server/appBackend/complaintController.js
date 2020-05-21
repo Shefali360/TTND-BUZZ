@@ -1,57 +1,71 @@
-const customId=require("custom-id");
-const complaintService=require('./complaintServices');
+const customId = require("custom-id");
+const complaintService = require("./complaintServices");
 
-module.exports.createComplaint = async(req, res,next) => {
-    const myuserdata = req.data;
-    req.body.email=myuserdata.data.email;
-    req.body.name=myuserdata.data.name;
-    req.body.assignedTo=myuserdata.data.name;
-    req.body.lockedBy=myuserdata.data.name;
-    const issueId=customId({
-        email:myuserdata.data.email,
-        randomLength:2
-    });
-    req.body.issueId=issueId;
-    const paths=[];
-    if(req.files){
-    req.files.forEach(path=>{
+module.exports.createComplaint = async (req, res, next) => {
+  const myuserdata = req.data;
+  req.body.email = myuserdata.data.email;
+  req.body.name = myuserdata.data.name;
+  req.body.assignedTo = myuserdata.data.name;
+  req.body.lockedBy = myuserdata.data.name;
+  const issueId = customId({
+    email: myuserdata.data.email,
+    randomLength: 2,
+  });
+  req.body.issueId = issueId;
+  const paths = [];
+  if (req.files) {
+    req.files.forEach((path) => {
       paths.push(path.path);
-    })}
-    req.body.files=paths;
-    try{
-      const response=await complaintService.createComplaint(req.body);
-      res.send(response);
-    }
-    catch (err) {
-     next(err);
-    }
-  };
-
-  module.exports.getAllComplaints=async(req,res,next)=>{
-    const limitCount=req.query.limit;
-    const skipCount=req.query.skip;
-    try{
-      const response=await complaintService.getAllComplaints(Number(limitCount,skipCount));
-      res.send(response);
-    }
-    catch(err){
-      next(err);
-    }
+    });
   }
-  module.exports.getComplaintsByUserEmail=async(req,res,next)=>{
-    const userEmail = req.data.data.email;
-    const limitCount=req.query.limit;
-    const skipCount=req.query.skip;
-    try{
-      const response=await complaintService.getComplaintsByUserEmail(userEmail,Number(limitCount,skipCount));
-      res.send(response);
-    }
-    catch(err){
-      next(err);
-    }
+  req.body.files = paths;
+  try {
+    const response = await complaintService.createComplaint(req.body);
+    res.send(response);
+  } catch (err) {
+    next(err);
   }
+};
 
-  module.exports.handleUnknownRequests = (req, res, next) => {
-    return next(new ResourceNotFound("requested resource not found", 404));
-  };
-  
+module.exports.getAllComplaints = async (req, res, next) => {
+  const limitCount = req.query.limit;
+  delete req.query.limit;
+  const skipCount = req.query.skip;
+  delete req.query.skip;
+  try {
+    const response = await complaintService.getAllComplaints(
+      req.query,
+      Number(limitCount,skipCount)
+    );
+    res.send(response);
+  } catch (err) {
+    next(err);
+  }
+};
+module.exports.getComplaintsByUserEmail = async (req, res, next) => {
+  const userEmail = req.data.data.email;
+  const limitCount = req.query.limit;
+  const skipCount = req.query.skip;
+  try {
+    const response = await complaintService.getComplaintsByUserEmail(
+      userEmail,
+      Number(limitCount, skipCount)
+    );
+    res.send(response);
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports.updateComplaintStatusById = async (req, res,next) => {
+  try {
+    const response = await complaintService.updateComplaintStatusById(req.params.id,req.body);
+    res.send(response);
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports.handleUnknownRequests = (req, res, next) => {
+  return next(new ResourceNotFound("requested resource not found", 404));
+};
