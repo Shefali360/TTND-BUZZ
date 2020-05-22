@@ -1,0 +1,27 @@
+.listItem{
+    list-style-type: none;  
+}
+.element{
+    text-decoration: none;
+    background-color: #fff;
+    color:#aaa;
+    font-weight: bold;
+    font-size:14px;
+    display: inline-block;
+    padding:14px 18px;
+    box-sizing: border-box;
+    border:1px solid #ccc;
+    border-radius: 3px;
+    width:100%; 
+}
+
+.element:after{
+    content:'\f105';
+    font-family: FontAwesome;
+    /* text-align: right; */
+    font-size:20px;
+}
+.element:active,
+.element.active{
+   color:#D8763A;
+}

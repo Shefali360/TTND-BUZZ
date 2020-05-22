@@ -8,6 +8,7 @@ import {createStore,applyMiddleware,compose,combineReducers} from 'redux';
 import {Provider} from 'react-redux';
 import thunk from 'redux-thunk';
 import tokenReducer from './store/reducers/tokenReducer';
+import '../node_modules/font-awesome/css/font-awesome.min.css';
 
 const composeEnhancers = (process.env.NODE_ENV === 'development'?window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ :null)|| compose;
 const rootReducer=combineReducers({

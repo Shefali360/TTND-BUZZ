@@ -6,7 +6,6 @@ import Loginbutton from './loginButton/loginButton';
 class Login extends Component{
     render(){
         return(
-          
             <div className={styles.mainImg}>
                   <div className={styles.overlay}>
                 <div className={styles.loginDiv}>

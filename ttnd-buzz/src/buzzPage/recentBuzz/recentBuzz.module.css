@@ -1,0 +1,16 @@
+.recentBuzz{
+margin-top:20px;
+border:2px solid #ccc;
+border-radius:5px;
+}
+
+.recentBuzz h5{
+    padding:10px 0px;
+    background-color: #eeeeee;
+}
+.recentBuzz h5:before{
+    content:'\f1fa';
+    font-family:FontAwesome;
+    margin:10px;
+    color:gray;
+}

@@ -27,6 +27,7 @@ const buzzSchema = new Schema({
       type:String,
       required:true,
       lowercase:true,
+      immutable:true
   },
   createdOn:{
     type:Number,
@@ -46,34 +47,39 @@ const adminSchema=new Schema({
 const complaintSchema=new Schema({
       issueId:{
         type:String,
-        required:true
+        required:true,
+        immutable:true
       },
       department:{
         type:String,
         enum:['Admin','IT','HR','Infra'],
-        default:'Admin'
+        default:'Admin',
       },
       issue:{
         type:String,
         enum:['Hardware','Infrastructure','Others'],
-        default:'Hardware'
+        default:'Hardware',
       },
       name:{
         type:String,
-        required:true
+        required:true,
+        immutable:true
       },
       assignedTo:{
         type:String,
-        required:true
+        required:true,
+        immutable:true
       },
       lockedBy:{
         type:String,
-        required:true
+        required:true,
+        immutable:true
       },
       email:{
         type:String,
         lowercase:true,
-        required:true
+        required:true,
+        immutable:true
       },
       concern:{
         type:String,
@@ -90,7 +96,8 @@ const complaintSchema=new Schema({
       },
       timestamp:{
         type:Number,
-        default:Date.now()
+        default:Date.now(),
+        immutable:true
       },
       estimatedTime:{
         value:{

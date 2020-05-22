@@ -1,15 +1,15 @@
 const axios = require("axios");
-const { InvalidFileFormat } = require("../ErrorHandler/buzzExceptions");
+const { InvalidFileFormat } = require("../ErrorHandler/buzz/buzzExceptions");
 const {
   invalidTokenError,
   authHeadersAbsent,
   invalidAuthHeaderFormat,
   authTokenAbsent,
-} = require("../ErrorHandler/authExceptions");
-const { ServerError } = require("../ErrorHandler/genericExceptions");
+} = require("../ErrorHandler/auth/authExceptions");
+const { ServerError } = require("../ErrorHandler/generic/genericExceptions");
 const multer = require("multer");
-const {getAdmin}=require("./adminServices");
-const {UnauthorizedAccess}=require('../ErrorHandler/adminExceptions');
+const {getAdmin}=require("../appBackend/services/adminServices");
+const {UnauthorizedAccess}=require('../ErrorHandler/admin/adminExceptions');
 
 module.exports.verifyTokenMiddleware = async (req, res, next) => {
   try {

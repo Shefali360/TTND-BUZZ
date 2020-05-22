@@ -2,7 +2,12 @@ const express = require('express');
 const mongoose = require("mongoose");
 const bodyParser = require('body-parser');
 const cors=require('cors');
-const routes = require('./appBackend/routes');
+const authRoutes = require('./appBackend/Routes/authRoutes');
+const buzzRoutes=require('./appBackend/Routes/buzzRoutes');
+const complaintRoutes=require('./appBackend/Routes/complaintRoutes');
+const adminRoutes=require('./appBackend/Routes/adminRoutes');
+const auth = require("./appBackend/controller/authController");
+const midware = require("./appBackend/midwares");
 const dotenv=require('dotenv');
 dotenv.config();
 
@@ -14,8 +19,13 @@ app.use(cors({
 ));
 
 app.use(bodyParser.json());
-app.use(routes);
+app.use(authRoutes);
+app.use(buzzRoutes);
+app.use(complaintRoutes);
+app.use(adminRoutes);
 app.use('/Images',express.static('Images'));
+app.use(auth.handleUnknownRequests);
+app.use(midware.errorHandlingMiddleware);
 
 const connection=process.env.DB_CONNECTION_STRING;
 mongoose.connect(connection, {

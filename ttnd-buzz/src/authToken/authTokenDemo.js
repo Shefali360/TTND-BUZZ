@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import * as actions from "../store/actions/index";
 import { connect } from "react-redux";
+import Spinner from '../UI/Spinner/Spinner';
 
 class authToken extends Component {
   componentDidMount() {
@@ -27,7 +28,7 @@ class authToken extends Component {
 
     // }
 
-    return <p>Please wait while you are being logged in...</p>;
+    return <Spinner/>;
   }
 }
 

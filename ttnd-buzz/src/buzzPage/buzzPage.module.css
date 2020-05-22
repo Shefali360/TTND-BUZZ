@@ -1,0 +1,12 @@
+.post{
+    display: flex;
+    justify-content:space-around;
+}
+
+.leftDiv{
+    width:30%;
+}
+.rightDiv{
+    width:60%;
+}
+
