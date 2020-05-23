@@ -2,15 +2,91 @@
 margin-top:20px;
 border:2px solid #ccc;
 border-radius:5px;
+margin-bottom: 10px;
 }
 
-.recentBuzz h5{
+.recentBuzz h4{
     padding:10px 0px;
     background-color: #eeeeee;
+    border-bottom: 2px solid #ccc;
 }
-.recentBuzz h5:before{
+.recentBuzz h4:before{
     content:'\f1fa';
     font-family:FontAwesome;
     margin:10px;
     color:gray;
+}
+
+.buzzes{
+    display: flex;
+    padding:25px;
+    background-color: #fff;
+}
+
+.buzzes .date{
+    width:10%;
+    font-size:28px;
+    color:gray;
+    font-style: italic;
+}
+
+.buzzes .rightDiv{
+    width:90%;
+}
+
+.buzzes img{
+    width:100%;
+    height:270px;
+    border:2px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.userId{
+    color:gray;
+    font-size:14px;
+    font-weight: bold;
+    margin-right:20px;
+}
+
+.duration{
+    color:gray;
+    font-size:14px;
+    font-weight: bold;
+}
+
+.duration:before{
+    content:'\f111';
+    font-family: FontAwesome;
+    font-size:4px;
+    margin-right:4px;
+    vertical-align: middle;
+}
+
+.buzzes p{
+    font-size:14px;
+    line-height: 1.4rem;
+}
+
+.reviews{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.reviews a:first-child{
+    margin-right:15px;
+}
+
+.reviews .count{
+    margin-right:5px;
+    font-size:14px;
+    color:gray;
+}
+
+.reviews i{
+    color:gray;
+}
+
+.active{
+    color:orange;
 }

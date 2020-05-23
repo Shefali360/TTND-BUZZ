@@ -5,7 +5,7 @@ class createBuzz extends Component {
   render() {
     return (
       <div className={styles.createBuzz}>
-          <h5>Create Buzz </h5>
+          <h4>Create Buzz </h4>
         <form className={styles.form}>
           <textarea
             rows="10"
@@ -16,7 +16,7 @@ class createBuzz extends Component {
             <div>
           <div className={styles.dropdown}>
           <select name="category">
-            <option value="" selected>Category</option>
+            <option value="" defaultValue>Category</option>
             <option value="Activity buzz">Activity</option>
             <option value="Lost and Found buzz">Lost and Found</option>
           </select>
