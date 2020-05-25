@@ -1,4 +1,4 @@
-const complaint = require("../../appBackend/controller/complaintController");
+const complaint = require("../../App-backend/controller/complaintController");
 const midware = require("../midwares/midwares");
 const router = require("express").Router();
 const multer = require("multer");

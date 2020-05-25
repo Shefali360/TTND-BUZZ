@@ -8,7 +8,7 @@ const Navbar=(props)=>{
     return (
         <Aux>
         <ul className={styles.list}>
-            <NavbarItem link="/buzz" exact>BUZZ</NavbarItem>
+            <NavbarItem link="/buzz" >BUZZ</NavbarItem>
             <NavbarItem link="/complaint">COMPLAINTS</NavbarItem>
             <NavbarItem link="/resolved">RESOLVED</NavbarItem>
         </ul>

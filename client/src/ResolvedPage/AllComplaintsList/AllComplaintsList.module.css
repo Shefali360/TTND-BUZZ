@@ -1,9 +1,17 @@
+.card{
+    position: relative;
+}
+
 .table{
     table-layout:fixed;
 }
 
 .table th i{
     margin-left:10px;
+}
+
+.table td:last-child{
+    position: relative;
 }
 
 .filterFields{
@@ -60,16 +68,26 @@
     border:2px solid #ccc;
     padding:15px;
     position: absolute;
+    top:0;
+    left:0;
     background-color: #fff;
     margin-bottom: 10px;
     margin-right: 30px;
+    max-height:150px;
+    max-width:250px;
+}
+
+.close{
+    position: absolute;
+    top:-10px;
+    right: 0;
 }
 .popup h5{
     color:black;
     margin-bottom:10px;
 }
 
-.popup form{
+.popup .formdata{
     display:flex;
     justify-content: space-around;
 }
@@ -89,4 +107,12 @@
     background-color: #D8763A;
     color:#fff;
     border-radius:4px;
+}
+
+.display{
+    display: none;
+}
+
+.displaydiv{
+    display:block;
 }

@@ -1,4 +1,4 @@
-const admin = require("../../appBackend/controller/adminController");
+const admin = require("../../App-backend/controller/adminController");
 const midware = require("../midwares/midwares");
 const router = require("express").Router();
 

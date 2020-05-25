@@ -1,4 +1,4 @@
-const buzz = require("../../appBackend/controller/buzzController");
+const buzz = require("../../App-backend/controller/buzzController");
 const midware = require("../midwares/midwares");
 const router = require("express").Router();
 const multer = require("multer");

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import * as actions from "../store/actions/index";
 import { connect } from "react-redux";
 import Spinner from '../components/Spinner/Spinner';
+import {Redirect} from 'react-router-dom';
 
 class AuthToken extends Component {
   componentDidMount() {
@@ -9,25 +10,14 @@ class AuthToken extends Component {
     //console.log(this.props.data);
   }
 
-  render() {
-    console.log(this.props.data);
-    // if(this.props.data){
-    //   this.props.history.push({
-    //     pathname: "/buzz",
-    //     // state: {
-    //     //   token: this.state.token,
-    //     // },
-    //   });
-    // }else if(this.props.error){
-    //   this.props.history.push({
-    //     pathname: "/",
-    //     // state: {
-    //     //   token: this.state.token,
-    //     // },
-    //   });
-
-    // }
-
+  render(){
+    const a=this.props.data&&this.props.data.access_token;
+    console.log(a);
+    if(a){
+      return <Redirect to ='/buzz'/>
+    }else if(this.props.error){
+      return <Redirect to ='/buzz'/>
+      };
     return <Spinner/>;
   }
 }

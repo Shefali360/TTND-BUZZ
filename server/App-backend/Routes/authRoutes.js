@@ -1,4 +1,4 @@
-const auth = require("../../appBackend/controller/authController");
+const auth = require("../../App-backend/controller/authController");
 const router = require("express").Router();
 router.get("/authToken/:code", auth.handleAuthTokenRequest);
 router.post("/refreshAuthToken", auth.handleRefreshAuthTokenRequest);

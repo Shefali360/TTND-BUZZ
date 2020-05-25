@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import styles from "./ComplaintBox.module.css";
-import sharedStyles from '../../BuzzPage/CreateBuzz/CreateBuzz.module.css';
 
 class ComplaintBox extends Component {
   render() {
@@ -40,7 +39,7 @@ class ComplaintBox extends Component {
           <textarea className={styles.Textarea} rows="10" cols="50" placeholder="Please write your concern..."></textarea>
           </div>
           <div className={styles.attachment}>
-          <div className={[sharedStyles.imageUpload,styles.realimage].join(' ')}>
+          <div className={styles.realimage}>
             <input type="file" name="images" />
             <div className={styles.fakeImage}>
             <i className="fa fa-image"></i>

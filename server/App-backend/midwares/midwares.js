@@ -8,7 +8,7 @@ const {
 } = require("../../ErrorHandler/auth/authExceptions");
 const { ServerError } = require("../../ErrorHandler/generic/genericExceptions");
 const multer = require("multer");
-const {getAdmin}=require("../appBackend/services/adminServices");
+const {getAdmin}=require("../../App-backend/services/adminServices");
 const {UnauthorizedAccess}=require('../../ErrorHandler/admin/adminExceptions');
 
 module.exports.verifyTokenMiddleware = async (req, res, next) => {
