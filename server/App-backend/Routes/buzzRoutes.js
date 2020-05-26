@@ -9,13 +9,13 @@ const imageUpload = multer({
   },
   fileFilter: midware.imageFileFilter,
 });
-router.get("/buzz", buzz.getAll);
+router.get("/", buzz.getAll);
 router.post(
   "/buzz",
   midware.verifyTokenToGetUserData,
   imageUpload.array("images"),
   buzz.createBuzz
 );
-router.patch("/buzz/like/:id", buzz.updateLikes);
-router.patch("/buzz/dislike/:id", buzz.updateDislikes);
+router.patch("/like/:id", buzz.updateLikes);
+router.patch("/dislike/:id", buzz.updateDislikes);
 module.exports=router;

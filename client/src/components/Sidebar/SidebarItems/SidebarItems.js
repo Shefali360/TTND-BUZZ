@@ -3,6 +3,7 @@ import NavbarItem from '../SidebarItem';
 import styles from './SidebarItems.module.css';
 import Footer from '../../Footer/Footer';
 import Aux from '../../../hoc/wrap/wrap';
+import { connect } from "react-redux";
 
 const Navbar=(props)=>{
     return (
@@ -10,7 +11,7 @@ const Navbar=(props)=>{
         <ul className={styles.list}>
             <NavbarItem link="/buzz" >BUZZ</NavbarItem>
             <NavbarItem link="/complaint">COMPLAINTS</NavbarItem>
-            <NavbarItem link="/resolved">RESOLVED</NavbarItem>
+            {props.admin&&<NavbarItem link="/resolved">RESOLVED</NavbarItem>}
         </ul>
         <Footer/>
         </Aux>
@@ -18,4 +19,11 @@ const Navbar=(props)=>{
 
 }
 
-export default Navbar;
+const mapStateToProps = (state) => {
+    
+    return {
+        admin:state.adminCheck.adminPrivilege
+    }
+};
+
+export default connect(mapStateToProps)(Navbar);

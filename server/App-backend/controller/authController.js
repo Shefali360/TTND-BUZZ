@@ -50,6 +50,7 @@ module.exports.handleRefreshAuthTokenRequest = async (req, res,next) => {
 
 
 module.exports.handleLogout = async (req, res,next) => {
+  console.log(req.body);
   if(!req.body || !req.body['refreshToken'])
   return next(new RequiredFieldAbsent('refresh token is not present', 400));
   try {

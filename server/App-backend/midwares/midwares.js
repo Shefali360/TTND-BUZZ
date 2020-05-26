@@ -12,33 +12,37 @@ const {getAdmin}=require("../../App-backend/services/adminServices");
 const {UnauthorizedAccess}=require('../../ErrorHandler/admin/adminExceptions');
 
 module.exports.verifyTokenMiddleware = async (req, res, next) => {
+  
   try {
     if (!req.headers["authorization"]) {
       return next(
         new authHeadersAbsent("Authorization headers are absent", 401)
       );
     }
-    const tokenType = req.headers["authorization"].split(" ")[0];
-    if (tokenType !== "Bearer") {
+  
+    const tokenType = req.headers["authorization"].split(",")[0];
+    const accessToken=tokenType.split(" ")[0];
+    if (accessToken !== "Bearer") {
       return next(
-        new invalidAuthHeaderFormat("Auth token should be of bearer type", 401)
+        new invalidAuthHeaderFormat("Auth token should be of Bearer type", 401)
       );
     }
-    const accessToken = req.headers["authorization"].split(" ")[1];
-    if (!accessToken) {
+    const accessTokenValue =tokenType.split(" ")[1];
+    if (!accessTokenValue) {
       return next(new authTokenAbsent("Auth token is not provided"), 401);
     }
 
     try {
       await axios.get(
         "https://oauth2.googleapis.com/tokeninfo" +
-          `?access_token=${accessToken}`
+          `?access_token=${accessTokenValue}`
       );
+      console.log("first midware successful");
       return next();
     } catch (err) {
       return next(
         new invalidTokenError(
-          "Invalid refresh token received",
+          "Invalid token received",
           401,
           err.response.data
         )
@@ -56,20 +60,23 @@ module.exports.verifyTokenToGetUserData = async (req, res, next) => {
         new authHeadersAbsent("Authorization headers are absent", 401)
       );
     }
-    const tokenType = req.headers["authorization"].split(" ")[0];
-    if (tokenType !== "Bearer") {
+    const tokenType = req.headers["authorization"].split(",")[1];
+    const idToken=tokenType.split(" ")[0];
+    if (idToken !== "Bearer") {
       return next(
-        new invalidAuthHeaderFormat("Auth token should be of bearer type", 401)
+        new invalidAuthHeaderFormat("Auth token should be of Bearer type", 401)
       );
     }
-    const idToken = req.headers["authorization"].split(" ")[1];
-    if (!idToken) {
+    const idTokenValue = tokenType.split(" ")[1];
+    if (!idTokenValue) {
       return next(new authTokenAbsent("Auth token is not provided"), 401);
     }
+
     try {
       req.data = await axios.get(
-        "https://oauth2.googleapis.com/tokeninfo" + `?id_token=${idToken}`
+        "https://oauth2.googleapis.com/tokeninfo" + `?id_token=${idTokenValue}`
       );
+      console.log("second midware successful");
       return next();
     } catch (err) {
       return next(

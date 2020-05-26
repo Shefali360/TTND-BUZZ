@@ -7,12 +7,16 @@ import * as serviceWorker from './serviceWorker';
 import {createStore,applyMiddleware,compose,combineReducers} from 'redux';
 import {Provider} from 'react-redux';
 import thunk from 'redux-thunk';
-import tokenReducer from './store/reducers/tokenReducer';
+import tokenReducer from './store/reducers/AccessTokenReducer';
+import revokeTokenReducer from './store/reducers/RevokeTokenReducer';
+import checkAdminReducer from './store/reducers/AdminRouteProtectReducer';
 import 'font-awesome/css/font-awesome.min.css';
 
 const composeEnhancers = (process.env.NODE_ENV === 'development'?window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ :null)|| compose;
 const rootReducer=combineReducers({
-token:tokenReducer
+auth:tokenReducer,
+logout:revokeTokenReducer,
+adminCheck:checkAdminReducer
 });
 const store=createStore(rootReducer,composeEnhancers(
   applyMiddleware(thunk)

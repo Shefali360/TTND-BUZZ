@@ -11,24 +11,24 @@ const fileUpload = multer({
 
 
 router.post(
-    "/complaint",
+    "/",
     midware.verifyTokenToGetUserData,
     fileUpload.array("files"),
     complaint.createComplaint
   );
   router.get(
-    "/complaint/all",
+    "/all",
     midware.verifyTokenToGetUserData,
     midware.checkAdminPrivileges,
     complaint.getAllComplaints
   );
   router.get(
-    "/complaint",
+    "/",
     midware.verifyTokenToGetUserData,
     complaint.getComplaintsByUserEmail
   );
   router.patch(
-   "/complaint/:id",
+   "/:id",
    midware.verifyTokenToGetUserData,
    midware.checkAdminPrivileges,
   complaint.updateComplaintStatusById

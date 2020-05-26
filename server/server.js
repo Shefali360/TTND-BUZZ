@@ -20,9 +20,9 @@ app.use(cors({
 
 app.use(bodyParser.json());
 app.use(authRoutes);
-app.use(buzzRoutes);
-app.use(complaintRoutes);
-app.use(adminRoutes);
+app.use('/buzz',midware.verifyTokenMiddleware,buzzRoutes);
+app.use('/complaint',midware.verifyTokenMiddleware,complaintRoutes);
+app.use('/admin',midware.verifyTokenMiddleware, adminRoutes);
 app.use('/Images',express.static('Images'));
 app.use(auth.handleUnknownRequests);
 app.use(midware.errorHandlingMiddleware);
