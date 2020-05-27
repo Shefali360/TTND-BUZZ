@@ -26,7 +26,7 @@ function App() {
           <Aux>
         <PrivateRoute exact path="/buzz"><BuzzPage/></PrivateRoute>
         <PrivateRoute exact path="/complaint"><ComplaintPage/></PrivateRoute>
-        <PrivateRoute exact path="/resolved"><ResolvedPage/></PrivateRoute>
+        {/* <PrivateRoute exact path="/resolved"><ResolvedPage/></PrivateRoute> */}
         <AuthenticatedRoute exact path="/resolved"><ResolvedPage/></AuthenticatedRoute>
         <Route path="/about" component={About}/>
         <Route path="/help" component={Help}/>

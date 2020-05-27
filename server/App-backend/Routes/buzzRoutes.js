@@ -11,7 +11,7 @@ const imageUpload = multer({
 });
 router.get("/", buzz.getAll);
 router.post(
-  "/buzz",
+  "/",
   midware.verifyTokenToGetUserData,
   imageUpload.array("images"),
   buzz.createBuzz
