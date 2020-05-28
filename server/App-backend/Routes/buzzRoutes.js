@@ -18,4 +18,5 @@ router.post(
 );
 router.patch("/like/:id", buzz.updateLikes);
 router.patch("/dislike/:id", buzz.updateDislikes);
+router.delete("/", buzz.delete);
 module.exports=router;

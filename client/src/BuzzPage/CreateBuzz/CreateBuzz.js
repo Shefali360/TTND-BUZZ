@@ -4,6 +4,7 @@ import sharedStyles from "../../components/Dropdown/Dropdown.module.css";
 import Dropdown from "../../components/Dropdown/Dropdown";
 import { connect } from "react-redux";
 import axios from "axios";
+import * as actions from "../../store/actions/index";
 
 class CreateBuzz extends Component {
   state = {
@@ -16,7 +17,7 @@ class CreateBuzz extends Component {
 
   fileChange=(event)=>{
     this.setState({images:event.target.files});
-    console.log(this.state.images);
+    // console.log(this.state.images);
   }
 
   handleChange = (event) => {
@@ -41,12 +42,6 @@ class CreateBuzz extends Component {
     }
     formData.append("description",this.state.description);
     formData.append("category",this.state.category);
-    // const buzzObject = {
-    //   description: this.state.description,
-    //   category: this.state.category,
-    //   images:this.state.images
-    // };
-
     const token = JSON.parse(localStorage.getItem("token"));
     console.log(token);
     axios
@@ -56,7 +51,7 @@ class CreateBuzz extends Component {
         },
       })
       .then((res) => {
-        console.log(res);
+        this.props.getRecentBuzz();
       })
       .catch((err) => {
         console.log(err);
@@ -122,6 +117,12 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(CreateBuzz);
+const mapDispatchToProps=(dispatch)=>{
+  return{
+    getRecentBuzz: () => dispatch(actions.fetchBuzz())
+  }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(CreateBuzz);
 
 

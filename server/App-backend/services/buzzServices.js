@@ -18,7 +18,9 @@ module.exports.createBuzz=async(data)=>{
 }
 
 module.exports.getAll = async (limit,skip) => {
-  const allBuzz = await buzz.find().limit(limit?limit:0).skip(skip?skip:0);
+  const allBuzz = await buzz.find().sort({
+    createdOn: -1,
+  }).limit(limit?limit:0).skip(skip?skip:0);
   return allBuzz;
 };
 
@@ -39,4 +41,9 @@ module.exports.updateLikesorDislikes= async ({ id }, likes, reverse) => {
 }catch(err){
     console.log(err);
 }
+};
+
+module.exports.deleteAll = async () => {
+  const response = await buzz.remove();
+  return response;
 };

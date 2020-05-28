@@ -1,6 +1,6 @@
 import React from 'react';
 import CreateBuzz from './CreateBuzz/CreateBuzz';
-import RecentBuzz from './RecentBuzz/RecentBuzz';
+import RecentBuzz from '../containers/RecentBuzz';
 
 const BuzzPage=(props)=>{
     return(

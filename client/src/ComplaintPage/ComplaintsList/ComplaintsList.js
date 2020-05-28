@@ -4,27 +4,12 @@ import styles from './ComplaintsList.module.css';
 class complaintsList extends Component {
   render() {
     return (
-      <div className={styles.complaintsList}>
-        <h4>Your Complaints</h4>
-        <table>
-            <thead>
           <tr>
-            <th>Department</th>
-            <th>Issue Id</th>
-            <th>Assigned To</th>
-            <th>Status</th>
+            <td>{this.props.department}</td>
+            <td>{this.props.issueid}</td>
+            <td>{this.props.assignedto}</td>
+            <td>{this.props.status}</td>
           </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td>Admin</td>
-            <td>123456</td>
-            <td>Shefali Goyal</td>
-            <td>Open</td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
     );
   }
 }

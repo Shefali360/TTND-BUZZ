@@ -4,7 +4,7 @@ import axios from "axios";
 export const buzzReceived = (data) => {
   return {
     type: actionTypes.BUZZ_RECEIVED,
-    data: data,
+    buzz: data,
   };
 };
 
@@ -17,12 +17,12 @@ export const buzzFailed = (err) => {
 
 export const fetchBuzz= () => {
   return (dispatch) => {
+    const token=JSON.parse(localStorage.getItem("token"));
     axios
       .get(
-        'http://localhost:3030/buzz',{headers:{"authorization":`Bearer ${token.access_token},Bearer ${token.id_token}`}}
+        'http://localhost:3030/buzz',{headers:{"authorization":`Bearer ${token.access_token},null`}}
       )
       .then((response) => {
-        console.log(response.data);
         dispatch(buzzReceived(response.data));
       })
       .catch((error) => {

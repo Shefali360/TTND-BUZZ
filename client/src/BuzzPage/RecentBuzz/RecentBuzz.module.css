@@ -1,14 +1,9 @@
 .recentBuzz{
-margin-top:20px;
-border:2px solid #ccc;
-border-radius:5px;
-margin-bottom: 10px;
+
 }
 
 .recentBuzz h4{
-    padding:10px 0px;
-    background-color: #eeeeee;
-    border-bottom: 2px solid #ccc;
+   
 }
 .recentBuzz h4:before{
     content:'\f1fa';

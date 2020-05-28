@@ -31,7 +31,7 @@ const buzzSchema = new Schema({
   },
   createdOn:{
     type:Number,
-    default:Date.now()
+    required:true
   }
 });
 

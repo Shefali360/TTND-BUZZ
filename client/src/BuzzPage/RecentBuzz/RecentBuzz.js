@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import styles from "./RecentBuzz.module.css";
-import thoughts from "../../Images/thoughts.jpeg";
+// import Corousel from '../../components/Corousel/Corousel';
 
 class RecentBuzz extends Component {
   state = {
@@ -27,7 +27,7 @@ class RecentBuzz extends Component {
         break;
       }
     }
-    if (defDuration === "now") return defDuration;
+    if (defDuration==="now") return defDuration;
     else {
       return `${Math.floor(durationQuantity)}${defDuration} ago`;
     }
@@ -49,41 +49,22 @@ class RecentBuzz extends Component {
   };
 
   render() {
-    const todayDate = new Date();
-    const time = todayDate.getTime();
-    // console.log(time);
-    const dayNum = todayDate.getDate();
-    const dayFormat = dayNum.length < 2 ? "0" + dayNum : dayNum;
-    const month = todayDate.getMonth() + 1;
-    const monthFormat = month < 10 ? "0" + month : month;
-    let dur = 1590464614832 - 1590264614832;
-    const email = "shefali.goyal@tothenew.com";
     return (
       <div className={styles.recentBuzz}>
-        <h4>Recent Buzz</h4>
         <div className={styles.buzzes}>
           <span className={styles.date}>
-            {dayFormat}/<br />
-            {monthFormat}
+            {this.props.dayFormat}/<br />
+            {this.props.monthFormat}
           </span>
           <div className={styles.rightDiv}>
-            <img src={thoughts} alt="Posted"></img>
-            <span className={styles.userId}>{email}</span>
-            <span className={styles.duration}>{this.timed(dur)}</span>
+           {(this.props.image)?<img src={this.props.image} alt={this.props.alt}></img>:null}
+            <span className={styles.userId}>{this.props.email}</span>
+            <span className={styles.duration}>{this.timed(this.props.duration)}</span>
             <p>
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry. Lorem Ipsum has been the industry's standard dummy text
-              ever since the 1500s, when an unknown printer took a galley of
-              type and scrambled it to make a type specimen book. It has
-              survived not only five centuries, but also the leap into
-              electronic typesetting, remaining essentially unchanged. It was
-              popularised in the 1960s with the release of Letraset sheets
-              containing Lorem Ipsum passages, and more recently with desktop
-              publishing software like Aldus PageMaker including versions of
-              Lorem Ipsum.
+              {this.props.description}
             </p>
             <div className={styles.reviews}>
-              <span className={styles.count}>{this.state.likeCount}</span>
+              <span className={styles.count}>{this.props.likeCount}</span>
               <button
                 onClick={() => this.toggleClick("like")}
                 className={styles.button}
@@ -96,7 +77,7 @@ class RecentBuzz extends Component {
                   }
                 ></i>
               </button>
-              <span className={styles.count}>{this.state.dislikeCount}</span>
+              <span className={styles.count}>{this.props.dislikeCount}</span>
               <button
                 onClick={() => this.toggleClick("dislike")}
                 className={styles.button}

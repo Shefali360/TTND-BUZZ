@@ -142,4 +142,15 @@
     border-radius:4px;
     margin-top:10px;
     background-color: #eee;
+    outline:0
+}
+
+/* .button:disabled{
+    
+} */
+
+.button:hover{
+    color:#fff;
+    background-color: #D8763A;
+    border:2px solid #D8763A;
 }

@@ -8,6 +8,7 @@ module.exports.createBuzz = async(req, res,next) => {
     paths.push(path.path);
   })}
   req.body.images=paths;
+  req.body.createdOn=Date.now();
   const myuserdata = req.data;
   req.body.userId=myuserdata.data.email;
   try{
@@ -18,6 +19,8 @@ module.exports.createBuzz = async(req, res,next) => {
    next(err);
   }
 };
+
+
 
 module.exports.getAll = async (req, res,next) => {
   try {
@@ -48,6 +51,16 @@ module.exports.updateDislikes = async (req, res) => {
   }
 };
 
+module.exports.delete = async (req, res) => {
+  try {
+    const response = await buzzService.delete();
+    res.send(response);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+};
+
 module.exports.handleUnknownRequests = (req, res, next) => {
   return next(new ResourceNotFound("requested resource not found", 404));
 };
+
