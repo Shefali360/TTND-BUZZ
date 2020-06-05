@@ -1,18 +1,18 @@
 import React from 'react';
 import './App.css';
 import {BrowserRouter as Router,Route,Switch} from 'react-router-dom';
-import BuzzPage from './BuzzPage/BuzzPage';
-import ComplaintPage from './ComplaintPage/ComplaintPage';
-import ResolvedPage from './ResolvedPage/ResolvedPage';
+import BuzzPage from './components/BuzzPage/BuzzPage';
+import ComplaintPage from './components/ComplaintPage/ComplaintPage';
+import ResolvedPage from './components/ResolvedPage/ResolvedPage';
 import About from './components/About/About';
 import Help from './components/Help/Help';
-import Login from './Login/Login';
-import AuthToken from './AuthToken/AuthToken';
-import Home from './Home/Home';
+import Login from './components/Login/Login';
+import AuthToken from './containers/AuthToken/AuthToken';
+import Home from './components/Home/Home';
 import Aux from './hoc/wrap/wrap';
-import PrivateRoute from './PrivateRoute/PrivateRoute';
-import AuthenticatedRoute from './AuthenticatedRoute/AuthenticatedRoute';
-import NotFound from './NotFound/NotFound';
+import PrivateRoute from './containers/PrivateRoute/PrivateRoute';
+import AuthenticatedRoute from './containers/AuthenticatedRoute/AuthenticatedRoute';
+// import NotFound from './NotFound/NotFound';
 
 function App() {
   return (

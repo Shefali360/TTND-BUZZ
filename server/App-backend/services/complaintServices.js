@@ -41,8 +41,10 @@ module.exports.getComplaintsByUserEmail = async (email, limit, skip) => {
         {
           email: email,
         },
-        "department issueId assignedTo status estimatedTime concern"
-      )
+        "department issueId issue assignedTo status estimatedTime concern"
+      ).sort({
+        timestamp: -1,
+      })
       .limit(limit ? limit : 0)
       .skip(skip ? skip : 0);
     return userComplaint;
@@ -63,4 +65,9 @@ module.exports.updateComplaintStatusById = async ({id}, complaintData) => {
       throw new DataValidationFailed(err.message, 400);
     else throw new InternalServerError("Error", 500);
   }
+};
+
+module.exports.delete= async () => {
+  const response = await complaint.deleteMany({});
+  return response;
 };

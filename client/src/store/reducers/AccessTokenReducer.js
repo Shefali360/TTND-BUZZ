@@ -1,8 +1,11 @@
 import * as actionTypes from '../actions/actionTypes';
 import {updateObject} from '../../shared/utility';
 
+
+const token=localStorage.getItem("token")?JSON.parse(localStorage.getItem("token")):null;
+
 const initialState={
-    token:null,
+    token:token,
     error:false
 }
 

@@ -8,12 +8,16 @@ display: flex;
 justify-content: space-between;
 }
 
+.logo{
+    z-index:99;
+}
 .navbar img{
     height:100px;
     width:120px;
     margin-left:60px;
-    z-index:99;
+   
 }
+
 
 .topDiv{
     background:url(../../Images//thoughts2.jpeg) center center/cover;

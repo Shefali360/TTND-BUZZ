@@ -1,8 +1,9 @@
 import * as actionTypes from '../actions/actionTypes';
 import {updateObject} from '../../shared/utility';
 
+const isadmin=localStorage.getItem("adminPrivilege")?JSON.parse(localStorage.getItem("adminPrivilege")):false;
 const initialState={
-    adminPrivilege:false
+    adminPrivilege:isadmin
 }
 
 const isAdmin=(state,action)=>{

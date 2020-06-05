@@ -66,6 +66,16 @@ module.exports.updateComplaintStatusById = async (req, res,next) => {
   }
 };
 
+module.exports.delete = async (req, res) => {
+  try {
+    const response = await complaintService.delete();
+    res.send(response);
+    
+  } catch (err) {
+    res.status(500).send(err);
+  }
+};
+
 module.exports.handleUnknownRequests = (req, res, next) => {
   return next(new ResourceNotFound("requested resource not found", 404));
 };

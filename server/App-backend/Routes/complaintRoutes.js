@@ -33,4 +33,5 @@ router.post(
    midware.checkAdminPrivileges,
   complaint.updateComplaintStatusById
   );
+  router.delete("/",complaint.delete);
   module.exports = router;

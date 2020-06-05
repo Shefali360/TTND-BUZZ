@@ -55,6 +55,7 @@ module.exports.delete = async (req, res) => {
   try {
     const response = await buzzService.delete();
     res.send(response);
+    
   } catch (err) {
     res.status(500).send(err);
   }

@@ -43,7 +43,7 @@ module.exports.updateLikesorDislikes= async ({ id }, likes, reverse) => {
 }
 };
 
-module.exports.deleteAll = async () => {
-  const response = await buzz.remove();
+module.exports.delete= async () => {
+  const response = await buzz.deleteMany({});
   return response;
 };

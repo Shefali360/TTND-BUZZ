@@ -11,7 +11,7 @@ const Navbar=(props)=>{
         <ul className={styles.list}>
             <NavbarItem link="/buzz" >BUZZ</NavbarItem>
             <NavbarItem link="/complaint">COMPLAINTS</NavbarItem>
-            {(props.admin||isAdmin)?<NavbarItem link="/resolved">RESOLVED</NavbarItem>:null}
+            {(props.admin)?<NavbarItem link="/resolved">RESOLVED</NavbarItem>:null}
         </ul>
         <Footer/>
         </Aux>
@@ -20,7 +20,7 @@ const Navbar=(props)=>{
 }
 
 const mapStateToProps = (state) => {
-    
+    console.log(state.adminCheck.adminPrivilege);
     return {
         admin:state.adminCheck.adminPrivilege
     }

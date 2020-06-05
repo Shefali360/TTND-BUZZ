@@ -1,13 +1,14 @@
 import React from "react";
 import logo from "../../Images/logo.jpeg";
 import styles from "./TopDiv.module.css";
-import Logout from '../../Logout/Logout';
+import Logout from '../../containers/Logout/Logout';
+import {Link} from 'react-router-dom';
 
 const TopDiv = (props) => {
   return (
     <div className={styles.top}>
       <nav className={styles.navbar}>
-       <img src={logo} alt="TTN Logo" />
+       <Link className={styles.logo} to="/buzz"><img src={logo} alt="TTN Logo" /></Link>
       <Logout/>
       </nav>
       <div className={styles.topDiv}>
