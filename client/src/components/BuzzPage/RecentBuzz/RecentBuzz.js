@@ -48,7 +48,7 @@ class RecentBuzz extends Component {
       .then(res => {console.log(res)})
       .catch(err => {});
       
-      if(this.state.dislike) {
+      if(this.state.disliked) {
         this.setState({
           dislikeCount: this.state.dislikeCount - 1,
           disliked: false,
@@ -66,11 +66,11 @@ class RecentBuzz extends Component {
       .then(res => {console.log(res)})
       .catch(err => {});
     }
+    
   };
 
   toggleDislike = () => {
     const token=JSON.parse(localStorage.getItem("token"));
-    
     const dislike = !this.state.disliked;
     if(dislike) {
       this.setState({
