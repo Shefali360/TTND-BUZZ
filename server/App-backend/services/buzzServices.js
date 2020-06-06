@@ -20,7 +20,7 @@ module.exports.createBuzz=async(data)=>{
 module.exports.getAll = async (limit,skip) => {
   const allBuzz = await buzz.find().sort({
     createdOn: -1,
-  }).limit(limit?limit:0).skip(skip?skip:0);
+  }).skip(skip?skip:0).limit(limit?limit:0);
   return allBuzz;
 };
 

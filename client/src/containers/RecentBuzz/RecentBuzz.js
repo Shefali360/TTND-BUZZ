@@ -1,44 +1,51 @@
 import React, { Component } from "react";
-import * as actions from "../../store/actions/index";
-import { connect } from "react-redux";
+// import * as actions from "../../store/actions/index";
+// import { connect } from "react-redux";
 import Spinner from '../../components/Spinner/Spinner';
 import RecentBuzz from '../../components/BuzzPage/RecentBuzz/RecentBuzz';
 import styles from './RecentBuzz.module.css';
 import InfiniteScroll from 'react-infinite-scroller';
+import axios from 'axios';
 
 class RecentBuzzData extends Component {
-
   state={
-    items:5,
-    hasMoreItems:true,
-   
+    buzz:[],
+    error:false,
+    skip:0
   }
 
-  limit = 5;
-  // showItems() {
-  //   var items = [];
-  //   for (var i = 0; i < this.state.items; i++) {
-  //     items.push(<li key={i}> Item {i} </li>);
-  //   }
-  //   return items;
-  // }
+  limit= 5;
 
-  // loadMore() {  
-  //   this.props.getRecentBuzz(this.props.skip || 0, this.limit);
-  // }
-
+  getBuzz=()=>{
+    const token=JSON.parse(localStorage.getItem("token"));
+    console.log(this.state.skip);
+    axios
+      .get(
+        `http://localhost:3030/buzz?skip=${this.state.skip}&limit=${this.limit}`, {headers:{"authorization":`Bearer ${token.access_token},null`}}
+      ).then((res)=>{
+        console.log(res.data);
+        const buzz = Array.from(this.state.buzz);
+        buzz.push(...res.data);
+        this.setState({
+          buzz: buzz,
+          skip:this.state.skip + 5,
+          hasMore:!(res.data.length<this.limit)})
+      }).catch((err)=>{
+        console.log(err);
+        this.setState({error:true})
+      })
+  }
+  
   componentDidMount() {
-    this.props.getRecentBuzz();
+    this.getBuzz();
   }
+
   render() {
-   
-    let buzzData=this.props.error?<p>Buzz data can't be loaded</p>:<Spinner/>;
-    console.log(this.props.buzz);
-     if (this.props.buzz.length!==0) {
-      let count = this.props.buzz;
-
+    let buzzData=this.state.error?<p>Buzz data can't be loaded</p>:<Spinner/>;
+    console.log(this.state.buzz);
+     if (this.state.buzz.length!==0) {
+      let count = this.state.buzz;
       buzzData = count.map((buzz) => {
-
       const todayDate = new Date();
       const time = todayDate.getTime();
       let dur =time-buzz.createdOn;
@@ -68,33 +75,35 @@ class RecentBuzzData extends Component {
 
       <div className={styles.mainDiv}>
       <h4 className={styles.heading}>Recent Buzz</h4>
-        {/* <InfiniteScroll
-              loadMore={this.loadMore.bind(this)}
-              hasMore={this.props.hasMore}
-              loader={<div className="loader"> Loading... </div>}
-              useWindow={false}
-        > */}
-                
-              {/* </InfiniteScroll> */}
       <ul className={styles.List}>
+      <InfiniteScroll
+              loadMore={this.getBuzz}
+              hasMore={this.state.hasMore}
+              loader={<Spinner key={1}/>}
+              useWindow={false}
+              initialLoad={false}
+        >
       {buzzData}
+      </InfiniteScroll>
        </ul>
       </div>
     );
 }
 
 }
-const mapStateToProps = (state) => {
-  console.log(state.recentBuzz.recentBuzz);
-  return {
-   buzz:state.recentBuzz.recentBuzz,
-   error:state.recentBuzz.error
-  };
-};
+// const mapStateToProps = (state) => {
+//   // console.log(state.recentBuzz.recentBuzz);
+//   return {
+//    buzz:state.recentBuzz.recentBuzz?state.recentBuzz.recentBuzz.data:[],
+//    skip:state.recentBuzz.recentBuzz?state.recentBuzz.recentBuzz.skip:0,
+//    hasMore:state.recentBuzz.recentBuzz?state.recentBuzz.recentBuzz.hasMore:null,
+//    error:state.recentBuzz.error
+//   };
+// };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    getRecentBuzz: () => dispatch(actions.fetchBuzz())
-  };
-};
-export default connect(mapStateToProps, mapDispatchToProps)(RecentBuzzData);
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     getRecentBuzz: (skip,limit) => dispatch(actions.fetchBuzz(skip,limit))
+//   };
+// };
+export default RecentBuzzData;

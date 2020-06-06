@@ -26,7 +26,8 @@ module.exports.getAll = async (req, res,next) => {
   try {
     const limitCount=req.query.limit;
     const skipCount=req.query.skip;
-    const response = await buzzService.getAll(Number(limitCount,skipCount));
+    console.log(limitCount);
+    const response = await buzzService.getAll(Number(limitCount), Number(skipCount));
     res.send(response);
   } catch (err) {
     return next( new ServerError("Error",500));

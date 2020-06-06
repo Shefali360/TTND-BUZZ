@@ -2,16 +2,13 @@ import * as actionTypes from '../actions/actionTypes';
 import {updateObject} from '../../shared/utility';
 
 const initialState={
-    recentBuzz:[]
+    recentBuzz:null
 }
 
 const buzzReceived=(state,action)=>{
-    let arr=[];
-    arr=action.buzz
-    // console.log(arr);
     console.log(" Buzz Recieved Successfully");
     return(updateObject(state,{
-        recentBuzz:arr
+        recentBuzz:action.buzz
      }))
     
 }

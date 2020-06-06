@@ -19,7 +19,7 @@ const Navbar=(props)=>{
 }
 
 const mapStateToProps = (state) => {
-    console.log(state.adminCheck.adminPrivilege);
+    // console.log(state.adminCheck.adminPrivilege);
     return {
         admin:state.adminCheck.adminPrivilege
     }
