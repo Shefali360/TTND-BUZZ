@@ -12,7 +12,7 @@ class ComplaintPage extends Component{
 
   componentDidMount() {
     const token=JSON.parse(localStorage.getItem("token"));
-    axios.get("https://oauth2.googleapis.com/tokeninfo" + `?id_token=${token.id_token}`)
+    axios.get(`https://oauth2.googleapis.com/tokeninfo?id_token=${token.id_token}`)
     .then(res => {
       this.setState({
         userName: res.data.name,

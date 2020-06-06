@@ -1,42 +1,44 @@
-import React, { Component } from "react";
-import styles from './ComplaintsList.module.css';
-import { connect } from "react-redux";
-import ComplaintPopup from '../../../components/ComplaintPopup/ComplaintPopup';
+// import React, { Component } from "react";
+// import styles from './ComplaintsList.module.css';
+// import { connect } from "react-redux";
+// import ComplaintPopup from '../../../components/ComplaintPopup/ComplaintPopup';
 
-class complaintsList extends Component {
-  state={
-    issueId:null
-  }
-  render() {
-    let popup=null;
-    if (this.props.complaints.length!==0) {
-     
-       let count = this.props.complaints;
-      popup = count.map((complaint) => {
-        // this.setState({issueId:complaint.issueId});
-           return(
-            
-   <ComplaintPopup issueId={complaint.issueId} assignedTo={complaint.assignedTo}
-               department={complaint.department} issue={complaint.issue} concern={complaint.concern}
-               status={complaint.status}/>)
-           })
-       }
-    return (
-          <tr>
-            <td>{this.props.department}</td>
-            <td className={styles.issueId}>{this.props.issueid}</td>
-            <td>{this.props.assignedto}</td>
-            <td>{this.props.status}</td>
-          </tr>
-    );
-  }
-}
+// class complaintsList extends Component {
+//   state={
+//     issueId:null,
+//     complaintData:this.props.complaints
+//   }
 
-const mapStateToProps = (state) => {
-  return {
-   complaints:state.userComplaintList.complaintList,
-   error:state.userComplaintList.error
-  };
-};
+//   showComplaintInfo=(issueId)=>{
+//     console.log(this.state.complaintData);
+//     let complaintpopup=null;
+//     console.log(issueId);
+//     if(issueId===this.state.complaintData.issueId){          
+//    complaintpopup=(<ComplaintPopup issueId={this.state.complaintData.issueId} 
+//     assignedTo={this.state.complaintData.assignedTo}
+//    department={this.state.complaintData.department} issue={this.state.complaintData.issue} concern={this.state.complaintData.concern}
+//    status={this.state.complaintData.status}/>)
+//    console.log(complaintpopup);
+//    return complaintpopup;
+//     }
+//   }
+//   render() {
+//     return (
+//           <tr>
+//             <td>{this.props.department}</td>
+//             <td className={styles.issueId} onClick={(issueId)=>this.showComplaintInfo(this.props.issueId)}>{this.props.issueid}</td>
+//             <td>{this.props.assignedto}</td>
+//             <td>{this.props.status}</td>
+//           </tr>
+//     );
+//   }
+// }
 
-export default connect(mapStateToProps)(complaintsList);
+// const mapStateToProps = (state) => {
+//   return {
+//    complaints:state.userComplaintList.complaintList,
+//    error:state.userComplaintList.error
+//   };
+// };
+
+// export default connect(mapStateToProps)(complaintsList);

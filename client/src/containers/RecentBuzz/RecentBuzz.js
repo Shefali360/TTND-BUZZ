@@ -4,8 +4,28 @@ import { connect } from "react-redux";
 import Spinner from '../../components/Spinner/Spinner';
 import RecentBuzz from '../../components/BuzzPage/RecentBuzz/RecentBuzz';
 import styles from './RecentBuzz.module.css';
+import InfiniteScroll from 'react-infinite-scroller';
 
 class RecentBuzzData extends Component {
+
+  state={
+    items:5,
+    hasMoreItems:true,
+   
+  }
+
+  limit = 5;
+  // showItems() {
+  //   var items = [];
+  //   for (var i = 0; i < this.state.items; i++) {
+  //     items.push(<li key={i}> Item {i} </li>);
+  //   }
+  //   return items;
+  // }
+
+  // loadMore() {  
+  //   this.props.getRecentBuzz(this.props.skip || 0, this.limit);
+  // }
 
   componentDidMount() {
     this.props.getRecentBuzz();
@@ -25,7 +45,7 @@ class RecentBuzzData extends Component {
       let d=new Date(buzz.createdOn);
       const dayNum=d.getDate();
       const dayFormat = dayNum < 10 ? "0" + dayNum : dayNum;
-      const month=d.getMonth()+1;
+      const month=d.getMonth()+1;   
       const monthFormat = month < 10 ? "0" + month : month;
       let imageData=[];
       let altData=null;
@@ -48,12 +68,21 @@ class RecentBuzzData extends Component {
 
       <div className={styles.mainDiv}>
       <h4 className={styles.heading}>Recent Buzz</h4>
+        {/* <InfiniteScroll
+              loadMore={this.loadMore.bind(this)}
+              hasMore={this.props.hasMore}
+              loader={<div className="loader"> Loading... </div>}
+              useWindow={false}
+        > */}
+                
+              {/* </InfiniteScroll> */}
       <ul className={styles.List}>
-       {buzzData}
+      {buzzData}
        </ul>
       </div>
     );
 }
+
 }
 const mapStateToProps = (state) => {
   console.log(state.recentBuzz.recentBuzz);

@@ -1,0 +1,8 @@
+.popup{
+    height:200px;
+    width:400px;
+    background-color: #fff;
+    position:absolute;
+    text-align: center;
+    /* top:0; */
+}

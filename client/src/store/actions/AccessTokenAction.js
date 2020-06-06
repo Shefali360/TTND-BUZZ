@@ -24,9 +24,9 @@ export const fetchToken = () => {
         `http://localhost:3030/authToken/${encodeURIComponent(urlParams.code)}`
       )
       .then((response) => {
-        const expirationDate = new Date(
-          new Date().getTime() + response.data.expires_in * 1000
-        );
+        // const expirationDate = new Date(
+        //   new Date().getTime() + response.data.expires_in * 1000
+        // );
         localStorage.setItem("token",JSON.stringify(response.data));
         console.log(response.data);
         dispatch(tokenReceived(response.data));

@@ -15,14 +15,17 @@ export const buzzFailed = (err) => {
   };
 };
 
-export const fetchBuzz= () => {
+export const fetchBuzz= (skip, limit) => {
+  console.log("getBuzzzAction", skip, limit);
   return (dispatch) => {
     const token=JSON.parse(localStorage.getItem("token"));
     axios
       .get(
-        'http://localhost:3030/buzz',{headers:{"authorization":`Bearer ${token.access_token},null`}}
+        `http://localhost:3030/buzz`, {headers:{"authorization":`Bearer ${token.access_token},null`}}
       )
       .then((response) => {
+        // response.data['skip'] = skip + 5;
+        // response.data['hasMore'] = !(response.data.buzz.length < limit);
         dispatch(buzzReceived(response.data));
       })
       .catch((error) => {

@@ -1,29 +1,31 @@
-.mainDiv{
-border:2px solid #ccc;
-border-radius:5px;
-margin:20px 0px;
+.mainDiv {
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    margin: 20px 0px;
+    /* max-height:250px; */
 }
 
 
-.heading{
-    
-    padding:10px 0px;
-    padding-left:20px;
+.heading {
+
+    padding: 10px 0px;
+    padding-left: 20px;
     background-color: #eeeeee;
     border-bottom: 2px solid #ccc;
 }
 
 
-.List{
+.List {
     overflow-y: scroll;
     overflow-x: hidden;
-    max-height:1000px;
-    list-style-type:none;
-    
+    max-height: 350px;
+    list-style-type: none;
+
+
 }
 
-.List li{
-    border-bottom:2px solid #ccc;
+.List li {
+    border-bottom: 2px solid #ccc;
 }
 
 .List::-webkit-scrollbar {

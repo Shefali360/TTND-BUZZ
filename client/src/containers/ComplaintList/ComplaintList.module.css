@@ -3,6 +3,7 @@
     border-radius:5px;
     border:2px solid #ccc;
     margin-bottom: 20px;
+    position: relative;
 }
 
 .complaintsList h4{
@@ -33,4 +34,10 @@ td:last-child{
 }
 .complaintsList table,th,td{
     padding:10px;
+}
+
+.issueId{
+    color:blue;
+    text-decoration: underline;
+    cursor:pointer;
 }

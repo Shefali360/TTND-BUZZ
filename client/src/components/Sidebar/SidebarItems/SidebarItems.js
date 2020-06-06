@@ -4,7 +4,6 @@ import styles from './SidebarItems.module.css';
 import Footer from '../../Footer/Footer';
 import Aux from '../../../hoc/wrap/wrap';
 import { connect } from "react-redux";
-const isAdmin=JSON.parse(localStorage.getItem("adminPrivilege"));
 const Navbar=(props)=>{
     return (
         <Aux>
