@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Complaintbox from '../../containers/ComplaintBox/ComplaintBox';
 import ComplaintsList from "../../containers/ComplaintList/ComplaintList";
 import axios from 'axios';
+import { connect } from "react-redux";
 
 class ComplaintPage extends Component{
 
@@ -11,8 +12,7 @@ class ComplaintPage extends Component{
   }
 
   componentDidMount() {
-    const token=JSON.parse(localStorage.getItem("token"));
-    axios.get(`https://oauth2.googleapis.com/tokeninfo?id_token=${token.id_token}`)
+    axios.get(`https://oauth2.googleapis.com/tokeninfo?id_token=${this.props.data.id_token}`)
     .then(res => {
       this.setState({
         userName: res.data.name,
@@ -31,4 +31,10 @@ class ComplaintPage extends Component{
   }
 }
 
-export default ComplaintPage;
+const mapStateToProps = (state) => {
+  return {
+    data: state.auth.token,
+  };
+};
+
+export default connect(mapStateToProps)(ComplaintPage);

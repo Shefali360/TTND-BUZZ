@@ -57,7 +57,7 @@ const complaintSchema=new Schema({
       immutable:true
     },
     estimatedTime:{
-      value:{
+      count:{
         type:Number,
         default:0
       },

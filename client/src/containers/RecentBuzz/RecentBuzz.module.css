@@ -7,13 +7,17 @@
 
 
 .heading {
-
     padding: 10px 0px;
     padding-left: 20px;
     background-color: #eeeeee;
     border-bottom: 2px solid #ccc;
 }
 
+.heading i{
+    margin-right:8px;
+    font-weight: bold;
+    color:gray;
+}
 
 .List {
     overflow-y: scroll;

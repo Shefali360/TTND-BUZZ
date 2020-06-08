@@ -8,11 +8,11 @@ class Home extends Component {
     return (
       <div>
         <header>
-          <TopDiv />
+          <TopDiv/>
         </header>
         <main className={styles.post}>
           <nav className={styles.leftDiv}>
-            <Sidebar />
+            <Sidebar/>
           </nav>
           <div className={styles.rightDiv}>{this.props.children}</div>
         </main>

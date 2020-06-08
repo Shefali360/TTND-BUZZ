@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import styles from "./ComplaintBox.module.css";
 import axios from 'axios';
 import { connect } from "react-redux";
-import * as actions from "../../store/actions/index";
 
 class ComplaintBox extends Component{
 state = {
@@ -14,8 +13,6 @@ state = {
     error: false,
     formSubmitted:false
   };
-
-  baseState=this.state;
 
   fileChange=(event)=>{
     this.setState({files:event.target.files});
@@ -43,15 +40,15 @@ state = {
     formData.append("department",this.state.department);
     formData.append("issue",this.state.issue);
     formData.append("concern",this.state.concern);
-    const token = JSON.parse(localStorage.getItem("token"));
+    // const token = JSON.parse(localStorage.getItem("token"));
     axios
       .post("http://localhost:3030/complaint",formData,{
         headers:{
-          authorization:`Bearer ${token.access_token},Bearer ${token.id_token}`
+          authorization:`Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`
         },
       })
       .then((res) => {
-        this.props.getComplaintsList();
+        // this.props.getComplaintsList();
         this.setState({
           department: '',
           issue: '',
@@ -137,10 +134,10 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    getComplaintsList:()=>dispatch(actions.fetchComplaintList())
-  };
-};
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     getComplaintsList:()=>dispatch(actions.fetchComplaintList())
+//   };
+// };
 
-export default connect(mapStateToProps,mapDispatchToProps)(ComplaintBox);
+export default connect(mapStateToProps)(ComplaintBox);

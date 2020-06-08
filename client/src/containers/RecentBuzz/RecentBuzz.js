@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 // import * as actions from "../../store/actions/index";
-// import { connect } from "react-redux";
+import { connect } from "react-redux";
 import Spinner from '../../components/Spinner/Spinner';
+import Loader from '../../components/Loader/Loader';
 import RecentBuzz from '../../components/BuzzPage/RecentBuzz/RecentBuzz';
 import styles from './RecentBuzz.module.css';
 import InfiniteScroll from 'react-infinite-scroller';
@@ -17,13 +18,11 @@ class RecentBuzzData extends Component {
   limit= 5;
 
   getBuzz=()=>{
-    const token=JSON.parse(localStorage.getItem("token"));
-    console.log(this.state.skip);
+
     axios
       .get(
-        `http://localhost:3030/buzz?skip=${this.state.skip}&limit=${this.limit}`, {headers:{"authorization":`Bearer ${token.access_token},null`}}
+        `http://localhost:3030/buzz?skip=${this.state.skip}&limit=${this.limit}`, {headers:{"authorization":`Bearer ${this.props.data.access_token},null`}}
       ).then((res)=>{
-        console.log(res.data);
         const buzz = Array.from(this.state.buzz);
         buzz.push(...res.data);
         this.setState({
@@ -42,7 +41,6 @@ class RecentBuzzData extends Component {
 
   render() {
     let buzzData=this.state.error?<p>Buzz data can't be loaded</p>:<Spinner/>;
-    console.log(this.state.buzz);
      if (this.state.buzz.length!==0) {
       let count = this.state.buzz;
       buzzData = count.map((buzz) => {
@@ -74,12 +72,12 @@ class RecentBuzzData extends Component {
  return (
 
       <div className={styles.mainDiv}>
-      <h4 className={styles.heading}>Recent Buzz</h4>
+      <h4 className={styles.heading}><i className="fa fa-at"></i>Recent Buzz</h4>
       <ul className={styles.List}>
       <InfiniteScroll
               loadMore={this.getBuzz}
               hasMore={this.state.hasMore}
-              loader={<Spinner key={1}/>}
+              loader={<Loader key={1}/>}
               useWindow={false}
               initialLoad={false}
         >
@@ -91,6 +89,12 @@ class RecentBuzzData extends Component {
 }
 
 }
+
+const mapStateToProps = (state) => {
+  return {
+    data: state.auth.token,
+  };
+};
 // const mapStateToProps = (state) => {
 //   // console.log(state.recentBuzz.recentBuzz);
 //   return {
@@ -106,4 +110,4 @@ class RecentBuzzData extends Component {
 //     getRecentBuzz: (skip,limit) => dispatch(actions.fetchBuzz(skip,limit))
 //   };
 // };
-export default RecentBuzzData;
+export default connect(mapStateToProps)(RecentBuzzData);

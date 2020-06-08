@@ -4,7 +4,6 @@ import sharedStyles from "../../components/Dropdown/Dropdown.module.css";
 import Dropdown from "../../components/Dropdown/Dropdown";
 import { connect } from "react-redux";
 import axios from "axios";
-import * as actions from "../../store/actions/index";
 
 class CreateBuzz extends Component {
   state = {
@@ -42,16 +41,16 @@ class CreateBuzz extends Component {
     }
     formData.append("description",this.state.description);
     formData.append("category",this.state.category);
-    const token = JSON.parse(localStorage.getItem("token"));
-    console.log(token);
+    // const token = JSON.parse(localStorage.getItem("token"));
+    // console.log(token);
     axios
       .post("http://localhost:3030/buzz",formData,{
         headers:{
-          authorization:`Bearer ${token.access_token},Bearer ${token.id_token}`
+          authorization:`Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`
         },
       })
       .then((res) => {
-        this.props.getRecentBuzz();
+        // this.props.getRecentBuzz();
         this.setState({
           description: '',
           category: '',
@@ -131,12 +130,12 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps=(dispatch)=>{
-  return{
-    getRecentBuzz: () => dispatch(actions.fetchBuzz())
-  }
-}
+// const mapDispatchToProps=(dispatch)=>{
+//   return{
+//     getRecentBuzz: () => dispatch(actions.fetchBuzz())
+//   }
+// }
 
-export default connect(mapStateToProps,mapDispatchToProps)(CreateBuzz);
+export default connect(mapStateToProps)(CreateBuzz);
 
 

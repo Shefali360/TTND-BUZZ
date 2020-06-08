@@ -20,8 +20,24 @@
     table-layout:fixed;
 }
 
+.search{
+    width:200px;
+}
+
+.open{
+    color:#e04a32;
+}
+
+.progress{
+    color:#1a73e8;
+}
+
+.closed{
+    color:#2ec020;
+}
+
 td:last-child{
-    color:#D8763A;
+    font-weight:bold;
 }
 .complaintsList th{
     color:gray;

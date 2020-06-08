@@ -15,7 +15,6 @@ class AuthToken extends Component {
     console.log(a);
     if(a){
       this.props.checkAdmin();
-
       return <Redirect to ='/buzz'/>
     }else if(this.props.error){
       return <Redirect to ='/login'/>

@@ -20,7 +20,7 @@ module.exports.getAllComplaints = async (query, limit, skip) => {
     const userComplaints = await complaint
       .find(
         query,
-        "department issueId lockedBy assignedTo status estimatedTime concern timestamp"
+        "department issueId issue lockedBy assignedTo status estimatedTime concern timestamp"
       )
       .sort({
         timestamp: -1,
@@ -41,7 +41,7 @@ module.exports.getComplaintsByUserEmail = async (email, limit, skip) => {
         {
           email: email,
         },
-        "department issueId issue assignedTo status estimatedTime concern"
+        "department issueId issue assignedTo status estimatedTime concern timestamp"
       ).sort({
         timestamp: -1,
       })
@@ -49,6 +49,7 @@ module.exports.getComplaintsByUserEmail = async (email, limit, skip) => {
       .skip(skip ? skip : 0);
     return userComplaint;
   } catch (err) {
+    console.log(err);
     throw new ServerError("Error", 500);
   }
 };
@@ -59,8 +60,11 @@ module.exports.updateComplaintStatusById = async ({id}, complaintData) => {
   const response=await complaint.findByIdAndUpdate(id, {
     $set: complaintData,
   }, {runValidators: true, new: true}).exec();
+  console.log("Res",response);
     return response;
+
   } catch (err) {
+    console.log(err);
     if (err.name === "ValidationError")
       throw new DataValidationFailed(err.message, 400);
     else throw new InternalServerError("Error", 500);

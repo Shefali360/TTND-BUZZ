@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import styles from "./RecentBuzz.module.css";
 import Corousel from '../../Corousel/Corousel';
 import axios from 'axios';
+import { connect } from "react-redux";
 
 class RecentBuzz extends Component {
   
@@ -36,15 +37,13 @@ class RecentBuzz extends Component {
   };
 
   toggleLike = () => {
-    const token=JSON.parse(localStorage.getItem("token"));
-    
     const liked = !this.state.liked;
     if(liked) {
       this.setState({
         likeCount: this.state.likeCount + 1,
         liked: liked
       });
-      axios.patch(`http://localhost:3030/buzz/like/${this.props.id}`, null, {headers:{"authorization":`Bearer ${token.access_token},null`}})
+      axios.patch(`http://localhost:3030/buzz/like/${this.props.id}`, null, {headers:{"authorization":`Bearer ${this.props.data.access_token},null`}})
       .then(res => {console.log(res)})
       .catch(err => {});
       
@@ -53,7 +52,7 @@ class RecentBuzz extends Component {
           dislikeCount: this.state.dislikeCount - 1,
           disliked: false,
         });
-        axios.patch(`http://localhost:3030/buzz/dislike/${this.props.id}?reverse=1`, null,{headers:{"authorization":`Bearer ${token.access_token},null`}})
+        axios.patch(`http://localhost:3030/buzz/dislike/${this.props.id}?reverse=1`, null,{headers:{"authorization":`Bearer ${this.props.data.access_token},null`}})
         .then(res => {console.log(res)})
         .catch(err => {});
       }
@@ -62,7 +61,7 @@ class RecentBuzz extends Component {
         likeCount: this.state.likeCount - 1,
         liked: liked
       });
-      axios.patch(`http://localhost:3030/buzz/like/${this.props.id}?reverse=1`, null, {headers:{"authorization":`Bearer ${token.access_token},null`}})
+      axios.patch(`http://localhost:3030/buzz/like/${this.props.id}?reverse=1`, null, {headers:{"authorization":`Bearer ${this.props.data.access_token},null`}})
       .then(res => {console.log(res)})
       .catch(err => {});
     }
@@ -70,14 +69,14 @@ class RecentBuzz extends Component {
   };
 
   toggleDislike = () => {
-    const token=JSON.parse(localStorage.getItem("token"));
+
     const dislike = !this.state.disliked;
     if(dislike) {
       this.setState({
         dislikeCount: this.state.dislikeCount + 1,
         disliked: dislike
       });
-      axios.patch(`http://localhost:3030/buzz/dislike/${this.props.id}`, null, {headers:{"authorization":`Bearer ${token.access_token},null`}})
+      axios.patch(`http://localhost:3030/buzz/dislike/${this.props.id}`, null, {headers:{"authorization":`Bearer ${this.props.data.access_token},null`}})
       .then(res => {console.log(res)})
       .catch(err => {});
       
@@ -86,7 +85,7 @@ class RecentBuzz extends Component {
           likeCount: this.state.likeCount - 1,
           liked: false,
         });
-        axios.patch(`http://localhost:3030/buzz/like/${this.props.id}?reverse=1`, null, {headers:{"authorization":`Bearer ${token.access_token},null`}})
+        axios.patch(`http://localhost:3030/buzz/like/${this.props.id}?reverse=1`, null, {headers:{"authorization":`Bearer ${this.props.data.access_token},null`}})
         .then(res => {console.log(res)})
         .catch(err => {});
       }
@@ -95,7 +94,7 @@ class RecentBuzz extends Component {
         dislikeCount: this.state.dislikeCount - 1,
         disliked: dislike
       });
-      axios.patch(`http://localhost:3030/buzz/dislike/${this.props.id}?reverse=1`, null, {headers:{"authorization":`Bearer ${token.access_token},null`}})
+      axios.patch(`http://localhost:3030/buzz/dislike/${this.props.id}?reverse=1`, null, {headers:{"authorization":`Bearer ${this.props.data.access_token},null`}})
       .then(res => {console.log(res)})
       .catch(err => {});
     }
@@ -151,4 +150,11 @@ class RecentBuzz extends Component {
   }
 }
 
-export default RecentBuzz;
+const mapStateToProps = (state) => {
+  return {
+    data: state.auth.token,
+  };
+};
+
+
+export default connect(mapStateToProps)(RecentBuzz);

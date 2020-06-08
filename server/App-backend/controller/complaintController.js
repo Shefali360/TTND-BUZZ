@@ -35,7 +35,7 @@ module.exports.getAllComplaints = async (req, res, next) => {
   try {
     const response = await complaintService.getAllComplaints(
       req.query,
-      Number(limitCount,skipCount)
+      Number(limitCount),Number(skipCount)
     );
     res.send(response);
   } catch (err) {
@@ -49,7 +49,7 @@ module.exports.getComplaintsByUserEmail = async (req, res, next) => {
   try {
     const response = await complaintService.getComplaintsByUserEmail(
       userEmail,
-      Number(limitCount, skipCount)
+      Number(limitCount),Number(skipCount)
     );
     res.send(response);
   } catch (err) {

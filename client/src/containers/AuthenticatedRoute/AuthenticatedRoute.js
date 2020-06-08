@@ -1,12 +1,11 @@
 import React from 'react';
 import { connect } from "react-redux";
 import {Route,Redirect} from 'react-router-dom';
-const isAdmin=JSON.parse(localStorage.getItem("adminPrivilege"));
 const AuthenticatedRoute = (props) => (
  
     <Route {...props.routeProps} render={() => (
    
-   (props.admin||isAdmin)? (
+   (props.admin)? (
         <div>{props.children}</div>
         ) : (
         <Redirect to={{

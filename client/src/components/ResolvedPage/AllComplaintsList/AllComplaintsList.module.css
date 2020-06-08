@@ -9,7 +9,11 @@
 .table th i{
     margin-left:10px;
 }
-
+.table td:nth-child(2){
+    color:blue;
+    text-decoration: underline;
+    cursor: pointer;
+}
 .table td:last-child{
     position: relative;
 }
@@ -21,7 +25,18 @@
     border-bottom: 2px solid #ccc;
     padding:10px 0px;
 }
-
+.check{
+    align-self: center;
+    color:#e04a32;
+    font-size:20px;
+    cursor:pointer;
+}
+.undo{
+    align-self: center;
+    color:#2ec020;
+    font-size:20px;
+    cursor:pointer;
+}
 .search{
     border:1px solid #ccc;
     border-radius:5px;
@@ -29,6 +44,7 @@
 
 .search input{
     height:100%;
+    width:100px;
     padding-left:10px;
     outline:0;
     border:0px;
@@ -115,4 +131,27 @@
 
 .displaydiv{
     display:block;
+}
+
+.open{
+    color:#e04a32 !important;
+}
+
+.open option{
+    color:gray;
+}
+
+.progress{
+    color:#1a73e8 !important;
+}
+
+.progress option{
+    color:gray;
+}
+.closed{
+    color:#2ec020 !important;
+}
+
+.closed option{
+    color:gray;
 }

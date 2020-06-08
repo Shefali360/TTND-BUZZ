@@ -8,7 +8,6 @@ const initialState={
 const complaintListReceived=(state,action)=>{
     let arr=[];
     arr=action.complaintList;
-    console.log(" Complaint List Received Successfully");
     return(updateObject(state,{
         complaintList:arr
      }))

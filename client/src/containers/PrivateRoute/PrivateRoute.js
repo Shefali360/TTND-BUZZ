@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import {Route,Redirect} from 'react-router-dom';
 
 
-const token=JSON.parse(localStorage.getItem("token"));
+// const token=JSON.parse(localStorage.getItem("token"));
 // console.log(token);
 
 
