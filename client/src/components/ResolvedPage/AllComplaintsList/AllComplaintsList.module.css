@@ -5,7 +5,7 @@
 .table{
     table-layout:fixed;
 }
-
+.table tr:nth-child(even) { background: #eee; }
 .table th i{
     margin-left:10px;
 }
@@ -27,13 +27,13 @@
 }
 .check{
     align-self: center;
-    color:#e04a32;
+    color:#2ec020;
     font-size:20px;
     cursor:pointer;
 }
 .undo{
     align-self: center;
-    color:#2ec020;
+    color:#1a73e8;
     font-size:20px;
     cursor:pointer;
 }

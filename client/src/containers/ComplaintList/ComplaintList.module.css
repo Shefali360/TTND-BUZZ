@@ -18,7 +18,31 @@
     border-collapse: collapse;
     border-style: hidden;
     table-layout:fixed;
+    max-height:300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: block;
 }
+
+.complaintsList tbody {
+    display: table; 
+}
+
+.complaintsList thead, tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.complaintsList thead {
+    border-top: 0;
+    position: sticky;
+    top:0;
+    left:0;
+    background-color: #fff;
+}
+
+.complaintsList tr:nth-child(even) { background: #eee; }
 
 .search{
     width:200px;
@@ -41,14 +65,14 @@ td:last-child{
 }
 .complaintsList th{
     color:gray;
-    border:2px solid #ccc;
+    border:1px solid #ccc;
 }
 
 .complaintsList td{
     text-align: center;
-    border:2px solid #ccc;
+    border:1px solid #ccc;
 }
-.complaintsList table,th,td{
+.complaintsList th,td{
     padding:10px;
 }
 
@@ -56,4 +80,12 @@ td:last-child{
     color:blue;
     text-decoration: underline;
     cursor:pointer;
+}
+
+.infiniteScroll{
+   max-height:300px;
+}
+
+.tableContainer{
+    position: relative;
 }

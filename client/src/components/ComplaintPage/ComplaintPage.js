@@ -8,8 +8,10 @@ class ComplaintPage extends Component{
 
   state = {
     userName: '',
-    userMail: ''
+    userMail: '',
+    complaintSubmitted:{submitted:0}
   }
+
 
   componentDidMount() {
     axios.get(`https://oauth2.googleapis.com/tokeninfo?id_token=${this.props.data.id_token}`)
@@ -21,11 +23,15 @@ class ComplaintPage extends Component{
     })
   }
 
+  complaintSubmitted=(event)=>{
+    this.setState({complaintSubmitted:event});
+  }
+
   render(){
     return (
       <div>
-        <Complaintbox name={this.state.userName} mail={this.state.userMail} />
-        <ComplaintsList/>
+        <Complaintbox name={this.state.userName} mail={this.state.userMail}  submitted={this.complaintSubmitted} />
+        <ComplaintsList submitted={this.state.complaintSubmitted}/>
       </div>
     );
   }

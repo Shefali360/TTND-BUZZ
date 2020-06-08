@@ -23,23 +23,22 @@ class UserComplaintList extends Component {
     skip:0
   }
 
-  limit= 5;
+  limit= 10;
 
-  getComplaints=()=>{
+  getComplaints=(skip)=>{
     axios
-    .get(`http://localhost:3030/complaint`, {
+    .get(`http://localhost:3030/complaint?skip=${skip}&limit=${this.limit}`, {
       headers: {
         authorization: `Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`,
       },
     })
     .then((res) => {
-      console.log(res.data);
       const complaintsList = Array.from(this.state.complaintsList);
       complaintsList.push(...res.data);
       this.setState({
         complaintsList:complaintsList,
-        // skip:this.state.skip + 5,
-        // hasMore:!(res.data.length<this.limit)
+        skip:skip + 10,
+        hasMore:!(res.data.length<this.limit)
       })
       })
     .catch((err) => {
@@ -49,8 +48,15 @@ class UserComplaintList extends Component {
 
   }
   componentDidMount() {
-   this.getComplaints();
+   this.getComplaints(this.state.skip);
   }
+
+  componentDidUpdate(prevProps){
+    if(this.props.submitted.submitted!==prevProps.submitted.submitted){
+    this.setState({complaintsList:[]})
+    this.getComplaints(0);}
+  }
+
   handleFilterChange=(event)=>{
     this.setState({
       [event.target.name]:event.target.value
@@ -94,7 +100,6 @@ class UserComplaintList extends Component {
         },
       })
       .then((res) => {
-        console.log(res);
         this.setState({
           complaintsList: res.data
         });
@@ -126,7 +131,6 @@ class UserComplaintList extends Component {
 
 
   render() {
-
     let tableData = null;
     if (this.state.complaintsList.length !== 0) {
       let count = this.state.complaintsList;
@@ -177,6 +181,7 @@ class UserComplaintList extends Component {
           <i className={["fa fa-check",sharedStyles.check].join(' ')}onClick={this.applyFilters}></i>
           <i className={["fa fa-undo",sharedStyles.undo].join(' ')}  onClick={this.resetFilters}></i>
         </div>
+        <div className={styles.tableContainer}>
         <table>
           <thead>
             <tr>
@@ -186,22 +191,21 @@ class UserComplaintList extends Component {
               <th>Status</th>
             </tr>
           </thead>
-          {/* <InfiniteScroll
-              loadMore={this.getComplaints}
+          <InfiniteScroll
+              loadMore={()=>this.getComplaints(this.state.skip)}
               hasMore={this.state.hasMore}
-              loader={<Loader key={1}/>}
+              loader={<tr key={1}><td colSpan={4}><Loader/></td></tr>}
               useWindow={false}
               initialLoad={false}
-        > */}
-          <tbody>
-            {tableData}
-          </tbody>
-          {/* </InfiniteScroll> */}
+              element={'tbody'}>
+            {tableData||[]}
+            </InfiniteScroll>
         </table>
+        </div>
         {this.state.popupVisible ? <ComplaintPopup complaint={this.state.complaint} click={this.closePopup}/> : null }
         {this.state.error ? <p>Complaint List can't be loaded</p> : null}
         {!this.state.error && this.state.complaintsList.length === 0 ? (
-          <Spinner />
+          <Spinner/>
         ) : null}
       </div>
     );

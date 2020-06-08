@@ -14,6 +14,8 @@ state = {
     formSubmitted:false
   };
 
+  counter=0;
+
   fileChange=(event)=>{
     this.setState({files:event.target.files});
   }
@@ -48,7 +50,7 @@ state = {
         },
       })
       .then((res) => {
-        // this.props.getComplaintsList();
+        this.props.submitted({submitted:++this.counter});
         this.setState({
           department: '',
           issue: '',
