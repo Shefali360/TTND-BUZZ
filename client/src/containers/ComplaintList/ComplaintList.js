@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import * as actions from "../../store/actions/index";
 import { connect } from "react-redux";
 import Spinner from "../../components/Spinner/Spinner";
 import styles from "./ComplaintList.module.css";
@@ -8,9 +7,10 @@ import dropdownStyles from "../../components/Dropdown/Dropdown.module.css";
 import sharedStyles from "../../components/ResolvedPage/AllComplaintsList/AllComplaintsList.module.css";
 import axios from "axios";
 import {stringify} from "query-string";
+import InfiniteScroll from 'react-infinite-scroller';
+import Loader from '../../components/Loader/Loader';
 
 class UserComplaintList extends Component {
-
   state = {
     complaint:[],
     popupVisible: false,
@@ -18,11 +18,38 @@ class UserComplaintList extends Component {
     status:'',
     searchInput:'',
     filters:{},
-    allComplaintsList: []
+    complaintsList:[],
+    error:false,
+    skip:0
   }
 
+  limit= 5;
+
+  getComplaints=()=>{
+    axios
+    .get(`http://localhost:3030/complaint`, {
+      headers: {
+        authorization: `Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`,
+      },
+    })
+    .then((res) => {
+      console.log(res.data);
+      const complaintsList = Array.from(this.state.complaintsList);
+      complaintsList.push(...res.data);
+      this.setState({
+        complaintsList:complaintsList,
+        // skip:this.state.skip + 5,
+        // hasMore:!(res.data.length<this.limit)
+      })
+      })
+    .catch((err) => {
+      console.log(err);
+      this.setState({ error: true });
+    });
+
+  }
   componentDidMount() {
-    this.props.getUserComplaintList();
+   this.getComplaints();
   }
   handleFilterChange=(event)=>{
     this.setState({
@@ -56,11 +83,10 @@ class UserComplaintList extends Component {
     if(this.state.status){
       filters["status"]=this.state.status;
     }
-    if(this.state.search){
+    if(this.state.searchInput){
       filters["issueId"]=this.state.searchInput;
     }
     this.setState({filters:filters});
-    console.log(filters);
     axios
       .get("http://localhost:3030/complaint?"+stringify(filters),{
         headers: {
@@ -70,7 +96,7 @@ class UserComplaintList extends Component {
       .then((res) => {
         console.log(res);
         this.setState({
-          complaint: res.data,
+          complaintsList: res.data
         });
       })
       .catch((err) => {
@@ -81,7 +107,7 @@ class UserComplaintList extends Component {
   resetFilters=()=>{
     this.setState({filters:{}});
     axios
-      .get("http://localhost:3030/complaint/all",{
+      .get("http://localhost:3030/complaint",{
         headers: {
           authorization:`Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`,
         },
@@ -89,7 +115,7 @@ class UserComplaintList extends Component {
       .then((res) => {
         console.log(res);
         this.setState({
-          complaint: res.data,
+          complaintsList: res.data,
         });
       })
       .catch((err) => {
@@ -102,8 +128,8 @@ class UserComplaintList extends Component {
   render() {
 
     let tableData = null;
-    if (this.props.complaints.length !== 0) {
-      let count = this.props.complaints;
+    if (this.state.complaintsList.length !== 0) {
+      let count = this.state.complaintsList;
       tableData = count.map((complaint) => {
         return (
             <tr key={complaint._id}>
@@ -160,13 +186,21 @@ class UserComplaintList extends Component {
               <th>Status</th>
             </tr>
           </thead>
+          {/* <InfiniteScroll
+              loadMore={this.getComplaints}
+              hasMore={this.state.hasMore}
+              loader={<Loader key={1}/>}
+              useWindow={false}
+              initialLoad={false}
+        > */}
           <tbody>
             {tableData}
           </tbody>
+          {/* </InfiniteScroll> */}
         </table>
         {this.state.popupVisible ? <ComplaintPopup complaint={this.state.complaint} click={this.closePopup}/> : null }
-        {this.props.error ? <p>Complaint List can't be loaded</p> : null}
-        {!this.props.error && this.props.complaints.length === 0 ? (
+        {this.state.error ? <p>Complaint List can't be loaded</p> : null}
+        {!this.state.error && this.state.complaintsList.length === 0 ? (
           <Spinner />
         ) : null}
       </div>
@@ -175,15 +209,8 @@ class UserComplaintList extends Component {
 }
 const mapStateToProps = (state) => {
   return {
-    data: state.auth.token,
-    complaints: state.userComplaintList.complaintList,
-    error: state.userComplaintList.error,
+    data: state.auth.token
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    getUserComplaintList: () => dispatch(actions.fetchComplaintList()),
-  };
-};
-export default connect(mapStateToProps, mapDispatchToProps)(UserComplaintList);
+export default connect(mapStateToProps)(UserComplaintList);

@@ -26,8 +26,9 @@ module.exports.getAll = async (req, res,next) => {
   try {
     const limitCount=req.query.limit;
     const skipCount=req.query.skip;
+    const email = req.data.data.email;
     console.log(limitCount);
-    const response = await buzzService.getAll(Number(limitCount), Number(skipCount));
+    const response = await buzzService.getAll(email,Number(limitCount), Number(skipCount));
     res.send(response);
   } catch (err) {
     return next( new ServerError("Error",500));
@@ -36,7 +37,8 @@ module.exports.getAll = async (req, res,next) => {
 
 module.exports.updateLikes = async (req, res) => {
   try {
-    const response = await buzzService.updateLikesorDislikes(req.params, true,req.query.reverse);
+    const email = req.data.data.email;
+    const response = await buzzService.updateLikes(req.params,email,req.query.reverse);
     res.send(response);
   } catch (err) {
     return next(new ServerError("Error",500));
@@ -45,7 +47,8 @@ module.exports.updateLikes = async (req, res) => {
 
 module.exports.updateDislikes = async (req, res) => {
   try {
-    const response = await buzzService.updateLikesorDislikes(req.params, false,req.query.reverse);
+    const email = req.data.data.email;
+    const response = await buzzService.updateDislikes(req.params,email,req.query.reverse);
     res.send(response);
   } catch (err) {
     return next(new ServerError("Error",500));

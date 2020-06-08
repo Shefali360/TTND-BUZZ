@@ -19,7 +19,7 @@ const ComplaintPopup=(props)=>{
          <p className={styles.status}>({complaint.status})</p>
          </div>
          <p className={styles.text}>Logged On:{dayFormat}/{monthFormat}/{year}</p>
-        {(complaint.status==="In Progress")?<p className={styles.time}>Estimated time:{complaint.estimatedTime.count} {complaint.estimatedTime.timeType}</p>:null}
+        {(complaint.status==="In Progress")?<p className={styles.text}>Estimated time:{complaint.estimatedTime.count} {complaint.estimatedTime.timeType}</p>:null}
         {(complaint.lockedBy)?<p className={styles.text}>Locked By:{complaint.lockedBy}</p>:null}
         <p className={styles.assignedTo}>Assigned To:{complaint.assignedTo}</p>
          <div className={styles.column2}>

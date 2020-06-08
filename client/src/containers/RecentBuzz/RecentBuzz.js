@@ -12,7 +12,8 @@ class RecentBuzzData extends Component {
   state={
     buzz:[],
     error:false,
-    skip:0
+    skip:0,
+    hasMore:false
   }
 
   limit= 5;
@@ -21,7 +22,7 @@ class RecentBuzzData extends Component {
 
     axios
       .get(
-        `http://localhost:3030/buzz?skip=${this.state.skip}&limit=${this.limit}`, {headers:{"authorization":`Bearer ${this.props.data.access_token},null`}}
+        `http://localhost:3030/buzz?skip=${this.state.skip}&limit=${this.limit}`, {headers:{"authorization":`Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token} `}}
       ).then((res)=>{
         const buzz = Array.from(this.state.buzz);
         buzz.push(...res.data);
@@ -62,9 +63,12 @@ class RecentBuzzData extends Component {
       }
             return (
               <li key={buzz._id} >
-                <RecentBuzz email={buzz.userId} description={buzz.description} likeCount={buzz.likes} dislikeCount={buzz.dislikes}
+                <RecentBuzz 
+                email={buzz.userId} description={buzz.description} likeCount={buzz.likes} dislikeCount={buzz.dislikes}
                 dayFormat={dayFormat} monthFormat={monthFormat}
-                 duration={dur} images={imageData} alt={altData} id={buzz._id}/>
+                 duration={dur} images={imageData} alt={altData} id={buzz._id} liked={buzz.liked}
+                 disliked={buzz.disliked}
+                 />
               </li>
             );
        });

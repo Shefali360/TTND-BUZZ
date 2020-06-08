@@ -44,15 +44,17 @@ module.exports.getAllComplaints = async (req, res, next) => {
 };
 module.exports.getComplaintsByUserEmail = async (req, res, next) => {
   const userEmail = req.data.data.email;
+  req.query["email"]=userEmail;
   const limitCount = req.query.limit;
   const skipCount = req.query.skip;
   try {
     const response = await complaintService.getComplaintsByUserEmail(
-      userEmail,
+      req.query,
       Number(limitCount),Number(skipCount)
     );
     res.send(response);
   } catch (err) {
+   
     next(err);
   }
 };

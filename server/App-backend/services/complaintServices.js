@@ -34,20 +34,20 @@ module.exports.getAllComplaints = async (query, limit, skip) => {
   }
 };
 
-module.exports.getComplaintsByUserEmail = async (email, limit, skip) => {
+module.exports.getComplaintsByUserEmail = async (query, limit, skip) => {
   try {
     const userComplaint = await complaint
       .find(
-        {
-          email: email,
-        },
+        query,
         "department issueId issue assignedTo status estimatedTime concern timestamp"
       ).sort({
         timestamp: -1,
       })
       .limit(limit ? limit : 0)
       .skip(skip ? skip : 0);
+      console.log(userComplaint);
     return userComplaint;
+   
   } catch (err) {
     console.log(err);
     throw new ServerError("Error", 500);

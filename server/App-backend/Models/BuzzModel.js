@@ -23,6 +23,14 @@ const buzzSchema = new Schema({
       type:Number,
       default:0
   },
+  likedBy:{
+      type:[String],
+      default:[]
+  },
+  dislikedBy:{
+    type:[String],
+    default:[]
+  },
   userId:{
       type:String,
       required:true,

@@ -1,16 +1,17 @@
 import React, { Component } from "react";
 import styles from "./RecentBuzz.module.css";
-import Corousel from '../../Corousel/Corousel';
-import axios from 'axios';
+import Corousel from "../../Corousel/Corousel";
+import axios from "axios";
 import { connect } from "react-redux";
+import Loader from '../../../components/Loader/Loader';
 
 class RecentBuzz extends Component {
-  
   state = {
     likeCount: this.props.likeCount || 0,
     dislikeCount: this.props.dislikeCount || 0,
-    liked: false,
-    disliked: false,
+    liked: this.props.liked || false,
+    disliked: this.props.disliked || false,
+    updateReview:false
   };
 
   timed = (duration) => {
@@ -30,73 +31,136 @@ class RecentBuzz extends Component {
         break;
       }
     }
-    if (defDuration==="now") return defDuration;
+    if (defDuration === "now") return defDuration;
     else {
       return `${Math.floor(durationQuantity)}${defDuration} ago`;
     }
   };
 
   toggleLike = () => {
+    this.setState({updateReview:true});
     const liked = !this.state.liked;
-    if(liked) {
+    if (liked) {
       this.setState({
         likeCount: this.state.likeCount + 1,
-        liked: liked
+        liked: liked,
       });
-      axios.patch(`http://localhost:3030/buzz/like/${this.props.id}`, null, {headers:{"authorization":`Bearer ${this.props.data.access_token},null`}})
-      .then(res => {console.log(res)})
-      .catch(err => {});
-      
-      if(this.state.disliked) {
+      axios
+        .patch(`http://localhost:3030/buzz/like/${this.props.id}`, null, {
+          headers: {
+            authorization: `Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`,
+          },
+        })
+        .then((res) => {
+          this.setState({updateReview:false});
+          console.log(res);
+        })
+        .catch((err) => {this.setState({updateReview:false});});
+
+      if (this.state.disliked) {
         this.setState({
           dislikeCount: this.state.dislikeCount - 1,
           disliked: false,
         });
-        axios.patch(`http://localhost:3030/buzz/dislike/${this.props.id}?reverse=1`, null,{headers:{"authorization":`Bearer ${this.props.data.access_token},null`}})
-        .then(res => {console.log(res)})
-        .catch(err => {});
+        axios
+          .patch(
+            `http://localhost:3030/buzz/dislike/${this.props.id}?reverse=1`,
+            null,
+            {
+              headers: {
+                authorization: `Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`,
+              },
+            }
+          )
+          .then((res) => {
+            this.setState({updateReview:false});
+          })
+          .catch((err) => {this.setState({updateReview:false});});
       }
     } else {
       this.setState({
         likeCount: this.state.likeCount - 1,
-        liked: liked
+        liked: liked,
       });
-      axios.patch(`http://localhost:3030/buzz/like/${this.props.id}?reverse=1`, null, {headers:{"authorization":`Bearer ${this.props.data.access_token},null`}})
-      .then(res => {console.log(res)})
-      .catch(err => {});
+      axios
+        .patch(
+          `http://localhost:3030/buzz/like/${this.props.id}?reverse=1`,
+          null,
+          {
+            headers: {
+              authorization: `Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`,
+            },
+          }
+        )
+        .then((res) => {
+          this.setState({updateReview:false});
+          console.log(res);
+        })
+        .catch((err) => {this.setState({updateReview:false});});
     }
-    
   };
 
   toggleDislike = () => {
-
     const dislike = !this.state.disliked;
-    if(dislike) {
+    this.setState({updateReview:true});
+    if (dislike) {
       this.setState({
         dislikeCount: this.state.dislikeCount + 1,
-        disliked: dislike
+        disliked: dislike,
       });
-      axios.patch(`http://localhost:3030/buzz/dislike/${this.props.id}`, null, {headers:{"authorization":`Bearer ${this.props.data.access_token},null`}})
-      .then(res => {console.log(res)})
-      .catch(err => {});
-      
-      if(this.state.liked) {
+      axios
+        .patch(`http://localhost:3030/buzz/dislike/${this.props.id}`, null, {
+          headers: {
+            authorization: `Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`,
+          },
+        })
+        .then((res) => {
+          this.setState({updateReview:false});
+          console.log(res);
+        })
+        .catch((err) => {this.setState({updateReview:false});});
+
+      if (this.state.liked) {
         this.setState({
           likeCount: this.state.likeCount - 1,
           liked: false,
         });
-        axios.patch(`http://localhost:3030/buzz/like/${this.props.id}?reverse=1`, null, {headers:{"authorization":`Bearer ${this.props.data.access_token},null`}})
-        .then(res => {console.log(res)})
-        .catch(err => {});
+        axios
+          .patch(
+            `http://localhost:3030/buzz/like/${this.props.id}?reverse=1`,
+            null,
+            {
+              headers: {
+                authorization: `Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`,
+              },
+            }
+          )
+          .then((res) => {
+            this.setState({updateReview:false});
+            console.log(res);
+          })
+          .catch((err) => {this.setState({updateReview:false});});
       }
     } else {
       this.setState({
         dislikeCount: this.state.dislikeCount - 1,
-        disliked: dislike
+        disliked: dislike,
       });
-      axios.patch(`http://localhost:3030/buzz/dislike/${this.props.id}?reverse=1`, null, {headers:{"authorization":`Bearer ${this.props.data.access_token},null`}})
-      .then(res => {console.log(res)})
-      .catch(err => {});
+      axios
+        .patch(
+          `http://localhost:3030/buzz/dislike/${this.props.id}?reverse=1`,
+          null,
+          {
+            headers: {
+              authorization: `Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`,
+            },
+          }
+        )
+        .then((res) => {
+          this.setState({updateReview:false});
+          console.log(res);
+        })
+        .catch((err) => {this.setState({updateReview:false});});
     }
   };
 
@@ -109,13 +173,16 @@ class RecentBuzz extends Component {
             {this.props.monthFormat}
           </span>
           <div className={styles.rightDiv}>
-            {(this.props.images.length!==0)?<Corousel image={this.props.images}/>:null}
+            {this.props.images.length !== 0 ? (
+              <Corousel image={this.props.images} />
+            ) : null}
             <span className={styles.userId}>{this.props.email}</span>
-            <span className={styles.duration}>{this.timed(this.props.duration)}</span>
-            <p>
-              {this.props.description}
-            </p>
-            <div className={styles.reviews}>
+            <span className={styles.duration}>
+              {this.timed(this.props.duration)}
+            </span>
+            <p>{this.props.description}</p>
+            <div className={styles.reviews+" "+(this.state.updateReview?styles.disableClick:null)}>
+              {/* {(this.state.updateReview)?<Loader/>:null} */}
               <span className={styles.count}>{this.state.likeCount}</span>
               <button
                 onClick={() => this.toggleLike()}
@@ -155,6 +222,5 @@ const mapStateToProps = (state) => {
     data: state.auth.token,
   };
 };
-
 
 export default connect(mapStateToProps)(RecentBuzz);

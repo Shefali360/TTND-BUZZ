@@ -1,10 +1,4 @@
-.recentBuzz{
 
-}
-
-.recentBuzz h4{
-   
-}
 .recentBuzz h4:before{
     content:'\f1fa';
     font-family:FontAwesome;
@@ -86,6 +80,10 @@
     margin-right:10px;
     cursor:pointer;
     background-color: white;
+}
+
+.disableClick{
+    pointer-events: none;
 }
 
 .Active{

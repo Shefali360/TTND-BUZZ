@@ -17,31 +17,90 @@ module.exports.createBuzz=async(data)=>{
 }
 }
 
-module.exports.getAll = async (limit,skip) => {
-  const allBuzz = await buzz.find().sort({
-    createdOn: -1,
-  }).skip(skip?skip:0).limit(limit?limit:0);
-  return allBuzz;
+module.exports.getAll = async (email,limit,skip) => {
+  try{
+  const allBuzz = await buzz.aggregate([
+    {
+        $addFields: {
+            liked: { $in: [email, "$likedBy"] },
+            disliked: { $in: [email, "$dislikedBy"] }
+        }
+    },
+    {
+        $project: {
+            likedBy: 0,
+            dislikedBy: 0
+        }
+    },
+    {
+        $sort: {
+            createdOn: -1
+        }
+    },
+    {
+        $skip: skip
+    },
+    {
+        $limit: limit
+    }
+]).exec();
+  return allBuzz;}
+  catch(err){
+    console.log(err);
+  }
 };
 
-module.exports.updateLikesorDislikes= async ({ id }, likes, reverse) => {
- try{ if (likes) {
-    await buzz.findByIdAndUpdate(id, {
-      $inc: {
-        likes: reverse ? -1 : 1,
-      },
-    });
-  } else {
-      await buzz.findByIdAndUpdate(id,{
-          $inc:{
-            dislikes:reverse?-1:1
-          }
-      })
+module.exports.updateLikes=async({id},email,reverse)=>{
+  try {
+      if (reverse)
+          await buzz.findByIdAndUpdate(id, {
+              $inc: {
+                  likes: -1
+              },
+              $pull: {
+                  likedBy: email
+              }
+          });
+      else
+          await buzz.findByIdAndUpdate(id, {
+              $inc: {
+                  likes: 1
+              },
+              $push: {
+                  likedBy: email
+              },
+          });
+        return {success:true};
+  } catch (err) {
+      console.log(err);
   }
-}catch(err){
-    console.log(err);
 }
-};
+
+module.exports.updateDislikes=async({id},email,reverse)=>{
+  try {
+      if (reverse)
+          await buzz.findByIdAndUpdate(id, {
+              $inc: {
+                  dislikes: -1
+              },
+              $pull: {
+                  dislikedBy: email
+              }
+          });
+      else
+          await buzz.findByIdAndUpdate(id, {
+              $inc: {
+                  dislikes: 1
+              },
+              $push: {
+                  dislikedBy: email
+              },
+          });
+        return {success:true};
+  } catch (err) {
+      console.log(err);
+  }
+}
 
 module.exports.delete= async () => {
   const response = await buzz.deleteMany({});
