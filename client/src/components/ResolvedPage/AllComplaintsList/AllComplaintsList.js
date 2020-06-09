@@ -7,6 +7,9 @@ import { connect } from "react-redux";
 import Spinner from "../../../components/Spinner/Spinner";
 import ComplaintPopup from "../../ComplaintPopup/ComplaintPopup";
 import {stringify} from "query-string";
+import InfiniteScroll from 'react-infinite-scroller';
+import Loader from '../../../components/Loader/Loader';
+import errorStyles from '../../../containers/RecentBuzz/RecentBuzz.module.css';
 
 class AllComplaintsList extends Component {
   state = {
@@ -28,25 +31,36 @@ class AllComplaintsList extends Component {
     searchInput:'',
     filters:{},
     submitDisabled: true,
+    skip:0,
+    formSubmitted:false
   };
   timePopupPosition;
+  limit=10;
+
+  getAllComplaintsList=()=>{
+    axios
+    .get(`http://localhost:3030/complaint/all?skip=${this.state.skip}&limit=${this.limit}&`+stringify(this.state.filters), {
+      headers: {
+        authorization: `Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`,
+      },
+    })
+    .then((res) => {
+      const allComplaintsList = Array.from(this.state.allComplaintsList);
+      allComplaintsList.push(...res.data);
+      this.setState({
+      allComplaintsList:allComplaintsList,
+      skip:this.state.skip + 10,
+      hasMore:!(res.data.length<this.limit)
+    })
+    })
+    .catch((err) => {
+      console.log(err);
+      this.setState({ error: true });
+    });
+  }
 
   componentDidMount() {
-    axios
-      .get("http://localhost:3030/complaint/all", {
-        headers: {
-          authorization: `Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`,
-        },
-      })
-      .then((res) => {
-        this.setState({
-          allComplaintsList: res.data,
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-        this.setState({ error: true });
-      });
+   this.getAllComplaintsList();
   }
 
   handleEstimatedTimeChange = (event) => {
@@ -59,7 +73,7 @@ class AllComplaintsList extends Component {
       () => {
         console.log(this.state.estimatedTime);
         if (
-          this.state.estimatedTime.count !== 0 &&
+         (this.state.estimatedTime.count !== ""||this.state.estimatedTime.count !== 0) &&
           this.state.estimatedTime.timeType !== ""
         )
           this.setState({ submitDisabled: false });
@@ -82,7 +96,7 @@ class AllComplaintsList extends Component {
       filters["status"]=this.state.status;
     }
     if(this.state.search){
-      filters[this.state.search]=this.state.searchInput;
+      filters[this.state.search]=this.state.searchInput.trim();
     }
     this.setState({filters:filters});
     console.log(filters);
@@ -142,23 +156,17 @@ class AllComplaintsList extends Component {
       })
       .then((res) => {
         this.setState({
-          // formSubmitted: true,
+          formSubmitted: true,
           popupVisible:false,
           submitDisabled: true,
           estimatedTime: { count: 0, timeType: "hours" },
         });
         console.log(res);
-        // setTimeout(() => {this.setState({formSubmitted: false});}, 1000);
+        setTimeout(() => {this.setState({formSubmitted: false});}, 1000);
       })
       .catch((err) => {
         console.log(err.message);
       });
-  };
-
-  closePopup = () => {
-    this.setState({
-      popupVisible: false,
-    });
   };
 
   closeDescriptionPopup = () => {
@@ -219,6 +227,21 @@ class AllComplaintsList extends Component {
   }
   render() {
     let tableData = null;
+    if (this.state.error) {
+      tableData = (
+        <tr className={errorStyles.errorContainer}>
+          <td className={errorStyles.error}><i className="fa fa-exclamation-triangle"></i>Complaint List can't be loaded.</td>
+        </tr>
+      );
+    } else {
+      tableData = (
+        <tr>
+          <td>
+            <Spinner />
+          </td>
+        </tr>
+      );
+    }
     if (this.state.allComplaintsList.length !== 0) {
       let count = this.state.allComplaintsList;
       tableData = count.map((complaint) => {
@@ -285,6 +308,7 @@ class AllComplaintsList extends Component {
             <option value="Closed" defaultValue>Closed</option>
             </select>
           </div>
+          <div>
           <div className={styles.search}>
             <input type="search" placeholder="Search" name="searchInput" onChange={this.handleFilterChange}/>
             <div className={dropdownStyles.dropdown}>
@@ -294,6 +318,8 @@ class AllComplaintsList extends Component {
               <option value="lockedBy" defaultValue>Locked By</option>
               </select>
             </div>
+          </div>
+          {(this.state.searchInput!==""&&this.state.search===""?<p className={styles.message}>Please select a field to search by.</p>:null)}
           </div>
           <i className={["fa fa-check",styles.check].join(' ')}onClick={this.applyFilters}></i>
           <i className={["fa fa-undo",styles.undo].join(' ')}  onClick={this.resetFilters}></i>
@@ -308,17 +334,21 @@ class AllComplaintsList extends Component {
               <th>Status</th>
             </tr>
           </thead>
-          <tbody>{tableData}</tbody>
+          <InfiniteScroll
+              loadMore={()=>this.getAllComplaintsList()}
+              hasMore={this.state.hasMore}
+              loader={<tr key={1}><td colSpan={4}><Loader/></td></tr>}
+              useWindow={false}
+              initialLoad={false}
+              element={'tbody'}>
+              {tableData||[]}
+          </InfiniteScroll>
         </table>
         {this.state.descriptionPopupVisible ? (
           <ComplaintPopup
             complaint={this.state.complaint}
             click={this.closeDescriptionPopup}
           />
-        ) : null}
-        {this.state.error ? <p>Complaint List can't be loaded</p> : null}
-        {!this.state.error && this.state.allComplaintsList.length === 0 ? (
-          <Spinner />
         ) : null}
         <div
           style={this.timePopupPosition}
@@ -333,7 +363,7 @@ class AllComplaintsList extends Component {
               Estimated Time
             </h5>
           </span>
-          <form>
+          <form className={styles.popupForm}>
             <div className={styles.formdata}>
               <input
                 type="text"
@@ -352,7 +382,7 @@ class AllComplaintsList extends Component {
                   <option value="hours">hours</option>
                   <option value="days">days</option>
                   <option value="weeks">weeks</option>
-                  <option value="months">months</option>
+                  <option value="month">months</option>
                 </select>
               </div>
             </div>
@@ -366,6 +396,7 @@ class AllComplaintsList extends Component {
             >
               Submit
             </button>
+            {(this.state.formSubmitted)?<i className="fa fa-check"></i>:null}
           </form>
         </div>
       </div>

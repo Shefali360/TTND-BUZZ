@@ -14,14 +14,10 @@ const tokenRevoked=(state,action)=>{
     
 }
 
-const tokenRevokeFailed=(state,action)=>{
-   console.log("Error");
-}
-
 const reducer=(state=initialState,action)=>{
     switch(action.type){
         case actionTypes.TOKEN_REVOKED:return tokenRevoked(state,action);
-        case actionTypes.TOKEN_REVOKE_FAILED:return tokenRevokeFailed(state,action);
+        case actionTypes.TOKEN_REVOKE_FAILED:return tokenRevoked(state,action);
         default:return state;
     }
 }

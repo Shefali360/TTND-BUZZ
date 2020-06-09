@@ -24,8 +24,6 @@
     overflow-x: hidden;
     max-height: 350px;
     list-style-type: none;
-
-
 }
 
 .List li {
@@ -40,4 +38,21 @@
 .List::-webkit-scrollbar-thumb {
     background: #7a7d89;
 
+}
+
+.errorContainer{
+    height:200px;
+    text-align: center;
+    position: relative;
+    
+}
+.error{
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    color:#e04a32;
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
 }

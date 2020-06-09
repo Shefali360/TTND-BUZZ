@@ -2,21 +2,11 @@
     position: relative;
 }
 
-.table{
-    table-layout:fixed;
-}
-.table tr:nth-child(even) { background: #eee; }
-.table th i{
-    margin-left:10px;
-}
 .table td:nth-child(2){
     color:blue;
     text-decoration: underline;
     cursor: pointer;
-}
-.table td:last-child{
-    position: relative;
-}
+} 
 
 .filterFields{
     display: flex;
@@ -31,11 +21,25 @@
     font-size:20px;
     cursor:pointer;
 }
+.check:hover{
+    color:#fff;
+    background-color:#2ec020;
+    padding:5px;
+    border-radius: 50%;
+   
+}
 .undo{
     align-self: center;
     color:#1a73e8;
     font-size:20px;
     cursor:pointer;
+}
+
+.undo:hover{
+    color:#fff;
+    background-color:#1a73e8;
+    padding:5px;
+    border-radius: 50%;
 }
 .search{
     border:1px solid #ccc;
@@ -125,6 +129,15 @@
     border-radius:4px;
 }
 
+/* .popup button:hover{
+
+} */
+
+.popup button:disabled{
+    background-color: #ccc;
+    color:#D8763A;
+}
+
 .display{
     display: none;
 }
@@ -154,4 +167,10 @@
 
 .closed option{
     color:gray;
+}
+
+.message{
+    font-size:14px;
+    color:#e04a32;
+    font-weight: bold;
 }

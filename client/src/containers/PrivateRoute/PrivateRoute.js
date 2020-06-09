@@ -2,11 +2,6 @@ import React from 'react';
 import { connect } from "react-redux";
 import {Route,Redirect} from 'react-router-dom';
 
-
-// const token=JSON.parse(localStorage.getItem("token"));
-// console.log(token);
-
-
 const PrivateRouteComponent = (props) => (
  
     <Route {...props.routeProps} render={() => (
@@ -20,7 +15,6 @@ const PrivateRouteComponent = (props) => (
         }} /> )
     )} />
 );
-
 
 const mapStateToProps = (state, ownProps) => {
     // console.log(state.auth.token);

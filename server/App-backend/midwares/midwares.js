@@ -19,7 +19,7 @@ module.exports.verifyTokenMiddleware = async (req, res, next) => {
         new authHeadersAbsent("Authorization headers are absent", 401)
       );
     }
-  
+    console.log(req.headers["authorization"]);
     const tokenType = req.headers["authorization"].split(",")[0];
     const accessToken=tokenType.split(" ")[0];
     if (accessToken !== "Bearer") {
@@ -31,7 +31,7 @@ module.exports.verifyTokenMiddleware = async (req, res, next) => {
     if (!accessTokenValue) {
       return next(new authTokenAbsent("Auth token is not provided"), 401);
     }
-
+    console.log(accessTokenValue);
     try {
       await axios.get(
         "https://oauth2.googleapis.com/tokeninfo" +

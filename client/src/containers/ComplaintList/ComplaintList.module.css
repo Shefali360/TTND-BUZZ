@@ -24,6 +24,15 @@
     display: block;
 }
 
+.complaintsList table::-webkit-scrollbar {
+    width: 3px;
+    background: #dfe1e8;
+}
+
+.complaintsList table::-webkit-scrollbar-thumb {
+    background: #7a7d89;
+
+}
 .complaintsList tbody {
     display: table; 
 }
@@ -81,11 +90,6 @@ td:last-child{
     text-decoration: underline;
     cursor:pointer;
 }
-
-.infiniteScroll{
-   max-height:300px;
-}
-
 .tableContainer{
     position: relative;
 }

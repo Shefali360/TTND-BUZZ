@@ -16,6 +16,8 @@ class CreateBuzz extends Component {
     files: null
   };
 
+  counter=0;
+
   fileChange=(event)=>{
     this.setState({images:event.target.files});
   }
@@ -50,7 +52,7 @@ class CreateBuzz extends Component {
         },
       })
       .then((res) => {
-        // this.props.getRecentBuzz();
+        this.props.submitted({submitted:++this.counter});
         this.setState({
           description: '',
           category: '',

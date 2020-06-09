@@ -18,17 +18,17 @@ class RecentBuzzData extends Component {
 
   limit= 5;
 
-  getBuzz=()=>{
+  getBuzz=(skip)=>{
 
     axios
       .get(
-        `http://localhost:3030/buzz?skip=${this.state.skip}&limit=${this.limit}`, {headers:{"authorization":`Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token} `}}
+        `http://localhost:3030/buzz?skip=${skip}&limit=${this.limit}`, {headers:{"authorization":`Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token} `}}
       ).then((res)=>{
         const buzz = Array.from(this.state.buzz);
         buzz.push(...res.data);
         this.setState({
           buzz: buzz,
-          skip:this.state.skip + 5,
+          skip:skip + 5,
           hasMore:!(res.data.length<this.limit)})
       }).catch((err)=>{
         console.log(err);
@@ -37,11 +37,17 @@ class RecentBuzzData extends Component {
   }
   
   componentDidMount() {
-    this.getBuzz();
+    this.getBuzz(this.state.skip);
+  }
+
+  componentDidUpdate(prevProps){
+    if(this.props.submitted.submitted>prevProps.submitted.submitted){
+    this.setState({buzz:[]})
+    this.getBuzz(0);}
   }
 
   render() {
-    let buzzData=this.state.error?<p>Buzz data can't be loaded</p>:<Spinner/>;
+    let buzzData=this.state.error?<div className={styles.errorContainer}><i className={["fa fa-exclamation-triangle",styles.error].join(' ')}><span >Buzz data can't be loaded!</span></i></div>:<Spinner/>;
      if (this.state.buzz.length!==0) {
       let count = this.state.buzz;
       buzzData = count.map((buzz) => {
@@ -79,7 +85,7 @@ class RecentBuzzData extends Component {
       <h4 className={styles.heading}><i className="fa fa-at"></i>Recent Buzz</h4>
       <ul className={styles.List}>
       <InfiniteScroll
-              loadMore={this.getBuzz}
+              loadMore={()=>this.getBuzz(this.state.skip)}
               hasMore={this.state.hasMore}
               loader={<Loader key={1}/>}
               useWindow={false}

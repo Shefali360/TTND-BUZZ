@@ -7,10 +7,9 @@ export const tokenRevoked = (data) => {
   };
 };
 
-export const tokenRevokeFailed = (err) => {
+export const tokenRevoke= (data) => {
   return {
-    type: actionTypes.TOKEN_REVOKE_FAILED,
-    error: err,
+    type: actionTypes.TOKEN_REVOKE_FAILED
   };
 };
 
@@ -29,7 +28,7 @@ console.log(token.refresh_token);
         dispatch(tokenRevoked());
       })
       .catch((error) => {
-        dispatch(tokenRevokeFailed(error));
+        dispatch(tokenRevoked());
       });
   };
 };

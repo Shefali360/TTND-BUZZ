@@ -12,7 +12,7 @@ import Home from './components/Home/Home';
 import Aux from './hoc/wrap/wrap';
 import PrivateRoute from './containers/PrivateRoute/PrivateRoute';
 import AuthenticatedRoute from './containers/AuthenticatedRoute/AuthenticatedRoute';
-// import NotFound from './NotFound/NotFound';
+import NotFound from './components/NotFound/NotFound';
 
 function App() {
   return (
@@ -24,13 +24,14 @@ function App() {
        <Home>
           <Route component={({match})=>
           <Aux>
+        <Switch>
         <PrivateRoute exact path="/buzz"><BuzzPage/></PrivateRoute>
         <PrivateRoute exact path="/complaint"><ComplaintPage/></PrivateRoute>
-        {/* <PrivateRoute exact path="/resolved"><ResolvedPage/></PrivateRoute> */}
         <AuthenticatedRoute exact path="/resolved"><ResolvedPage/></AuthenticatedRoute>
-        <Route path="/about" component={About}/>
-        <Route path="/help" component={Help}/>
-        
+        <Route exact path="/about" component={About}/>
+        <Route exact path="/help" component={Help}/>
+        <Route path="" component={NotFound}/>
+        </Switch>
          </Aux>
           }/>
          </Home>

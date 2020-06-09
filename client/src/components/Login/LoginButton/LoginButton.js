@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import * as queryString from 'query-string';
 import styles from './loginButton.module.css';
 
@@ -17,7 +17,11 @@ const stringifiedParams = queryString.stringify({
 
 const googleLoginUrl = `https://accounts.google.com/o/oauth2/v2/auth?${stringifiedParams}`;
 
-const LoginButton=()=>{
+class LoginButton extends Component{
+  componentDidMount(){
+    localStorage.clear();
+  }
+  render(){
 return (
     <div className={styles.btn}>
     <i className="fa fa-google" aria-hidden="true">
@@ -27,5 +31,6 @@ return (
     </div>
   );
 };
+}
 
 export default LoginButton;
