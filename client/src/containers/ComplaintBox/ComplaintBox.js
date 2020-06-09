@@ -11,26 +11,35 @@ state = {
     files:[],
     submitDisabled: true,
     error: false,
-    formSubmitted:false
+    formSubmitted:false,
   };
 
   counter=0;
+  mounted=false;
 
   fileChange=(event)=>{
-    this.setState({files:event.target.files});
+    this.mounted && this.setState({files:event.target.files});
   }
 
   handleChange = (event) => {
-    this.setState(
+    this.mounted && this.setState(
       {
         [event.target.name]: event.target.value,
       },
       () => {
         if (this.state.department !== "" && this.state.issue !== "" && this.state.concern !== "")
-          this.setState({ submitDisabled: false });
+          this.mounted && this.setState({ submitDisabled: false });
       }
     );
   };
+
+  componentDidMount() {
+    this.mounted = true;
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
+  }
 
   submitHandler = (event) => {
     event.preventDefault();
@@ -47,11 +56,11 @@ state = {
       .post("http://localhost:3030/complaint",formData,{
         headers:{
           authorization:`Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`
-        },
+        }
       })
       .then((res) => {
         this.props.submitted({submitted:++this.counter});
-        this.setState({
+        this.mounted && this.setState({
           department: '',
           issue: '',
           formSubmitted: true,
@@ -59,7 +68,7 @@ state = {
           concern: '',
           files: []
         });
-        setTimeout(() => {this.setState({formSubmitted: false});}, 1000);
+        this.handle = setTimeout(() => {this.mounted && this.setState({formSubmitted: false});}, 1000);
       })
       .catch((err) => {
         console.log(err);

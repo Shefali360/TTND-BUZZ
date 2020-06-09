@@ -129,9 +129,6 @@
     border-radius:4px;
 }
 
-/* .popup button:hover{
-
-} */
 
 .popup button:disabled{
     background-color: #ccc;

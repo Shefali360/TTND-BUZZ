@@ -23,11 +23,15 @@ class UserComplaintList extends Component {
     error: false,
     skip: 0,
     notFound: false,
-    docsUnavailable: false,
     spinner:true
   };
 
+  mounted = false;
   limit = 10;
+
+  updateState(arg){
+    this.mounted&&this.setState(arg);
+  }
 
   getComplaints = (skip) => {
     axios
@@ -42,7 +46,7 @@ class UserComplaintList extends Component {
       .then((res) => {
         const complaintsList = Array.from(this.state.complaintsList);
         complaintsList.push(...res.data);
-        this.setState({
+        this.mounted && this.setState({
           complaintsList: complaintsList,
           skip: skip + 10,
           hasMore: !(res.data.length < this.limit),
@@ -51,28 +55,33 @@ class UserComplaintList extends Component {
       })
       .catch((err) => {
         console.log(err);
-        this.setState({ error: true,spinner:false });
+        this.mounted && this.setState({ error: true,spinner:false });
       });
   };
   componentDidMount() {
+    this.mounted = true;
     this.getComplaints(this.state.skip);
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.submitted.submitted > prevProps.submitted.submitted) {
-      this.setState({ complaintsList: [] });
+    if (this.props.submitted.submitted > prevProps.submitted.submitted){
+      this.mounted && this.setState({ complaintsList:[],spinner:true});
       this.getComplaints(0);
     }
   }
 
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
   handleFilterChange = (event) => {
-    this.setState({
+    this.mounted && this.setState({
       [event.target.name]: event.target.value,
     });
   };
 
   closePopup = () => {
-    this.setState({
+    this.mounted && this.setState({
       complaint: [],
       popupVisible: false,
     });
@@ -99,7 +108,7 @@ class UserComplaintList extends Component {
     if (this.state.searchInput) {
       filters["issueId"] = this.state.searchInput.trim();
     }
-    this.setState({ filters: filters });
+    this.mounted && this.setState({ filters: filters });
     axios
       .get("http://localhost:3030/complaint?" + stringify(filters), {
         headers: {
@@ -109,23 +118,22 @@ class UserComplaintList extends Component {
       .then((res) => {
         console.log(res.data.length);
         if (res.data.length !== 0) {
-          this.setState({
+          this.mounted && this.setState({
             complaintsList: res.data,
           });
         } else if (res.data.length === 0) {
-          this.setState({
-            complaintsList: [],
-            docsUnavailable: true,
+          this.mounted && this.setState({
+            complaintsList: []
           });
         }
       })
       .catch((err) => {
         console.log(err);
-        this.setState({ notFound: true });
+        this.mounted && this.setState({ notFound: true });
       });
   };
   resetFilters = () => {
-    this.setState({ filters: {} });
+    this.mounted && this.setState({ filters: {} });
     axios
       .get("http://localhost:3030/complaint?", {
         headers: {
@@ -134,13 +142,13 @@ class UserComplaintList extends Component {
       })
       .then((res) => {
         console.log(res);
-        this.setState({
+        this.mounted && this.setState({
           complaintsList: res.data,
         });
       })
       .catch((err) => {
         console.log(err);
-        this.setState({ error: true });
+        this.mounted && this.setState({ error: true });
       });
   };
 
@@ -171,7 +179,7 @@ class UserComplaintList extends Component {
             <td
               className={styles.issueId}
               onClick={() => {
-                this.setState({
+                this.mounted && this.setState({
                   complaint: complaint,
                   popupVisible: true,
                 });
@@ -259,10 +267,6 @@ class UserComplaintList extends Component {
             click={this.closePopup}
           />
         ) : null}
-        {/* {!this.state.error && this.state.complaintsList.length===0? (
-          <Spinner/>
-        ) : null} */}
-        {this.state.docsUnavailable ? <p>Sorry</p> : null}
       </div>
     );
   }

@@ -12,6 +12,7 @@ module.exports.createComplaint = async (req, res, next) => {
     randomLength: 2,
   });
   req.body.issueId = issueId;
+  req.body.timestamp=Date.now();
   const paths = [];
   if (req.files) {
     req.files.forEach((path) => {
@@ -42,7 +43,7 @@ module.exports.getAllComplaints = async (req, res, next) => {
     next(err);
   }
 };
-module.exports.getComplaintsByUserEmail = async (req, res, next) => {
+module.exports.getComplaintsByUserEmail = async(req, res, next) => {
   const userEmail = req.data.data.email;
   req.query["email"]=userEmail;
   const limitCount = req.query.limit;

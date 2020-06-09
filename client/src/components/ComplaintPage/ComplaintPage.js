@@ -12,8 +12,10 @@ class ComplaintPage extends Component{
     complaintSubmitted:{submitted:0}
   }
 
+  mounted = false;
 
   componentDidMount() {
+    this.mounted = true;
     axios.get(`https://oauth2.googleapis.com/tokeninfo?id_token=${this.props.data.id_token}`)
     .then(res => {
       this.setState({
@@ -23,8 +25,16 @@ class ComplaintPage extends Component{
     })
   }
 
+  componentWillUnmount(){
+    this.mounted = false;
+  }
+
+  updateState(arg) {
+    this.mounted && this.setState(arg);
+  }
+
   complaintSubmitted=(event)=>{
-    this.setState({complaintSubmitted:event});
+    this.updateState({complaintSubmitted:event});
   }
 
   render(){

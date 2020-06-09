@@ -42,7 +42,7 @@ class AllComplaintsList extends Component {
     .get(`http://localhost:3030/complaint/all?skip=${this.state.skip}&limit=${this.limit}&`+stringify(this.state.filters), {
       headers: {
         authorization: `Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`,
-      },
+      }
     })
     .then((res) => {
       const allComplaintsList = Array.from(this.state.allComplaintsList);
@@ -62,6 +62,7 @@ class AllComplaintsList extends Component {
   componentDidMount() {
    this.getAllComplaintsList();
   }
+
 
   handleEstimatedTimeChange = (event) => {
     const estimatedTime = { ...this.state.estimatedTime };
