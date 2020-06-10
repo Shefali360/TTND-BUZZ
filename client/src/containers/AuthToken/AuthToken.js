@@ -13,12 +13,21 @@ class AuthToken extends Component {
   render(){
     const a=this.props.data&&this.props.data.access_token;
     console.log(a);
+    const now=new Date();
+    const hrs=now.getHours();
+    const mins=now.getMinutes();
     if(a){
+      const expiryDate = new Date(now.getTime() + this.props.data.expires_in*1000);
+      const expiryHrs=expiryDate.getHours();
+      const expiryMins=expiryDate.getMinutes();
       this.props.checkAdmin();
-      return <Redirect to ='/buzz'/>
+      if(hrs===expiryHrs&&mins===expiryMins){
+        return <Redirect to ='/login'/>
+      }
+      else return <Redirect to ='/buzz'/>
     }else if(this.props.error){
       return <Redirect to ='/login'/>
-      };
+      }
     return <Spinner/>;
   }
 }

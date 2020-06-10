@@ -30,3 +30,20 @@
     color: gray;
     margin-bottom: 18px;
 }
+
+
+@media (min-width:768px) and (max-width:1024px){ 
+.loginDiv{
+    padding: 0px 150px;
+    box-sizing: border-box;
+}
+}
+@media(max-width:767px){
+   .loginDiv{ padding: 0px 80px;
+    box-sizing: border-box;
+   }
+
+   .loginDiv h5{
+       font-size: 12px;
+   }
+}

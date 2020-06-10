@@ -8,8 +8,8 @@ import Spinner from "../../../components/Spinner/Spinner";
 import ComplaintPopup from "../../ComplaintPopup/ComplaintPopup";
 import {stringify} from "query-string";
 import InfiniteScroll from 'react-infinite-scroller';
-import Loader from '../../../components/Loader/Loader';
 import errorStyles from '../../../containers/RecentBuzz/RecentBuzz.module.css';
+import SmallSpinner from "../../SmallSpinner/SmallSpinner";
 
 class AllComplaintsList extends Component {
   state = {
@@ -32,7 +32,9 @@ class AllComplaintsList extends Component {
     filters:{},
     submitDisabled: true,
     skip:0,
-    formSubmitted:false
+    formSubmitted:false,
+    spinner:true,
+    requesting:false
   };
   timePopupPosition;
   limit=10;
@@ -50,12 +52,13 @@ class AllComplaintsList extends Component {
       this.setState({
       allComplaintsList:allComplaintsList,
       skip:this.state.skip + 10,
-      hasMore:!(res.data.length<this.limit)
+      hasMore:!(res.data.length<this.limit),
+      spinner:false
     })
     })
     .catch((err) => {
-      console.log(err);
-      this.setState({ error: true });
+      
+      this.setState({ error: true,spinner:false });
     });
   }
 
@@ -72,9 +75,9 @@ class AllComplaintsList extends Component {
         estimatedTime: estimatedTime,
       },
       () => {
-        console.log(this.state.estimatedTime);
+        
         if (
-         (this.state.estimatedTime.count !== ""||this.state.estimatedTime.count !== 0) &&
+         this.state.estimatedTime.count !== "" &&
           this.state.estimatedTime.timeType !== ""
         )
           this.setState({ submitDisabled: false });
@@ -99,22 +102,26 @@ class AllComplaintsList extends Component {
     if(this.state.search){
       filters[this.state.search]=this.state.searchInput.trim();
     }
-    this.setState({filters:filters});
-    console.log(filters);
+    this.setState({filters:filters,skip:0});
+    
     axios
-      .get("http://localhost:3030/complaint/all?"+stringify(filters),{
+      .get(`http://localhost:3030/complaint/all?skip=0&limit=${this.limit}&`+stringify(filters),{
         headers: {
           authorization:`Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`,
         },
       })
       .then((res) => {
-        console.log(res);
+     
+        if (res.data.length !== 0) {
         this.setState({
           allComplaintsList: res.data,
-        });
+          skip:this.limit
+        });}else if (res.data.length === 0) {
+          this.setState({ complaintsList: []})
+        }
       })
       .catch((err) => {
-        console.log(err);
+       
         this.setState({ error: true });
       });
   }
@@ -122,26 +129,26 @@ class AllComplaintsList extends Component {
   resetFilters=()=>{
     this.setState({filters:{}});
     axios
-      .get("http://localhost:3030/complaint/all",{
+      .get(`http://localhost:3030/complaint/all?skip=0&limit=${this.limit}`,{
         headers: {
           authorization:`Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`,
         },
       })
       .then((res) => {
-        console.log(res);
+       
         this.setState({
           allComplaintsList: res.data,
+          skip:this.limit
         });
       })
       .catch((err) => {
-        console.log(err);
+        
         this.setState({ error: true });
       });
   }
   submitHandler = (event) => {
-    console.log(this.state.value);
+   
     event.preventDefault();
-    console.log(this.state.estimatedTime.count);
     const formData = {
       estimatedTime: {
         count: this.state.estimatedTime.count,
@@ -149,6 +156,7 @@ class AllComplaintsList extends Component {
       },
       status: this.state.value,
     };
+    this.setState({requesting:true});
     axios
       .patch(`http://localhost:3030/complaint/${this.state.id}`, formData, {
         headers: {
@@ -161,12 +169,12 @@ class AllComplaintsList extends Component {
           popupVisible:false,
           submitDisabled: true,
           estimatedTime: { count: 0, timeType: "hours" },
+          requesting:false
         });
-        console.log(res);
         setTimeout(() => {this.setState({formSubmitted: false});}, 1000);
       })
       .catch((err) => {
-        console.log(err.message);
+
       });
   };
 
@@ -210,10 +218,10 @@ class AllComplaintsList extends Component {
           }
         )
         .then((res) => {
-          console.log(res);
+         
         })
         .catch((err) => {
-          console.log(err.message);
+
         });
     }
   };
@@ -226,24 +234,29 @@ class AllComplaintsList extends Component {
       default:return null;
     }
   }
+
+  hidePopup=()=>{
+    this.setState({popupVisible:false});
+  }
   render() {
     let tableData = null;
-    if (this.state.error) {
+    if(this.state.spinner){
+      tableData= 
+    <tr>
+      <td>
+        <Spinner />
+      </td>
+    </tr>
+    }
+   else if (this.state.error) {
       tableData = (
         <tr className={errorStyles.errorContainer}>
           <td className={errorStyles.error}><i className="fa fa-exclamation-triangle"></i>Complaint List can't be loaded.</td>
         </tr>
       );
+    } else if(this.state.allComplaintsList.length === 0) {
+      tableData=(<tr><td>Table has no data.</td></tr>)
     } else {
-      tableData = (
-        <tr>
-          <td>
-            <Spinner />
-          </td>
-        </tr>
-      );
-    }
-    if (this.state.allComplaintsList.length !== 0) {
       let count = this.state.allComplaintsList;
       tableData = count.map((complaint) => {
         return (
@@ -324,6 +337,10 @@ class AllComplaintsList extends Component {
           </div>
           <i className={["fa fa-check",styles.check].join(' ')}onClick={this.applyFilters}></i>
           <i className={["fa fa-undo",styles.undo].join(' ')}  onClick={this.resetFilters}></i>
+          <div className={styles.mobileButtons}>
+          <button className={styles.apply} onClick={this.applyFilters}>Apply Filters</button>
+          <button className={styles.reset}onClick={this.resetFilters}>Reset Filters</button>
+        </div>
         </div>
         <table className={styles.table}>
           <thead>
@@ -338,7 +355,8 @@ class AllComplaintsList extends Component {
           <InfiniteScroll
               loadMore={()=>this.getAllComplaintsList()}
               hasMore={this.state.hasMore}
-              loader={<tr key={1}><td colSpan={4}><Loader/></td></tr>}
+              loader={<tr key={1}><td colSpan={4}></td></tr>}
+              threshold={0.8}
               useWindow={false}
               initialLoad={false}
               element={'tbody'}>
@@ -351,6 +369,9 @@ class AllComplaintsList extends Component {
             click={this.closeDescriptionPopup}
           />
         ) : null}
+        <div className={styles.overlay +
+            " " +
+            (this.state.popupVisible ? "null" : styles.display)}>
         <div
           style={this.timePopupPosition}
           className={
@@ -373,7 +394,7 @@ class AllComplaintsList extends Component {
                 value={this.state.estimatedTime.count}
                 onChange={this.handleEstimatedTimeChange}
               />
-              <div className={styles.dropdown}>
+              <div className={[dropdownStyles.dropdown,styles.dropdown].join(' ')}>
                 <select
                   className={styles.select}
                   name="timeType"
@@ -397,9 +418,11 @@ class AllComplaintsList extends Component {
             >
               Submit
             </button>
+            {(this.state.requesting)?<SmallSpinner/>:null}
             {(this.state.formSubmitted)?<i className="fa fa-check"></i>:null}
           </form>
         </div>
+      </div>
       </div>
     );
   }

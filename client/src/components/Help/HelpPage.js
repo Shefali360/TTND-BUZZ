@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./HelpPage.module.css";
-import Aux from "../../../hoc/wrap/wrap";
+import Aux from "../../hoc/wrap/wrap";
 const HelpPage = () => {
   return (
     <Aux>

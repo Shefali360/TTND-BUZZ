@@ -5,7 +5,6 @@
     /* max-height:250px; */
 }
 
-
 .heading {
     padding: 10px 0px;
     padding-left: 20px;
@@ -24,6 +23,7 @@
     overflow-x: hidden;
     max-height: 350px;
     list-style-type: none;
+    background-color: #fff;
 }
 
 .List li {
@@ -55,4 +55,11 @@
     top:50%;
     left:50%;
     transform: translate(-50%,-50%);
+}
+
+@media (min-width:768px) and (max-width:1024px){
+    .List {
+        max-height: 500px;
+    }
+    
 }

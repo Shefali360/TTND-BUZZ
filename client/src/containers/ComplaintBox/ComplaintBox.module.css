@@ -107,6 +107,7 @@
     margin-top:15px;
 }
 
+
 .realimage{
     display:inline-block;
     position: relative;
@@ -182,4 +183,12 @@
     font-size:14px;
     color:#228B22;
     font-weight: bold;
+}
+
+
+@media(max-width:767px){
+    .item {
+        width: 100%;
+    }
+    
 }

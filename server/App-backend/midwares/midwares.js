@@ -137,7 +137,7 @@ module.exports.checkAdminPrivileges= async (req,res,next)=>{
 }
 
 module.exports.errorHandlingMiddleware = (err, req, res, next) => {
-  res.status(err.responseCode || 400);
+  res.status(err.responseCode || 500);
   res.json({
     error: err.name,
     errorCode: err.code,

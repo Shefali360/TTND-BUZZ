@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import styles from "./CreateBuzz.module.css";
 import sharedStyles from "../../components/Dropdown/Dropdown.module.css";
-import Dropdown from "../../components/Dropdown/Dropdown";
 import { connect } from "react-redux";
 import axios from "axios";
+import SmallSpinner from '../../components/SmallSpinner/SmallSpinner';
 
 class CreateBuzz extends Component {
   state = {
@@ -13,7 +13,8 @@ class CreateBuzz extends Component {
     submitDisabled: true,
     error: false,
     formSubmitted:false,
-    files: null
+    files: null,
+    spinner:false
   };
 
   counter=0;
@@ -45,6 +46,7 @@ class CreateBuzz extends Component {
     formData.append("category",this.state.category);
     // const token = JSON.parse(localStorage.getItem("token"));
     // console.log(token);
+    this.setState({spinner:true})
     axios
       .post("http://localhost:3030/buzz",formData,{
         headers:{
@@ -59,11 +61,13 @@ class CreateBuzz extends Component {
           formSubmitted: true,
           submitDisabled: true,
           files: null,
-          images: []
+          images: [],
+          spinner:false
         });
         setTimeout(() => {this.setState({formSubmitted: false});}, 1000);
       })
       .catch((err) => {
+        this.setState({spinner:false});
         console.log(err);
       });
   };
@@ -88,12 +92,9 @@ class CreateBuzz extends Component {
                   value={this.state.category}
                   onChange={this.handleChange}
                 >
-                  <Dropdown value="" optionName="Category" />
-                  <Dropdown value="Activity buzz" optionName="Activity" />
-                  <Dropdown
-                    value="Lost and Found buzz"
-                    optionName="Lost and Found"
-                  />
+                  <option value="" >Category</option>
+                  <option value="Activity buzz" >Activity</option>
+                  <option value="Lost and Found buzz" >Lost and Found</option>
                 </select>
               </div>
               <div className={styles.imageUpload}>
@@ -107,6 +108,7 @@ class CreateBuzz extends Component {
             <div className={styles.submitted}>
             {(this.state.formSubmitted)?<i className="fa fa-check"/>:null}
             </div>
+            {(this.state.spinner)?<SmallSpinner/>:null}
             <button
               className={styles.button}
               type="submit"

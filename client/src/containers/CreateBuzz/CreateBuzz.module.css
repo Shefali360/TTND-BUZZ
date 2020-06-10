@@ -70,6 +70,10 @@ cursor: not-allowed;
     color:#D8763A;
 }
 
+.button i:hover{
+    color:#D8777D;
+}
+
 .bottombarRight{
     display:flex;
 }
@@ -77,3 +81,4 @@ cursor: not-allowed;
 .submitted{
     color:#228B22;
 }
+

@@ -3,7 +3,6 @@ import styles from "./RecentBuzz.module.css";
 import Corousel from "../../Corousel/Corousel";
 import axios from "axios";
 import { connect } from "react-redux";
-import Loader from '../../../components/Loader/Loader';
 
 class RecentBuzz extends Component {
   state = {
@@ -53,7 +52,6 @@ class RecentBuzz extends Component {
         })
         .then((res) => {
           this.setState({updateReview:false});
-          console.log(res);
         })
         .catch((err) => {this.setState({updateReview:false});});
 
@@ -94,7 +92,6 @@ class RecentBuzz extends Component {
         )
         .then((res) => {
           this.setState({updateReview:false});
-          console.log(res);
         })
         .catch((err) => {this.setState({updateReview:false});});
     }
@@ -116,7 +113,7 @@ class RecentBuzz extends Component {
         })
         .then((res) => {
           this.setState({updateReview:false});
-          console.log(res);
+          
         })
         .catch((err) => {this.setState({updateReview:false});});
 
@@ -137,7 +134,7 @@ class RecentBuzz extends Component {
           )
           .then((res) => {
             this.setState({updateReview:false});
-            console.log(res);
+            
           })
           .catch((err) => {this.setState({updateReview:false});});
       }
@@ -158,7 +155,7 @@ class RecentBuzz extends Component {
         )
         .then((res) => {
           this.setState({updateReview:false});
-          console.log(res);
+          
         })
         .catch((err) => {this.setState({updateReview:false});});
     }
@@ -169,8 +166,11 @@ class RecentBuzz extends Component {
       <div className={styles.recentBuzz}>
         <div className={styles.buzzes}>
           <span className={styles.date}>
-            {this.props.dayFormat}/<br />
+            {this.props.dayFormat}/<br/>
             {this.props.monthFormat}
+          </span>
+          <span className={styles.dateMobile}>
+            {this.props.dayFormat}/{this.props.monthFormat}/{this.props.yearFormat}
           </span>
           <div className={styles.rightDiv}>
             {this.props.images.length !== 0 ? (

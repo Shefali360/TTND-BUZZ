@@ -1,13 +1,13 @@
 import React from "react";
 import styles from "./AboutInfo.module.css";
-import TTN from "../../../Images/About.png";
-import Aux from "../../../hoc/wrap/wrap";
-import CustomerSuccess from "../../../Images/Client.png";
-import Agility from "../../../Images/Agility.png";
-import EnterprenaurialSpirit from "../../../Images/EnterprenaurialSpirit.png";
-import Transparency from "../../../Images/Transparency.png";
-import ConstantLearning from "../../../Images/ConstantLearning.png";
-import Creativity from "../../../Images/Creativity.png";
+import TTN from "../../Images/About.png";
+import Aux from "../../hoc/wrap/wrap";
+import CustomerSuccess from "../../Images/Client.png";
+import Agility from "../../Images/Agility.png";
+import EnterprenaurialSpirit from "../../Images/EnterprenaurialSpirit.png";
+import Transparency from "../../Images/Transparency.png";
+import ConstantLearning from "../../Images/ConstantLearning.png";
+import Creativity from "../../Images/Creativity.png";
 
 const AboutInfo = () => {
   return (

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import styles from "./ComplaintBox.module.css";
 import axios from 'axios';
 import { connect } from "react-redux";
+import SmallSpinner from "../../components/SmallSpinner/SmallSpinner";
 
 class ComplaintBox extends Component{
 state = {
@@ -12,8 +13,9 @@ state = {
     submitDisabled: true,
     error: false,
     formSubmitted:false,
+    spinner:false
   };
-
+  
   counter=0;
   mounted=false;
 
@@ -51,6 +53,7 @@ state = {
     formData.append("department",this.state.department);
     formData.append("issue",this.state.issue);
     formData.append("concern",this.state.concern);
+    this.setState({spinner:true});
     // const token = JSON.parse(localStorage.getItem("token"));
     axios
       .post("http://localhost:3030/complaint",formData,{
@@ -66,7 +69,8 @@ state = {
           formSubmitted: true,
           submitDisabled: true,
           concern: '',
-          files: []
+          files: [],
+          spinner:false
         });
         this.handle = setTimeout(() => {this.mounted && this.setState({formSubmitted: false});}, 1000);
       })
@@ -121,7 +125,9 @@ state = {
             </div>
             </div>
         </div>
+
             <div className={styles.Button}>
+            {(this.state.spinner)?<div className={styles.spinner}><SmallSpinner/></div>:null}
           <button className={styles.button} type="submit" value="Submit"
           disabled={this.state.submitDisabled}
           onClick={(event) => {

@@ -9,7 +9,7 @@ module.exports.createComplaint = async (data) => {
     return complaintData;
   } catch (err) {
     if (err.name === "ValidationError") {
-      throw new DataValidationFailed(err.message, 400);
+      throw new DataValidationFailed(err.message, 500);
     } else {
       throw new ServerError("Error", 500);
     }
@@ -66,7 +66,7 @@ module.exports.updateComplaintStatusById = async ({id}, complaintData) => {
   } catch (err) {
     console.log(err);
     if (err.name === "ValidationError")
-      throw new DataValidationFailed(err.message, 400);
+      throw new DataValidationFailed(err.message, 500);
     else throw new InternalServerError("Error", 500);
   }
 };

@@ -53,3 +53,12 @@
 .pillars div img{
     margin-right:20px;
 }
+
+@media(max-width:767px){
+    .Aboutinfo .ttnimg{
+        display: none;
+    }
+    .pillars{
+        display: block;
+    }
+}

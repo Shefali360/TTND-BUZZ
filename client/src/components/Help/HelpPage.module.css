@@ -79,3 +79,13 @@
     color:#fff;
     border-top-right-radius: 8px;
 }
+
+@media(max-width:767px){
+    .address{
+        width:70%;
+    }
+    .div button{
+    width:50%;
+    font-size:12px;
+    }
+}

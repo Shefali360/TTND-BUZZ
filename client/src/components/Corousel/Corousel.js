@@ -24,8 +24,8 @@ class Corousel extends Component{
                 <div className={styles.imageContainer}>
                     <img src={"http://localhost:3030/" + images[this.state.idx]} alt={images[this.state.idx]}/>
                 </div>
-                <a className={[styles.arrow,styles.prev].join(' ')} onClick={this.prev}><i className="fa fa-angle-left"/></a>
-                <a className={[styles.arrow,styles.next].join(' ')} onClick={this.next}><i className="fa fa-angle-right"/></a>
+                <button className={[styles.arrow,styles.prev].join(' ')} onClick={this.prev}><i className="fa fa-angle-left"/></button>
+                <button className={[styles.arrow,styles.next].join(' ')} onClick={this.next}><i className="fa fa-angle-right"/></button>
             </div>
         );
     }

@@ -1,7 +1,6 @@
 .carouselContainer {
     position: relative;
     min-height: 300px;
-    border: 1px solid #777;
     margin-bottom:15px;
 }
 
@@ -35,10 +34,12 @@
 
 .prev {
     padding-right: 2px;
-    left: 20px;
+    left: 10px;
+    border:1px solid #ccc;
 }
 
 .next {
     padding-left: 2px;
-    right: 20px;
+    right: 10px;
+    border:1px solid #ccc;
 }

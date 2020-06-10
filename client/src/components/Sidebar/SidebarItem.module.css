@@ -27,3 +27,17 @@
 .element.active{
    color:#D8763A;
 }
+
+@media (min-width:768px) and (max-width:1024px){
+    .element{
+        font-size:20px;
+        padding:22px 18px;
+    }
+}
+
+@media(max-width:767px){
+    .element{
+        font-size:15px;
+        padding:18px 18px;
+    }
+}

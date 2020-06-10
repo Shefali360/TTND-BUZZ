@@ -18,7 +18,7 @@ class ComplaintPage extends Component{
     this.mounted = true;
     axios.get(`https://oauth2.googleapis.com/tokeninfo?id_token=${this.props.data.id_token}`)
     .then(res => {
-      this.setState({
+      this.updateState({
         userName: res.data.name,
         userMail: res.data.email
       });

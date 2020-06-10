@@ -8,7 +8,6 @@ import sharedStyles from "../../components/ResolvedPage/AllComplaintsList/AllCom
 import axios from "axios";
 import { stringify } from "query-string";
 import InfiniteScroll from "react-infinite-scroller";
-import Loader from "../../components/Loader/Loader";
 import errorStyles from '../../containers/RecentBuzz/RecentBuzz.module.css';
 
 class UserComplaintList extends Component {
@@ -22,7 +21,6 @@ class UserComplaintList extends Component {
     complaintsList: [],
     error: false,
     skip: 0,
-    notFound: false,
     spinner:true
   };
 
@@ -46,16 +44,15 @@ class UserComplaintList extends Component {
       .then((res) => {
         const complaintsList = Array.from(this.state.complaintsList);
         complaintsList.push(...res.data);
-        this.mounted && this.setState({
-          complaintsList: complaintsList,
+        this.updateState({complaintsList: complaintsList,
           skip: skip + 10,
           hasMore: !(res.data.length < this.limit),
-          spinner:false
-        });
+          spinner:false})
       })
       .catch((err) => {
         console.log(err);
-        this.mounted && this.setState({ error: true,spinner:false });
+        this.updateState({error: true,spinner:false})
+      
       });
   };
   componentDidMount() {
@@ -65,7 +62,7 @@ class UserComplaintList extends Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.submitted.submitted > prevProps.submitted.submitted){
-      this.mounted && this.setState({ complaintsList:[],spinner:true});
+      this.updateState({complaintsList:[],spinner:true})
       this.getComplaints(0);
     }
   }
@@ -75,16 +72,12 @@ class UserComplaintList extends Component {
   }
 
   handleFilterChange = (event) => {
-    this.mounted && this.setState({
-      [event.target.name]: event.target.value,
-    });
+    this.updateState({ [event.target.name]: event.target.value});
   };
 
   closePopup = () => {
-    this.mounted && this.setState({
-      complaint: [],
-      popupVisible: false,
-    });
+    this.updateState({complaint: [],
+      popupVisible: false})
   };
 
   statusColor = (status) => {
@@ -108,9 +101,10 @@ class UserComplaintList extends Component {
     if (this.state.searchInput) {
       filters["issueId"] = this.state.searchInput.trim();
     }
-    this.mounted && this.setState({ filters: filters });
+    this.updateState({ filters: filters,skip:0})
+    console.log(filters);
     axios
-      .get("http://localhost:3030/complaint?" + stringify(filters), {
+      .get(`http://localhost:3030/complaint?skip=0&limit=${this.limit}&`+ stringify(filters), {
         headers: {
           authorization: `Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`,
         },
@@ -118,37 +112,31 @@ class UserComplaintList extends Component {
       .then((res) => {
         console.log(res.data.length);
         if (res.data.length !== 0) {
-          this.mounted && this.setState({
-            complaintsList: res.data,
-          });
+          this.updateState({  complaintsList: res.data,skip:this.limit})
         } else if (res.data.length === 0) {
-          this.mounted && this.setState({
-            complaintsList: []
-          });
+          this.updateState({ complaintsList: []})
         }
       })
       .catch((err) => {
         console.log(err);
-        this.mounted && this.setState({ notFound: true });
+        this.updateState({error:true})
       });
   };
   resetFilters = () => {
-    this.mounted && this.setState({ filters: {} });
+    this.updateState({filters: {},skip:0});
     axios
-      .get("http://localhost:3030/complaint?", {
+      .get(`http://localhost:3030/complaint?skip=0&limit=${this.limit}`, {
         headers: {
           authorization: `Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`,
         },
       })
       .then((res) => {
         console.log(res);
-        this.mounted && this.setState({
-          complaintsList: res.data,
-        });
+        this.updateState({ complaintsList: res.data,skip:this.limit})
       })
       .catch((err) => {
         console.log(err);
-        this.mounted && this.setState({ error: true });
+        this.updateState({error: true })
       });
   };
 
@@ -169,23 +157,22 @@ class UserComplaintList extends Component {
         </tr>
       );
     } else if(this.state.complaintsList.length===0)
-    tableData=(<tr><td>Table is empty.</td></tr>)
+    tableData=(<tr><td>Table has no data.</td></tr>)
     else{
       let count = this.state.complaintsList;
       tableData = count.map((complaint) => {
         return (
           <tr key={complaint._id}>
             <td>{complaint.department}</td>
-            <td
+            <td><button
               className={styles.issueId}
               onClick={() => {
-                this.mounted && this.setState({
-                  complaint: complaint,
-                  popupVisible: true,
-                });
+                this.updateState({ complaint: complaint,
+                  popupVisible: true});
               }}
             >
               {complaint.issueId}
+            </button>
             </td>
             <td>{complaint.assignedTo}</td>
             <td className={this.statusColor(complaint.status)}>
@@ -232,6 +219,10 @@ class UserComplaintList extends Component {
             className={["fa fa-undo", sharedStyles.undo].join(" ")}
             onClick={this.resetFilters}
           ></i>
+          <div className={sharedStyles.mobileButtons}>
+           <button className={sharedStyles.apply} onClick={this.applyFilters}>Apply Filters</button>
+          <button className={sharedStyles.reset}onClick={this.resetFilters}>Reset Filters</button>
+        </div>
         </div>
         <div className={styles.tableContainer}>
           <table>
@@ -249,10 +240,10 @@ class UserComplaintList extends Component {
               loader={
                 <tr key={1}>
                   <td colSpan={4}>
-                    <Loader />
                   </td>
                 </tr>
               }
+              threshold={0.8}
               useWindow={false}
               initialLoad={false}
               element={"tbody"}
