@@ -33,7 +33,7 @@ class Home extends Component {
     return (
       <div className={styles.home}>
         <header>
-          <TopDiv text="Creating buzz around you has never been so easy.."/>
+          <TopDiv text={"Creating buzz around you has never been so easy.."}/>
         </header>
         <main className={styles.post}>
         <button className={styles.navigation} onClick={this.toggleNavbar}>Navigation</button>

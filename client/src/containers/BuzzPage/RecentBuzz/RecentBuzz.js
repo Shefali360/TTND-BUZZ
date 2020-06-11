@@ -1,12 +1,12 @@
 import React, { Component } from "react";
-// import * as actions from "../../store/actions/index";
 import { connect } from "react-redux";
-import Spinner from '../../components/Spinner/Spinner';
-import Loader from '../../components/Loader/Loader';
-import RecentBuzz from '../../components/BuzzPage/RecentBuzz/RecentBuzz';
+import Spinner from '../../../components/Spinner/Spinner';
+import Loader from '../../../components/Loader/Loader';
+import RecentBuzz from './RecentBuzzFile/RecentBuzz';
 import styles from './RecentBuzz.module.css';
 import InfiniteScroll from 'react-infinite-scroller';
 import axios from 'axios';
+import { Redirect } from "react-router-dom";
 
 class RecentBuzzData extends Component {
   state={
@@ -14,7 +14,9 @@ class RecentBuzzData extends Component {
     error:false,
     skip:0,
     hasMore:false,
-    spinner:true
+    spinner:true,
+    redirect:false,
+    networkErr:false
   }
 
   limit= 5;
@@ -35,6 +37,13 @@ class RecentBuzzData extends Component {
           spinner:false})
       }).catch((err)=>{
         this.mounted&&this.setState({error:true,spinner:false})
+        if(err.response.status===401){
+          this.setState({redirect:true});
+        }
+        if(err.response.status===500){
+          this.setState({networkErr:true});
+        }
+       
       })
   }
   
@@ -99,8 +108,13 @@ class RecentBuzzData extends Component {
             );
        });
   }
+  if(this.state.redirect){
+    alert("Timed out!Please login again.")
+    return <Redirect to='/login'/>
+  }else{
  return (
       <div className={styles.mainDiv}>
+      {(this.state.networkErr)?alert("Please check your internet connection"):null}
       <h4 className={styles.heading}><i className="fa fa-at"></i>Recent Buzz</h4>
       <ul className={styles.List}>
       <InfiniteScroll
@@ -116,6 +130,7 @@ class RecentBuzzData extends Component {
       </div>
     );
 }
+ }
 
 }
 
@@ -124,19 +139,5 @@ const mapStateToProps = (state) => {
     data: state.auth.token,
   };
 };
-// const mapStateToProps = (state) => {
-//   // console.log(state.recentBuzz.recentBuzz);
-//   return {
-//    buzz:state.recentBuzz.recentBuzz?state.recentBuzz.recentBuzz.data:[],
-//    skip:state.recentBuzz.recentBuzz?state.recentBuzz.recentBuzz.skip:0,
-//    hasMore:state.recentBuzz.recentBuzz?state.recentBuzz.recentBuzz.hasMore:null,
-//    error:state.recentBuzz.error
-//   };
-// };
 
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//     getRecentBuzz: (skip,limit) => dispatch(actions.fetchBuzz(skip,limit))
-//   };
-// };
 export default connect(mapStateToProps)(RecentBuzzData);

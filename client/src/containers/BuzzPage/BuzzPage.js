@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import CreateBuzz from '../../containers/CreateBuzz/CreateBuzz';
-import RecentBuzz from '../../containers/RecentBuzz/RecentBuzz';
+import CreateBuzz from './CreateBuzz/CreateBuzz';
+import RecentBuzz from './RecentBuzz/RecentBuzz';
 
 class BuzzPage extends Component{    
 

@@ -36,10 +36,12 @@
     padding-right: 2px;
     left: 10px;
     border:1px solid #ccc;
+    outline:0;
 }
 
 .next {
     padding-left: 2px;
     right: 10px;
     border:1px solid #ccc;
+    outline:0;
 }

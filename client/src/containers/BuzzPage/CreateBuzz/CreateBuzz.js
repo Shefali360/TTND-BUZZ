@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import styles from "./CreateBuzz.module.css";
-import sharedStyles from "../../components/Dropdown/Dropdown.module.css";
+import sharedStyles from "../../../components/Dropdown/Dropdown.module.css";
 import { connect } from "react-redux";
 import axios from "axios";
-import SmallSpinner from '../../components/SmallSpinner/SmallSpinner';
+import SmallSpinner from '../../../components/SmallSpinner/SmallSpinner';
+import { Redirect } from "react-router-dom";
 
 class CreateBuzz extends Component {
   state = {
@@ -16,7 +17,9 @@ class CreateBuzz extends Component {
     files: null,
     spinner:false,
     descEmpty:false,
-    categoryEmpty:false
+    categoryEmpty:false,
+    networkErr:false,
+    redirect:false
   };
 
   counter=0;
@@ -42,6 +45,7 @@ class CreateBuzz extends Component {
   };
 
   submitHandler = (event) => {
+
     event.preventDefault();
     let formData=new FormData();
     for(let i=0;i<this.state.images.length;i++){
@@ -69,13 +73,25 @@ class CreateBuzz extends Component {
         });
         setTimeout(() => {this.setState({formSubmitted: false});}, 1000);
       })
-      .catch((err) => {
+      .catch((err) => { 
         this.setState({spinner:false});
+        if(err.response.status===401){
+          this.setState({redirect:true});
+        }
+        if(err.response.status===500){
+          this.setState({networkErr:true});
+        }
+       
       });
   };
   render() {
+    if(this.state.redirect){
+      alert("Timed out!Please login again.")
+      return <Redirect to='/login'/>
+    }else{
     return (
       <div className={styles.createBuzz}>
+         {(this.state.networkErr)?alert("Please check your internet connection"):null}
         <h4>Create Buzz </h4>
         <form className={styles.form}>
           <textarea
@@ -131,6 +147,7 @@ class CreateBuzz extends Component {
     );
   }
 }
+}
 
 const mapStateToProps = (state) => {
   return {
@@ -138,11 +155,6 @@ const mapStateToProps = (state) => {
   };
 };
 
-// const mapDispatchToProps=(dispatch)=>{
-//   return{
-//     getRecentBuzz: () => dispatch(actions.fetchBuzz())
-//   }
-// }
 
 export default connect(mapStateToProps)(CreateBuzz);
 

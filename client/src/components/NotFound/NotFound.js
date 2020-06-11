@@ -10,7 +10,7 @@ const NotFound = (props) =>(
         (props.token&&props.token.access_token)? (
             <div className={styles.notfound}>
             <img src={notFound} alt="Page Not Found"/>
-            <p>Seems like you are lost,navigate back to login.</p>
+            <p>You have wandered to the wrong page.</p>
              </div>
             ) : (
             <Redirect to={{

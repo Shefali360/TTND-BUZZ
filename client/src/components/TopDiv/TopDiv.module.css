@@ -40,9 +40,13 @@ justify-content: space-between;
 }
 
 
-@media (min-width:768px) and (max-width:1024px){
+@media (min-width:768px) and (max-width:1023px){
     .topDiv{
         height:30vh;
+    }
+    .innerDiv p{
+       font-size:25px;
+    
     }
 }
 

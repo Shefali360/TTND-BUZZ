@@ -189,7 +189,7 @@
     margin-right:10px;
 }
 
-@media (min-width:768px) and (max-width:1024px){ 
+@media (min-width:768px) and (max-width:1023px){ 
     .popup{
         height:100px;
         width:200px;

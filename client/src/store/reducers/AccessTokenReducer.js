@@ -4,20 +4,17 @@ import {updateObject} from '../../shared/utility';
 
 const token=localStorage.getItem("token")?JSON.parse(localStorage.getItem("token")):null;
 
-const expirationDate = token?new Date(
-          new Date().getTime() + token.expires_in * 1000
-        ):null;
 const initialState={
     token:token,
     error:false,
-    expirationDate:expirationDate
+    
 }
 
-
 const tokenReceived=(state,action)=>{
+
 return(updateObject(state,{
        token:action.data
-    }
+}
 ))
 }
 

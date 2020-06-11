@@ -11,18 +11,8 @@ class AuthToken extends Component {
 
   render(){
     const a=this.props.data&&this.props.data.access_token;
-    // const now=Date.now();
-    // console.log(now);
     if(a){
-      // const expiryDate=now + 3.6e6;
-      // console.log(expiryDate);
       this.props.checkAdmin();
-      // if(now===expiryDate){
-      //   console.log("true");
-      //   return <Redirect to ='/login'/>
-      // }else if(now!==expiryDate){
-      //     console.log("false");
-      // }
        return <Redirect to ='/buzz'/>
     }else if(this.props.error){
       return <Redirect to ='/login'/>

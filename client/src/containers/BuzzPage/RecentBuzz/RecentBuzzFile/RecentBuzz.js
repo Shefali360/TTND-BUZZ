@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import styles from "./RecentBuzz.module.css";
-import Corousel from "../../Corousel/Corousel";
+import Corousel from "../../../../components/Corousel/Corousel";
 import axios from "axios";
 import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
 
 class RecentBuzz extends Component {
   state = {
@@ -10,7 +11,9 @@ class RecentBuzz extends Component {
     dislikeCount: this.props.dislikeCount || 0,
     liked: this.props.liked || false,
     disliked: this.props.disliked || false,
-    updateReview:false
+    updateReview:false,
+    redirect:false,
+    networkErr:false
   };
 
   timed = (duration) => {
@@ -53,7 +56,14 @@ class RecentBuzz extends Component {
         .then((res) => {
           this.setState({updateReview:false});
         })
-        .catch((err) => {this.setState({updateReview:false});});
+        .catch((err) => {this.setState({updateReview:false})
+        if(err.response.status===401){
+          this.setState({redirect:true});
+        }
+        if(err.response.status===500){
+          this.setState({networkErr:true});
+        }
+      });
 
       if (this.state.disliked) {
         this.setState({
@@ -72,8 +82,15 @@ class RecentBuzz extends Component {
           )
           .then((res) => {
             this.setState({updateReview:false});
+           
           })
-          .catch((err) => {this.setState({updateReview:false});});
+          .catch((err) => {this.setState({updateReview:false});
+          if(err.response.status===401){
+            this.setState({redirect:true});
+          }
+          if(err.response.status===500){
+            this.setState({networkErr:true});
+          }});
       }
     } else {
       this.setState({
@@ -91,9 +108,14 @@ class RecentBuzz extends Component {
           }
         )
         .then((res) => {
-          this.setState({updateReview:false});
-        })
-        .catch((err) => {this.setState({updateReview:false});});
+          this.setState({updateReview:false})        })
+        .catch((err) => {this.setState({updateReview:false});
+        if(err.response.status===401){
+          this.setState({redirect:true});
+        }
+        if(err.response.status===500){
+          this.setState({networkErr:true});
+        }});
     }
   };
 
@@ -115,7 +137,13 @@ class RecentBuzz extends Component {
           this.setState({updateReview:false});
           
         })
-        .catch((err) => {this.setState({updateReview:false});});
+        .catch((err) => {this.setState({updateReview:false});
+        if(err.response.status===401){
+          this.setState({redirect:true});
+        }
+        if(err.response.status===500){
+          this.setState({networkErr:true});
+        }});
 
       if (this.state.liked) {
         this.setState({
@@ -136,7 +164,13 @@ class RecentBuzz extends Component {
             this.setState({updateReview:false});
             
           })
-          .catch((err) => {this.setState({updateReview:false});});
+          .catch((err) => {this.setState({updateReview:false});
+          if(err.response.status===401){
+            this.setState({redirect:true});
+          }
+          if(err.response.status===500){
+            this.setState({networkErr:true});
+          }});
       }
     } else {
       this.setState({
@@ -154,16 +188,26 @@ class RecentBuzz extends Component {
           }
         )
         .then((res) => {
-          this.setState({updateReview:false});
-          
+          this.setState({updateReview:false}); 
         })
-        .catch((err) => {this.setState({updateReview:false});});
+        .catch((err) => {this.setState({updateReview:false});
+        if(err.response.status===401){
+          this.setState({redirect:true});
+        }
+        if(err.response.status===500){
+          this.setState({networkErr:true});
+        }});
     }
   };
 
   render() {
+    if(this.state.redirect){
+      alert("Timed out!Please login again.")
+      return <Redirect to='/login'/>
+    }else
     return (
       <div className={styles.recentBuzz}>
+         {(this.state.networkErr)?alert("Please check your internet connection"):null}
         <div className={styles.buzzes}>
           <span className={styles.date}>
             {this.props.dayFormat}/<br/>
@@ -182,7 +226,6 @@ class RecentBuzz extends Component {
             </span>
             <p>{this.props.description}</p>
             <div className={styles.reviews+" "+(this.state.updateReview?styles.disableClick:null)}>
-              {/* {(this.state.updateReview)?<Loader/>:null} */}
               <span className={styles.count}>{this.state.likeCount}</span>
               <button
                 onClick={() => this.toggleLike()}

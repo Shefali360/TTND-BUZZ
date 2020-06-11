@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import styles from "./ComplaintBox.module.css";
 import axios from 'axios';
 import { connect } from "react-redux";
-import SmallSpinner from "../../components/SmallSpinner/SmallSpinner";
+import SmallSpinner from "../../../components/SmallSpinner/SmallSpinner";
+import { Redirect } from "react-router-dom";
 
 class ComplaintBox extends Component{
 state = {
@@ -17,8 +18,9 @@ state = {
     departmentEmpty: false,
     issueEmpty:false,
     concernEmpty:false,
-  };
-  
+    networkErr:false,
+    redirect:false
+  }; 
   counter=0;
   mounted=false;
 
@@ -84,14 +86,23 @@ state = {
         this.handle = setTimeout(() => {this.mounted && this.setState({formSubmitted: false});}, 1000);
       })
       .catch((err) => {
-     
+        if(err.response.status===401){
+          this.setState({redirect:true});
+        }
+        if(err.response.status===500){
+          this.setState({networkErr:true});
+        }
       });
 
   };
 
   render() {
-    return (
+    if(this.state.redirect){
+      alert("Timed out!Please login again.")
+      return <Redirect to='/login'/>
+    }else{ return (
       <div className={styles.complaintBox}>
+         {(this.state.networkErr)?alert("Please check your internet connection"):null}
         <h4>Complaint Box</h4>
         <form className={styles.complaintForm}>
         <div className={[styles.item,styles.dropdownMenu].join(' ')}> 
@@ -153,6 +164,7 @@ state = {
       </div>
     );
   }
+}
 }
 
 const mapStateToProps = (state) => {

@@ -1,14 +1,15 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import Spinner from "../../components/Spinner/Spinner";
+import Spinner from "../../../components/Spinner/Spinner";
 import styles from "./ComplaintList.module.css";
-import ComplaintPopup from "../../components/ComplaintPopup/ComplaintPopup";
-import dropdownStyles from "../../components/Dropdown/Dropdown.module.css";
-import sharedStyles from "../../components/ResolvedPage/AllComplaintsList/AllComplaintsList.module.css";
+import ComplaintPopup from "../../../components/ComplaintPopup/ComplaintPopup";
+import dropdownStyles from "../../../components/Dropdown/Dropdown.module.css";
+import sharedStyles from "../../../containers/ResolvedPage/AllComplaintsList/AllComplaintsList.module.css";
 import axios from "axios";
 import { stringify } from "query-string";
 import InfiniteScroll from "react-infinite-scroller";
-import errorStyles from '../../containers/RecentBuzz/RecentBuzz.module.css';
+import errorStyles from '../../BuzzPage/RecentBuzz/RecentBuzzFile/RecentBuzz';
+import { Redirect } from "react-router-dom";
 
 class UserComplaintList extends Component {
   state = {
@@ -21,7 +22,9 @@ class UserComplaintList extends Component {
     complaintsList: [],
     error: false,
     skip: 0,
-    spinner:true
+    spinner:true,
+    redirect:false,
+    networkErr:false
   };
 
   mounted = false;
@@ -50,7 +53,14 @@ class UserComplaintList extends Component {
           spinner:false})
       })
       .catch((err) => {
-        this.updateState({error: true,spinner:false})
+        this.updateState({error: true,spinner:false
+        })
+        if(err.response.status===401){
+          this.setState({redirect:true});
+        }
+        if(err.response.status===500){
+          this.setState({networkErr:true});
+        }
       
       });
   };
@@ -116,6 +126,12 @@ class UserComplaintList extends Component {
       })
       .catch((err) => {
         this.updateState({error:true})
+        if(err.response.status===401){
+          this.setState({redirect:true});
+        }
+        if(err.response.status===500){
+          this.setState({networkErr:true});
+        }
       });
   };
   resetFilters = () => {
@@ -127,10 +143,16 @@ class UserComplaintList extends Component {
         },
       })
       .then((res) => {
-        this.updateState({ complaintsList: res.data,skip:this.limit})
+        this.setState({ complaintsList: res.data,skip:this.limit})
       })
       .catch((err) => {
         this.updateState({error: true })
+        if(err.response.status===401){
+          this.setState({redirect:true});
+        }
+        if(err.response.status===500){
+          this.setState({networkErr:true});
+        }
       });
   };
 
@@ -176,8 +198,13 @@ class UserComplaintList extends Component {
         );
       });
     }
+    if(this.state.redirect){
+      alert("Timed out!Please login again.")
+      return <Redirect to='/login'/>
+    }else{
     return (
       <div className={styles.complaintsList}>
+         {(this.state.networkErr)?alert("Please check your internet connection"):null}
         <h4>Your Complaints</h4>
         <div className={sharedStyles.filterFields}>
           <div className={dropdownStyles.dropdown}>
@@ -255,6 +282,7 @@ class UserComplaintList extends Component {
       </div>
     );
   }
+}
 }
 const mapStateToProps = (state) => {
   return {

@@ -1,9 +1,9 @@
 import React from 'react';
 import './App.css';
 import {BrowserRouter as Router,Route,Switch} from 'react-router-dom';
-import BuzzPage from './components/BuzzPage/BuzzPage';
-import ComplaintPage from './components/ComplaintPage/ComplaintPage';
-import ResolvedPage from './components/ResolvedPage/ResolvedPage';
+import BuzzPage from './containers/BuzzPage/BuzzPage';
+import ComplaintPage from './containers/ComplaintPage/ComplaintPage';
+import ResolvedPage from './containers/ResolvedPage/AllComplaintsList/AllComplaintsList';
 import About from './components/About/AboutInfo';
 import Help from './components/Help/HelpPage';
 import Login from './components/Login/Login';

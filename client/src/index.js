@@ -10,17 +10,13 @@ import thunk from 'redux-thunk';
 import tokenReducer from './store/reducers/AccessTokenReducer';
 import revokeTokenReducer from './store/reducers/RevokeTokenReducer';
 import checkAdminReducer from './store/reducers/AdminRouteProtectReducer';
-import recentBuzzReducer from './store/reducers/GetRecentBuzzReducer';
-import userComplaintListReducer from './store/reducers/GetUserComplaintListReducer';
 
 
 const composeEnhancers = (process.env.NODE_ENV === 'development'?window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ :null)|| compose;
 const rootReducer=combineReducers({
 auth:tokenReducer,
 logout:revokeTokenReducer,
-adminCheck:checkAdminReducer,
-recentBuzz:recentBuzzReducer,
-userComplaintList:userComplaintListReducer
+adminCheck:checkAdminReducer
 });
 const store=createStore(rootReducer,composeEnhancers(
   applyMiddleware(thunk)

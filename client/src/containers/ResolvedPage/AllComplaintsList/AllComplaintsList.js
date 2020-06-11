@@ -1,15 +1,16 @@
 import React, { Component } from "react";
-import dropdownStyles from "../../Dropdown/Dropdown.module.css";
+import dropdownStyles from "../../../components/Dropdown/Dropdown.module.css";
 import styles from "./AllComplaintsList.module.css";
-import sharedStyles from "../../../containers/ComplaintList/ComplaintList.module.css";
+import sharedStyles from "../../ComplaintPage/ComplaintList/ComplaintList.module.css";
 import axios from "axios";
 import { connect } from "react-redux";
 import Spinner from "../../../components/Spinner/Spinner";
-import ComplaintPopup from "../../ComplaintPopup/ComplaintPopup";
+import ComplaintPopup from "../../../components/ComplaintPopup/ComplaintPopup";
 import {stringify} from "query-string";
 import InfiniteScroll from 'react-infinite-scroller';
-import errorStyles from '../../../containers/RecentBuzz/RecentBuzz.module.css';
-import SmallSpinner from "../../SmallSpinner/SmallSpinner";
+import errorStyles from '../../BuzzPage/RecentBuzz/RecentBuzzFile/RecentBuzz.module.css';
+import SmallSpinner from "../../../components/SmallSpinner/SmallSpinner";
+import { Redirect } from "react-router-dom";
 
 class AllComplaintsList extends Component {
   state = {
@@ -35,7 +36,9 @@ class AllComplaintsList extends Component {
     formSubmitted:false,
     spinner:true,
     requesting:false,
-    countEmpty:false
+    countEmpty:false,
+    networkErr:false,
+    redirect:false
   };
   timePopupPosition;
   limit=10;
@@ -58,8 +61,13 @@ class AllComplaintsList extends Component {
     })
     })
     .catch((err) => {
-      
       this.setState({ error: true,spinner:false });
+      if(err.response.status===401){
+        this.setState({redirect:true});
+      }
+      if(err.response.status===500){
+        this.setState({networkErr:true});
+      }
     });
   }
 
@@ -126,8 +134,13 @@ class AllComplaintsList extends Component {
         }
       })
       .catch((err) => {
-       
         this.setState({ error: true });
+        if(err.response.status===401){
+          this.setState({redirect:true});
+        }
+        if(err.response.status===500){
+          this.setState({networkErr:true});
+        }
       });
   }
 
@@ -140,15 +153,19 @@ class AllComplaintsList extends Component {
         },
       })
       .then((res) => {
-       
         this.setState({
           allComplaintsList: res.data,
-          skip:this.limit
+          skip:this.limit,
         });
       })
       .catch((err) => {
-        
         this.setState({ error: true });
+        if(err.response.status===401){
+          this.setState({redirect:true});
+        }
+        if(err.response.status===500){
+          this.setState({networkErr:true});
+        }
       });
   }
   submitHandler = (event) => {
@@ -178,7 +195,12 @@ class AllComplaintsList extends Component {
         setTimeout(() => {this.setState({formSubmitted: false});}, 1000);
       })
       .catch((err) => {
-
+        if(err.response.status===401){
+          this.setState({redirect:true});
+        }
+        if(err.response.status===500){
+          this.setState({networkErr:true});
+        }
       });
   };
 
@@ -225,7 +247,12 @@ class AllComplaintsList extends Component {
          
         })
         .catch((err) => {
-
+          if(err.response.status===401){
+            this.setState({redirect:true});
+          }
+          if(err.response.status===500){
+            this.setState({networkErr:true});
+          }
         });
     }
   };
@@ -305,8 +332,13 @@ class AllComplaintsList extends Component {
         );
       });
     }
+    if(this.state.redirect){
+      alert("Timed out!Please login again.")
+      return <Redirect to='/login'/>
+    }else{
     return (
       <div id="card" className={sharedStyles.complaintsList}>
+          {(this.state.networkErr)?alert("Please check your internet connection"):null}
         <h4>All Complaints</h4>
         <div className={styles.filterFields}>
           <div className={dropdownStyles.dropdown}>
@@ -431,6 +463,7 @@ class AllComplaintsList extends Component {
       </div>
     );
   }
+}
 }
 
 const mapStateToProps = (state) => {
