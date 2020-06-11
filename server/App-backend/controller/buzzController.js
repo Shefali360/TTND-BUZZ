@@ -27,7 +27,6 @@ module.exports.getAll = async (req, res,next) => {
     const limitCount=req.query.limit;
     const skipCount=req.query.skip;
     const email = req.data.data.email;
-    console.log(limitCount);
     const response = await buzzService.getAll(email,Number(limitCount), Number(skipCount));
     res.send(response);
   } catch (err) {

@@ -19,7 +19,7 @@ module.exports.verifyTokenMiddleware = async (req, res, next) => {
         new authHeadersAbsent("Authorization headers are absent", 401)
       );
     }
-    console.log(req.headers["authorization"]);
+
     const tokenType = req.headers["authorization"].split(",")[0];
     const accessToken=tokenType.split(" ")[0];
     if (accessToken !== "Bearer") {
@@ -31,13 +31,11 @@ module.exports.verifyTokenMiddleware = async (req, res, next) => {
     if (!accessTokenValue) {
       return next(new authTokenAbsent("Auth token is not provided"), 401);
     }
-    console.log(accessTokenValue);
     try {
       await axios.get(
         "https://oauth2.googleapis.com/tokeninfo" +
           `?access_token=${accessTokenValue}`
       );
-      console.log("first midware successful");
       return next();
     } catch (err) {
       return next(
@@ -76,7 +74,6 @@ module.exports.verifyTokenToGetUserData = async (req, res, next) => {
       req.data = await axios.get(
         "https://oauth2.googleapis.com/tokeninfo" + `?id_token=${idTokenValue}`
       );
-      console.log("second midware successful");
       return next();
     } catch (err) {
       return next(
@@ -130,7 +127,6 @@ module.exports.checkAdminPrivileges= async (req,res,next)=>{
   }else{
     return next(new UnauthorizedAccess("You need admin privileges to access this data.",400));
   }}catch(err){
-    console.log(err);
     return next(new ServerError("Error"), 500);
   }
 

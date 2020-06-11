@@ -7,7 +7,6 @@ const initialState={
 }
 
 const isAdmin=(state,action)=>{
-    console.log("Successful");
     return(updateObject(state,{
         adminPrivilege:action.data
      }))

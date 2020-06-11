@@ -4,6 +4,7 @@
     border:2px solid #ccc;
     margin-bottom: 20px;
     position: relative;
+    width:100%;
 }
 
 .complaintsList h4{

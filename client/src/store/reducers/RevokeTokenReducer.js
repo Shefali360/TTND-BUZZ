@@ -6,7 +6,6 @@ const initialState={
 }
 
 const tokenRevoked=(state,action)=>{
-    console.log("Successful");
     return(updateObject(state,{
         loggedout:true,
         token:null

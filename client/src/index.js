@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import styles from './index.module.css';
 import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 import * as serviceWorker from './serviceWorker';
@@ -12,7 +12,7 @@ import revokeTokenReducer from './store/reducers/RevokeTokenReducer';
 import checkAdminReducer from './store/reducers/AdminRouteProtectReducer';
 import recentBuzzReducer from './store/reducers/GetRecentBuzzReducer';
 import userComplaintListReducer from './store/reducers/GetUserComplaintListReducer';
-// import 'font-awesome/css/font-awesome.min.css';
+
 
 const composeEnhancers = (process.env.NODE_ENV === 'development'?window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ :null)|| compose;
 const rootReducer=combineReducers({
@@ -29,7 +29,7 @@ const store=createStore(rootReducer,composeEnhancers(
 ReactDOM.render(
   <Provider store={store}>
   <BrowserRouter>
-    <App />
+    <App className={styles.container}/>
   </BrowserRouter>
   </Provider>,
   document.getElementById('root')

@@ -14,7 +14,9 @@ class CreateBuzz extends Component {
     error: false,
     formSubmitted:false,
     files: null,
-    spinner:false
+    spinner:false,
+    descEmpty:false,
+    categoryEmpty:false
   };
 
   counter=0;
@@ -30,8 +32,11 @@ class CreateBuzz extends Component {
       },
       () => {
         if (this.state.description !== "" && this.state.category !== "")
-          this.setState({ submitDisabled: false });
-        
+         { this.setState({ submitDisabled: false,descEmpty:false,categoryEmpty:false});}
+         if (this.state.description === "")
+         { this.setState({ descEmpty:true });}
+         if (this.state.category === "")
+         { this.setState({ categoryEmpty:true });}
       }
     );
   };
@@ -44,8 +49,6 @@ class CreateBuzz extends Component {
     }
     formData.append("description",this.state.description);
     formData.append("category",this.state.category);
-    // const token = JSON.parse(localStorage.getItem("token"));
-    // console.log(token);
     this.setState({spinner:true})
     axios
       .post("http://localhost:3030/buzz",formData,{
@@ -68,7 +71,6 @@ class CreateBuzz extends Component {
       })
       .catch((err) => {
         this.setState({spinner:false});
-        console.log(err);
       });
   };
   render() {
@@ -108,6 +110,8 @@ class CreateBuzz extends Component {
             <div className={styles.submitted}>
             {(this.state.formSubmitted)?<i className="fa fa-check"/>:null}
             </div>
+            {(this.state.descEmpty)?<p className={styles.errormsg}>Please fill in the description.</p>:null}
+            {(this.state.categoryEmpty)?<p className={styles.errormsg}>Please fill in the category.</p>:null}
             {(this.state.spinner)?<SmallSpinner/>:null}
             <button
               className={styles.button}

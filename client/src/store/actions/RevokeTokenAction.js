@@ -15,7 +15,6 @@ export const tokenRevoke= (data) => {
 
 export const revokeToken = () => {
 const token=JSON.parse(localStorage.getItem("token"));
-console.log(token.refresh_token);
   return (dispatch) => {
     axios
       .post(
@@ -24,7 +23,6 @@ console.log(token.refresh_token);
       )
       .then((response) => {
         localStorage.clear();
-        console.log(response);
         dispatch(tokenRevoked());
       })
       .catch((error) => {

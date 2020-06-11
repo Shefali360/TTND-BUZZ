@@ -13,7 +13,10 @@ state = {
     submitDisabled: true,
     error: false,
     formSubmitted:false,
-    spinner:false
+    spinner:false,
+    departmentEmpty: false,
+    issueEmpty:false,
+    concernEmpty:false,
   };
   
   counter=0;
@@ -30,7 +33,13 @@ state = {
       },
       () => {
         if (this.state.department !== "" && this.state.issue !== "" && this.state.concern !== "")
-          this.mounted && this.setState({ submitDisabled: false });
+          this.mounted && this.setState({ submitDisabled: false,departmentEmpty:false,issueEmpty:false,concernEmpty:false });
+          if (this.state.department === "")
+          { this.setState({ departmentEmpty:true });}
+          if (this.state.issue === "")
+          { this.setState({ issueEmpty:true });}
+          if (this.state.concern === "")
+          { this.setState({ concernEmpty:true });}
       }
     );
   };
@@ -75,7 +84,7 @@ state = {
         this.handle = setTimeout(() => {this.mounted && this.setState({formSubmitted: false});}, 1000);
       })
       .catch((err) => {
-        console.log(err);
+     
       });
 
   };
@@ -128,6 +137,7 @@ state = {
 
             <div className={styles.Button}>
             {(this.state.spinner)?<div className={styles.spinner}><SmallSpinner/></div>:null}
+            {(this.state.departmentEmpty||(this.state.issueEmpty)||(this.state.concernEmpty))?<p className={styles.errormsg}>Please fill in all the fields.</p>:null}
           <button className={styles.button} type="submit" value="Submit"
           disabled={this.state.submitDisabled}
           onClick={(event) => {

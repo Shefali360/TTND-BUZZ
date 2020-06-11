@@ -29,7 +29,6 @@ module.exports.getAllComplaints = async (query, limit, skip) => {
       .skip(skip ? skip : 0);
     return userComplaints;
   } catch (err) {
-    console.log(err);
     throw new ServerError("Error", 500);
   }
 };
@@ -45,26 +44,21 @@ module.exports.getComplaintsByUserEmail = async (query, limit, skip) => {
       })
       .limit(limit ? limit : 0)
       .skip(skip ? skip : 0);
-      console.log(userComplaint);
     return userComplaint;
    
   } catch (err) {
-    console.log(err);
     throw new ServerError("Error", 500);
   }
 };
 
 module.exports.updateComplaintStatusById = async ({id}, complaintData) => {
-  console.log(complaintData)
   try {
   const response=await complaint.findByIdAndUpdate(id, {
     $set: complaintData,
   }, {runValidators: true, new: true}).exec();
-  console.log("Res",response);
     return response;
 
   } catch (err) {
-    console.log(err);
     if (err.name === "ValidationError")
       throw new DataValidationFailed(err.message, 500);
     else throw new InternalServerError("Error", 500);

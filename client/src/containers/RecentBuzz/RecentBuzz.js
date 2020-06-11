@@ -34,7 +34,6 @@ class RecentBuzzData extends Component {
           hasMore:!(res.data.length<this.limit),
           spinner:false})
       }).catch((err)=>{
-        console.log(err);
         this.mounted&&this.setState({error:true,spinner:false})
       })
   }

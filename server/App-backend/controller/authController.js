@@ -19,7 +19,6 @@ module.exports.handleAuthTokenRequest = async (req, res,next) => {
         code: decodeURIComponent(req.params["code"]),
       },
     });
-    console.log(token['data']);
     res.send(token['data']);
   } catch (err) {
   return next(new invalidTokenCodeError("Invalid code for token access request",401,err.response.data));
@@ -40,7 +39,6 @@ module.exports.handleRefreshAuthTokenRequest = async (req, res,next) => {
         refresh_token: req.body["refreshToken"]
       },
     });
-    console.log(token['data']);
     res.send(token['data']);
   } catch (err) {
     return next(new invalidTokenError("Invalid refresh token received",401,err.response.data));
@@ -50,7 +48,6 @@ module.exports.handleRefreshAuthTokenRequest = async (req, res,next) => {
 
 
 module.exports.handleLogout = async (req, res,next) => {
-  console.log(req.body);
   if(!req.body || !req.body['refreshToken'])
   return next(new RequiredFieldAbsent('refresh token is not present', 400));
   try {
@@ -61,7 +58,7 @@ module.exports.handleLogout = async (req, res,next) => {
     res.send({"success":true});
   } catch (err) {
     next(new invalidTokenError("Invalid token received or token has been expired",401,err.response.data));
-    console.log(err);
+
   }
   
 };

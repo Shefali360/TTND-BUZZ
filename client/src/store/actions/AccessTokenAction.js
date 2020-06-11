@@ -17,11 +17,8 @@ export const tokenReceiveFailed = (err) => {
 };
 
 export const fetchToken = () => {
-  console.log(window.location);
   if(window.location.pathname==="/authToken"){
   const urlParams = queryString.parse(window.location.search);
-  console.log(window.location);
-  console.log("AccessTokenAction",urlParams.code);
   return (dispatch) => {
     axios
       .get(
@@ -32,7 +29,6 @@ export const fetchToken = () => {
         //   new Date().getTime() + response.data.expires_in * 1000
         // );
         localStorage.setItem("token",JSON.stringify(response.data));
-        console.log(response.data);
         dispatch(tokenReceived(response.data));
       })
       .catch((error) => {

@@ -21,7 +21,6 @@ module.exports.getAdmin = async (req, res, next) => {
     const response = await adminService.getAdmin(email);
     res.send(response);
   } catch (err) {
-    console.log(err);
     return next(new ServerError("Error", 500));
   }
 };

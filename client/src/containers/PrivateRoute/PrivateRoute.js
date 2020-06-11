@@ -17,7 +17,7 @@ const PrivateRouteComponent = (props) => (
 );
 
 const mapStateToProps = (state, ownProps) => {
-    // console.log(state.auth.token);
+
     return {
         token:state.auth.token,
         location: ownProps.path,

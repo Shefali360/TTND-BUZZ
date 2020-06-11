@@ -50,7 +50,6 @@ class UserComplaintList extends Component {
           spinner:false})
       })
       .catch((err) => {
-        console.log(err);
         this.updateState({error: true,spinner:false})
       
       });
@@ -99,10 +98,9 @@ class UserComplaintList extends Component {
       filters["status"] = this.state.status;
     }
     if (this.state.searchInput) {
-      filters["issueId"] = this.state.searchInput.trim();
+      filters["issueId"] = this.state.searchInput.trim().toUpperCase();
     }
     this.updateState({ filters: filters,skip:0})
-    console.log(filters);
     axios
       .get(`http://localhost:3030/complaint?skip=0&limit=${this.limit}&`+ stringify(filters), {
         headers: {
@@ -110,7 +108,6 @@ class UserComplaintList extends Component {
         },
       })
       .then((res) => {
-        console.log(res.data.length);
         if (res.data.length !== 0) {
           this.updateState({  complaintsList: res.data,skip:this.limit})
         } else if (res.data.length === 0) {
@@ -118,7 +115,6 @@ class UserComplaintList extends Component {
         }
       })
       .catch((err) => {
-        console.log(err);
         this.updateState({error:true})
       });
   };
@@ -131,11 +127,9 @@ class UserComplaintList extends Component {
         },
       })
       .then((res) => {
-        console.log(res);
         this.updateState({ complaintsList: res.data,skip:this.limit})
       })
       .catch((err) => {
-        console.log(err);
         this.updateState({error: true })
       });
   };

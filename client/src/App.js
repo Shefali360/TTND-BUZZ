@@ -14,7 +14,7 @@ import PrivateRoute from './containers/PrivateRoute/PrivateRoute';
 import AuthenticatedRoute from './containers/AuthenticatedRoute/AuthenticatedRoute';
 import NotFound from './components/NotFound/NotFound';
 
-function App() {
+const App=()=>{
   return (
     <Router>
       <Switch>

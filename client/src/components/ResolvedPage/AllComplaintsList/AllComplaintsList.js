@@ -34,7 +34,8 @@ class AllComplaintsList extends Component {
     skip:0,
     formSubmitted:false,
     spinner:true,
-    requesting:false
+    requesting:false,
+    countEmpty:false
   };
   timePopupPosition;
   limit=10;
@@ -80,8 +81,11 @@ class AllComplaintsList extends Component {
          this.state.estimatedTime.count !== "" &&
           this.state.estimatedTime.timeType !== ""
         )
-          this.setState({ submitDisabled: false });
+         { this.setState({ submitDisabled: false,countEmpty:false });}
+        if (this.state.estimatedTime.count === "")
+          { this.setState({ countEmpty:true });}
       }
+    
     );
   };
 
@@ -93,6 +97,7 @@ class AllComplaintsList extends Component {
 
   applyFilters=()=>{
     const filters={};
+  
     if(this.state.department){
       filters["department"]=this.state.department;
     }
@@ -100,7 +105,7 @@ class AllComplaintsList extends Component {
       filters["status"]=this.state.status;
     }
     if(this.state.search){
-      filters[this.state.search]=this.state.searchInput.trim();
+      this.state.search==="issueId"?filters[this.state.search]=this.state.searchInput.trim().toUpperCase():filters[this.state.search]=this.state.searchInput.trim();
     }
     this.setState({filters:filters,skip:0});
     
@@ -147,7 +152,6 @@ class AllComplaintsList extends Component {
       });
   }
   submitHandler = (event) => {
-   
     event.preventDefault();
     const formData = {
       estimatedTime: {
@@ -420,6 +424,7 @@ class AllComplaintsList extends Component {
             </button>
             {(this.state.requesting)?<SmallSpinner/>:null}
             {(this.state.formSubmitted)?<i className="fa fa-check"></i>:null}
+            {(this.state.countEmpty)?<p className={styles.errormsg}>Please fill in all the fields.</p>:null}
           </form>
         </div>
       </div>

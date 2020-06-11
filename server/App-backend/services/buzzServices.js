@@ -46,7 +46,7 @@ module.exports.getAll = async (email,limit,skip) => {
 ]).exec();
   return allBuzz;}
   catch(err){
-    console.log(err);
+  
   }
 };
 
@@ -72,7 +72,6 @@ module.exports.updateLikes=async({id},email,reverse)=>{
           });
         return {success:true};
   } catch (err) {
-      console.log(err);
   }
 }
 
@@ -98,7 +97,6 @@ module.exports.updateDislikes=async({id},email,reverse)=>{
           });
         return {success:true};
   } catch (err) {
-      console.log(err);
   }
 }
 

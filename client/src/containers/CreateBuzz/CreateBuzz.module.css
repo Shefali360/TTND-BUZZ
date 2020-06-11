@@ -2,6 +2,7 @@
 margin-top:20px;
 border:2px solid #ccc;
 border-radius:5px;
+width:100%;
 }
 
 .createBuzz h4{
@@ -82,3 +83,17 @@ cursor: not-allowed;
     color:#228B22;
 }
 
+.errormsg{
+    color:#e04a32;
+    font-size:14px;
+    font-weight: bold;
+    margin-top:5px;
+    margin-right:10px;
+}
+
+@media(max-width:767px){
+    .errormsg{
+       display:none;
+    }
+
+}

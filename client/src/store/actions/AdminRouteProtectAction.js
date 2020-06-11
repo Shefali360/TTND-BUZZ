@@ -19,11 +19,11 @@ export const checkAdmin = () => {
  
   return (dispatch) => {
     const token=JSON.parse(localStorage.getItem("token"));
-    console.log(token);
+
         axios.get("http://localhost:3030/admin",
         {headers:{"authorization":`Bearer ${token.access_token},Bearer ${token.id_token}`}})
       .then((response) => {
-        console.log(response.data);
+
         localStorage.setItem("adminPrivilege",response.data);
         dispatch(isAdmin(response.data));
       })
