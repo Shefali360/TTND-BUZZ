@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import styles from "./Home.module.css";
 import TopDiv from '../../components/TopDiv/TopDiv';
 import Sidebar from '../../components/Sidebar/SidebarItems/SidebarItems';
+import { withRouter } from 'react-router-dom';
 
 class Home extends Component {
   state={
@@ -30,10 +31,22 @@ class Home extends Component {
   }
 
   render() {
+    let text="";
+    if(this.props.history.location.pathname==="/buzz"){
+      text="Creating buzz around you has never been so easy...";
+    }else if(this.props.history.location.pathname==="/complaint"||this.props.history.location.pathname==="/resolved"){
+      text="You can now log complaints on a single click...";
+    }else if(this.props.history.location.pathname==="/about"){
+      text="About Us...";
+    }else if(this.props.history.location.pathname==="/help"){
+      text="Help...";
+    }else{
+      text="You seem a little lost...";
+    }
     return (
       <div className={styles.home}>
         <header>
-          <TopDiv text={"Creating buzz around you has never been so easy.."}/>
+          <TopDiv text={text}/>
         </header>
         <main className={styles.post}>
         <button className={styles.navigation} onClick={this.toggleNavbar}>Navigation</button>
@@ -50,4 +63,4 @@ class Home extends Component {
   }
 }
 
-export default Home;
+export default withRouter(Home);
