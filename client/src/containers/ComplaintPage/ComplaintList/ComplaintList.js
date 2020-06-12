@@ -13,7 +13,7 @@ import { Redirect } from "react-router-dom";
 
 class UserComplaintList extends Component {
   state = {
-    complaint: [],
+    complaint: {},
     popupVisible: false,
     department: "",
     status: "",
@@ -26,8 +26,6 @@ class UserComplaintList extends Component {
     redirect:false,
     networkErr:false
   };
-
-  mounted = false;
   limit = 10;
 
 
@@ -44,45 +42,40 @@ class UserComplaintList extends Component {
       .then((res) => {
         const complaintsList = Array.from(this.state.complaintsList);
         complaintsList.push(...res.data);
-        this.mounted &&this.setState({complaintsList: complaintsList,
+       this.setState({complaintsList: complaintsList,
           skip: skip + 10,
           hasMore: !(res.data.length < this.limit),
           spinner:false})
       })
       .catch((err) => {
-        this.mounted &&this.setState({error: true,spinner:false
+       this.setState({error: true,spinner:false
         })
         if(err.response.status===401){
-          this.mounted &&this.setState({redirect:true});
+         this.setState({redirect:true});
         }
         if(err.response.status===500){
-          this.mounted &&this.setState({networkErr:true});
+         this.setState({networkErr:true});
         }
       
       });
   };
   componentDidMount() {
-    this.mounted = true;
     this.getComplaints(this.state.skip);
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.submitted.submitted > prevProps.submitted.submitted){
-      this.mounted &&this.setState({complaintsList:[],spinner:true})
+     this.setState({complaintsList:[],spinner:true})
       this.getComplaints(0);
     }
   }
 
-  componentWillUnmount() {
-    this.mounted = false;
-  }
-
   handleFilterChange = (event) => {
-    this.mounted&&this.setState({ [event.target.name]: event.target.value});
+    this.setState({ [event.target.name]: event.target.value});
   };
 
   closePopup = () => {
-    this.mounted &&this.setState({complaint: [],
+   this.setState({complaint: {},
       popupVisible: false})
   };
 
@@ -107,7 +100,7 @@ class UserComplaintList extends Component {
     if (this.state.searchInput) {
       filters["issueId"] = this.state.searchInput.trim().toUpperCase();
     }
-    this.mounted &&this.setState({ filters: filters,skip:0})
+   this.setState({ filters: filters,skip:0})
     axios
       .get(`http://localhost:3030/complaint?skip=0&limit=${this.limit}&`+ stringify(filters), {
         headers: {
@@ -116,23 +109,23 @@ class UserComplaintList extends Component {
       })
       .then((res) => {
         if (res.data.length !== 0) {
-          this.mounted &&this.setState({  complaintsList:res.data,skip:this.limit})
+         this.setState({  complaintsList:res.data,skip:this.limit})
         } else if (res.data.length === 0) {
-          this.mounted && this.setState({ complaintsList: []})
+          this.setState({ complaintsList: []})
         }
       })
       .catch((err) => {
-        this.mounted &&this.setState({error:true})
+       this.setState({error:true})
         if(err.response.status===401){
-          this.mounted && this.setState({redirect:true});
+          this.setState({redirect:true});
         }
         if(err.response.status===500){
-          this.mounted &&this.setState({networkErr:true});
+         this.setState({networkErr:true});
         }
       });
   };
   resetFilters = () => {
-    this.mounted &&this.setState({filters: {},skip:0});
+   this.setState({filters: {},skip:0});
     axios
       .get(`http://localhost:3030/complaint?skip=0&limit=${this.limit}`, {
         headers: {
@@ -140,15 +133,15 @@ class UserComplaintList extends Component {
         },
       })
       .then((res) => {
-        this.mounted &&this.setState({ complaintsList: res.data,skip:this.limit})
+       this.setState({ complaintsList: res.data,skip:this.limit})
       })
       .catch((err) => {
-        this.mounted && this.setState({error: true })
+        this.setState({error: true })
         if(err.response.status===401){
-          this.mounted && this.setState({redirect:true});
+          this.setState({redirect:true});
         }
         if(err.response.status===500){
-          this.mounted &&this.setState({networkErr:true});
+         this.setState({networkErr:true});
         }
       });
   };
@@ -180,7 +173,7 @@ class UserComplaintList extends Component {
             <td><button
               className={styles.issueId}
               onClick={() => {
-                this.mounted&&this.setState({ complaint: complaint,
+               this.setState({ complaint: complaint,
                   popupVisible: true});
               }}
             >
@@ -231,11 +224,11 @@ class UserComplaintList extends Component {
           </div>
           <i
             className={["fa fa-check", sharedStyles.check].join(" ")}
-            onClick={this.applyFilters}
+            onClick={this.applyFilters} title="Apply Filters"
           ></i>
           <i
             className={["fa fa-undo", sharedStyles.undo].join(" ")}
-            onClick={this.resetFilters}
+            onClick={this.resetFilters} title="Reset Filters"
           ></i>
           <div className={sharedStyles.mobileButtons}>
            <button className={sharedStyles.apply} onClick={this.applyFilters}>Apply Filters</button>

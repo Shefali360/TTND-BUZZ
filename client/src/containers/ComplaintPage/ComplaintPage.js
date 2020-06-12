@@ -14,10 +14,7 @@ class ComplaintPage extends Component{
     redirect:false
   }
 
-  mounted = false;
-
   componentDidMount() {
-    this.mounted = true;
     axios.get(`https://oauth2.googleapis.com/tokeninfo?id_token=${this.props.data.id_token}`)
     .then(res => {
       this.mounted &&this.setState({
@@ -33,13 +30,8 @@ class ComplaintPage extends Component{
     });
   }
 
-  componentWillUnmount(){
-    this.mounted = false;
-  }
-
-
   complaintSubmitted=(event)=>{
-    this.mounted &&this.setState({complaintSubmitted:event});
+    this.setState({complaintSubmitted:event});
   }
 
   render(){

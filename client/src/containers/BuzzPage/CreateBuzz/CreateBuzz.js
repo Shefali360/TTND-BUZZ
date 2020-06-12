@@ -23,32 +23,23 @@ class CreateBuzz extends Component {
   };
 
   counter=0;
-  mounted=false;
-
-  componentDidMount(){
-    this.mounted=true;
-  }
-
-  componentWillUnmount(){
-    this.mounted=false;
-  }
 
   fileChange=(event)=>{
-    this.mounted&&this.setState({images:event.target.files});
+    this.setState({images:event.target.files});
   }
 
   handleChange = (event) => {
-    this.mounted&& this.setState(
+     this.setState(
       {
         [event.target.name]: event.target.value,
       },
       () => {
         if (this.state.description !== "" && this.state.category !== "")
-         {this.mounted&& this.setState({ submitDisabled: false,descEmpty:false,categoryEmpty:false});}
+         { this.setState({ submitDisabled: false,descEmpty:false,categoryEmpty:false});}
          if (this.state.description === "")
-         { this.mounted&&this.setState({ descEmpty:true });}
+         { this.setState({ descEmpty:true });}
          if (this.state.category === "")
-         { this.mounted&&this.setState({ categoryEmpty:true });}
+         { this.setState({ categoryEmpty:true });}
       }
     );
   };
@@ -62,7 +53,7 @@ class CreateBuzz extends Component {
     }
     formData.append("description",this.state.description);
     formData.append("category",this.state.category);
-    this.mounted&&this.setState({spinner:true})
+    this.setState({spinner:true})
     axios
       .post("http://localhost:3030/buzz",formData,{
         headers:{
@@ -71,7 +62,7 @@ class CreateBuzz extends Component {
       })
       .then((res) => {
         this.props.submitted({submitted:++this.counter});
-        this.mounted&&this.setState({
+        this.setState({
           description: '',
           category: '',
           formSubmitted: true,
@@ -80,15 +71,15 @@ class CreateBuzz extends Component {
           images: [],
           spinner:false
         });
-        setTimeout(() => {this.mounted&&this.setState({formSubmitted: false});}, 1000);
+        setTimeout(() => {this.setState({formSubmitted: false});}, 1000);
       })
       .catch((err) => { 
-        this.mounted&& this.setState({spinner:false});
+         this.setState({spinner:false});
         if(err.response.status===401){
-          this.mounted&&this.setState({redirect:true});
+          this.setState({redirect:true});
         }
         if(err.response.status===500){
-          this.mounted&&this.setState({networkErr:true});
+          this.setState({networkErr:true});
         }
        
       });

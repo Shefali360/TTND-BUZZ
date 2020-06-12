@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server":"node TTND-BUZZ/server/server.js" 
+    "client":"npm start",
+    "server":"node server/server.js" 
+    
   },
   "repository": {
     "type": "git",

@@ -20,7 +20,6 @@ class RecentBuzzData extends Component {
   }
 
   limit= 5;
-  mounted=false;
 
   getBuzz=(skip)=>{
 
@@ -30,18 +29,18 @@ class RecentBuzzData extends Component {
       ).then((res)=>{
         const buzz = Array.from(this.state.buzz);
         buzz.push(...res.data);
-        this.mounted&&this.setState({
+       this.setState({
           buzz: buzz,
           skip:skip + 5,
           hasMore:!(res.data.length<this.limit),
           spinner:false})
       }).catch((err)=>{
-        this.mounted&&this.setState({error:true,spinner:false})
+       this.setState({error:true,spinner:false})
         if(err.response.status===401){
-          this.mounted&&this.setState({redirect:true});
+         this.setState({redirect:true});
         }
         if(err.response.status===500){
-          this.mounted&&this.setState({networkErr:true});
+         this.setState({networkErr:true});
         }
        
       })
@@ -49,16 +48,12 @@ class RecentBuzzData extends Component {
   
   componentDidMount() {
     this.getBuzz(this.state.skip);
-    this.mounted=true;
-  }
-  componentWillUnmount(){
-    this.mounted=false;
-    
+   
   }
 
   componentDidUpdate(prevProps){
     if(this.props.submitted.submitted>prevProps.submitted.submitted){
-      this.mounted&&this.setState({buzz:[],spinner:true})
+     this.setState({buzz:[],spinner:true})
     this.getBuzz(0);}
   }
 

@@ -20,7 +20,7 @@ class AllComplaintsList extends Component {
     issueId: null,
     allComplaintsList: [],
     descriptionPopupVisible: false,
-    complaint: [],
+    complaint: {},
     estimatedTime: {
       count: 0,
       timeType: "hours",
@@ -42,17 +42,11 @@ class AllComplaintsList extends Component {
   };
   timePopupPosition;
   limit=10;
-  mounted=false;
 
   componentDidMount() {
     this.getAllComplaintsList();
-    this.mounted=true;
+    
    }
- 
-   componentWillUnmount() {
-     this.mounted=false;
-    }
-  
 
   getAllComplaintsList=()=>{
     axios
@@ -64,7 +58,7 @@ class AllComplaintsList extends Component {
     .then((res) => {
       const allComplaintsList = Array.from(this.state.allComplaintsList);
       allComplaintsList.push(...res.data);
-      this.mounted&&this.setState({
+      this.setState({
       allComplaintsList:allComplaintsList,
       skip:this.state.skip + 10,
       hasMore:!(res.data.length<this.limit),
@@ -72,12 +66,12 @@ class AllComplaintsList extends Component {
     })
     })
     .catch((err) => {
-      this.mounted&&this.setState({ error: true,spinner:false });
+      this.setState({ error: true,spinner:false });
       if(err.response.status===401){
-        this.mounted&&this.setState({redirect:true});
+        this.setState({redirect:true});
       }
       if(err.response.status===500){
-        this.mounted&&this.setState({networkErr:true});
+        this.setState({networkErr:true});
       }
     });
   }
@@ -85,7 +79,7 @@ class AllComplaintsList extends Component {
   handleEstimatedTimeChange = (event) => {
     const estimatedTime = { ...this.state.estimatedTime };
     estimatedTime[event.target.name] = event.target.value;
-    this.mounted&& this.setState(
+     this.setState(
       {
         estimatedTime: estimatedTime,
       },
@@ -95,16 +89,16 @@ class AllComplaintsList extends Component {
          this.state.estimatedTime.count !== "" &&
           this.state.estimatedTime.timeType !== ""
         )
-         { this.mounted&&this.setState({ submitDisabled: false,countEmpty:false });}
+         { this.setState({ submitDisabled: false,countEmpty:false });}
         if (this.state.estimatedTime.count === "")
-          { this.mounted&&this.setState({ countEmpty:true });}
+          { this.setState({ countEmpty:true });}
       }
     
     );
   };
 
   handleFilterChange=(event)=>{
-    this.mounted&&this.setState({
+    this.setState({
       [event.target.name]:event.target.value
     })
   }
@@ -121,7 +115,7 @@ class AllComplaintsList extends Component {
     if(this.state.search){
       this.state.search==="issueId"?filters[this.state.search]=this.state.searchInput.trim().toUpperCase():filters[this.state.search]=this.state.searchInput.trim();
     }
-    this.mounted&& this.setState({filters:filters,skip:0});
+     this.setState({filters:filters,skip:0});
     
     axios
       .get(`http://localhost:3030/complaint/all?skip=0&limit=${this.limit}&`+stringify(filters),{
@@ -132,26 +126,26 @@ class AllComplaintsList extends Component {
       .then((res) => {
      
         if (res.data.length !== 0) {
-          this.mounted&&this.setState({
+          this.setState({
           allComplaintsList: res.data,
           skip:this.limit
         });}else if (res.data.length === 0) {
-          this.mounted&&this.setState({ complaintsList: []})
+          this.setState({ complaintsList: []})
         }
       })
       .catch((err) => {
-        this.mounted&& this.setState({ error: true });
+         this.setState({ error: true });
         if(err.response.status===401){
-          this.mounted&&this.setState({redirect:true});
+          this.setState({redirect:true});
         }
         if(err.response.status===500){
-          this.mounted&&this.setState({networkErr:true});
+          this.setState({networkErr:true});
         }
       });
   }
 
   resetFilters=()=>{
-    this.mounted&& this.setState({filters:{}});
+     this.setState({filters:{}});
     axios
       .get(`http://localhost:3030/complaint/all?skip=0&limit=${this.limit}`,{
         headers: {
@@ -159,18 +153,18 @@ class AllComplaintsList extends Component {
         },
       })
       .then((res) => {
-        this.mounted&&this.setState({
+        this.setState({
           allComplaintsList: res.data,
           skip:this.limit,
         });
       })
       .catch((err) => {
-        this.mounted&& this.setState({ error: true });
+         this.setState({ error: true });
         if(err.response.status===401){
-          this.mounted&&this.setState({redirect:true});
+          this.setState({redirect:true});
         }
         if(err.response.status===500){
-          this.mounted&&this.setState({networkErr:true});
+          this.setState({networkErr:true});
         }
       });
   }
@@ -183,7 +177,7 @@ class AllComplaintsList extends Component {
       },
       status: this.state.value,
     };
-    this.mounted&& this.setState({requesting:true});
+     this.setState({requesting:true});
     axios
       .patch(`http://localhost:3030/complaint/${this.state.id}`, formData, {
         headers: {
@@ -191,28 +185,28 @@ class AllComplaintsList extends Component {
         },
       })
       .then((res) => {
-        this.mounted&&this.setState({
+        this.setState({
           formSubmitted: true,
           popupVisible:false,
           submitDisabled: true,
           estimatedTime: { count: 0, timeType: "hours" },
           requesting:false
         });
-        setTimeout(() => {this.mounted&&this.setState({formSubmitted: false});}, 1000);
+        setTimeout(() => {this.setState({formSubmitted: false});}, 1000);
       })
       .catch((err) => {
         if(err.response.status===401){
-          this.mounted&&this.setState({redirect:true});
+          this.setState({redirect:true});
         }
         if(err.response.status===500){
-          this.mounted&&this.setState({networkErr:true});
+          this.setState({networkErr:true});
         }
       });
   };
 
   closeDescriptionPopup = () => {
-    this.mounted&&this.setState({
-      complaint: [],
+    this.setState({
+      complaint: {},
       descriptionPopupVisible: false,
     });
   };
@@ -226,7 +220,7 @@ class AllComplaintsList extends Component {
       left: "" + positionMeta["x"] - cardX - positionMeta["width"] - 50 + "px",
     };
     if (event.target.value=== "In Progress") {
-      this.mounted&&this.setState({
+      this.setState({
         popupVisible: true,
         id: id,
         issueId: issueId,
@@ -236,7 +230,7 @@ class AllComplaintsList extends Component {
   
   handleChange = (event,id) => {
     if (event.target.value === "In Progress") {
-      this.mounted&& this.setState({ value: event.target.value });
+       this.setState({ value: event.target.value });
     } else 
      {
       axios
@@ -254,10 +248,10 @@ class AllComplaintsList extends Component {
         })
         .catch((err) => {
           if(err.response.status===401){
-            this.mounted&& this.setState({redirect:true});
+             this.setState({redirect:true});
           }
           if(err.response.status===500){
-            this.mounted&&this.setState({networkErr:true});
+            this.setState({networkErr:true});
           }
         });
     }
@@ -273,7 +267,7 @@ class AllComplaintsList extends Component {
   }
 
   hidePopup=()=>{
-    this.mounted&& this.setState({popupVisible:false});
+     this.setState({popupVisible:false});
   }
   render() {
     let tableData = null;
@@ -377,8 +371,8 @@ class AllComplaintsList extends Component {
           </div>
           {(this.state.searchInput!==""&&this.state.search===""?<p className={styles.message}>Please select a field to search by.</p>:null)}
           </div>
-          <i className={["fa fa-check",styles.check].join(' ')}onClick={this.applyFilters}></i>
-          <i className={["fa fa-undo",styles.undo].join(' ')}  onClick={this.resetFilters}></i>
+          <i className={["fa fa-check",styles.check].join(' ')}onClick={this.applyFilters} title="Apply Filters"></i>
+          <i className={["fa fa-undo",styles.undo].join(' ')}  onClick={this.resetFilters} title="Reset Filters"></i>
           <div className={styles.mobileButtons}>
           <button className={styles.apply} onClick={this.applyFilters}>Apply Filters</button>
           <button className={styles.reset}onClick={this.resetFilters}>Reset Filters</button>

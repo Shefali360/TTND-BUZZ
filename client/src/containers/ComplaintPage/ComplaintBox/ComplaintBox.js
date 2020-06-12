@@ -22,37 +22,28 @@ state = {
     redirect:false
   }; 
   counter=0;
-  mounted=false;
 
   fileChange=(event)=>{
-    this.mounted && this.setState({files:event.target.files});
+     this.setState({files:event.target.files});
   }
 
   handleChange = (event) => {
-    this.mounted && this.setState(
+     this.setState(
       {
         [event.target.name]: event.target.value,
       },
       () => {
         if (this.state.department !== "" && this.state.issue !== "" && this.state.concern !== "")
-          this.mounted && this.setState({ submitDisabled: false,departmentEmpty:false,issueEmpty:false,concernEmpty:false });
+           this.setState({ submitDisabled: false,departmentEmpty:false,issueEmpty:false,concernEmpty:false });
           if (this.state.department === "")
-          { this.mounted &&this.setState({ departmentEmpty:true });}
+          { this.setState({ departmentEmpty:true });}
           if (this.state.issue === "")
-          { this.mounted &&this.setState({ issueEmpty:true });}
+          { this.setState({ issueEmpty:true });}
           if (this.state.concern === "")
-          { this.mounted &&this.setState({ concernEmpty:true });}
+          { this.setState({ concernEmpty:true });}
       }
     );
   };
-
-  componentDidMount() {
-    this.mounted = true;
-  }
-
-  componentWillUnmount() {
-    this.mounted = false;
-  }
 
   submitHandler = (event) => {
     event.preventDefault();
@@ -64,7 +55,7 @@ state = {
     formData.append("department",this.state.department);
     formData.append("issue",this.state.issue);
     formData.append("concern",this.state.concern);
-    this.mounted &&this.setState({spinner:true});
+    this.setState({spinner:true});
     axios
       .post("http://localhost:3030/complaint",formData,{
         headers:{
@@ -73,7 +64,7 @@ state = {
       })
       .then((res) => {
         this.props.submitted({submitted:++this.counter});
-        this.mounted && this.setState({
+         this.setState({
           department: '',
           issue: '',
           formSubmitted: true,
@@ -82,14 +73,14 @@ state = {
           files: [],
           spinner:false
         });
-        this.handle = setTimeout(() => {this.mounted && this.setState({formSubmitted: false});}, 1000);
+        this.handle = setTimeout(() => { this.setState({formSubmitted: false});}, 1000);
       })
       .catch((err) => {
         if(err.response.status===401){
-          this.mounted &&this.setState({redirect:true});
+          this.setState({redirect:true});
         }
         if(err.response.status===500){
-          this.mounted &&this.setState({networkErr:true});
+          this.setState({networkErr:true});
         }
       });
 
