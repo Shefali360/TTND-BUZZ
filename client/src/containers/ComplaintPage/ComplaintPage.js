@@ -37,9 +37,6 @@ class ComplaintPage extends Component{
     this.mounted = false;
   }
 
-  updateState(arg) {
-    this.mounted && this.setState(arg);
-  }
 
   complaintSubmitted=(event)=>{
     this.mounted &&this.setState({complaintSubmitted:event});

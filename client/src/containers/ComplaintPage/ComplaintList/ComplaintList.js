@@ -78,7 +78,7 @@ class UserComplaintList extends Component {
   }
 
   handleFilterChange = (event) => {
-    this.updateState({ [event.target.name]: event.target.value});
+    this.mounted&&this.setState({ [event.target.name]: event.target.value});
   };
 
   closePopup = () => {
@@ -116,7 +116,7 @@ class UserComplaintList extends Component {
       })
       .then((res) => {
         if (res.data.length !== 0) {
-          this.mounted &&this.setState({  complaintsList: res.data,skip:this.limit})
+          this.mounted &&this.setState({  complaintsList:res.data,skip:this.limit})
         } else if (res.data.length === 0) {
           this.mounted && this.setState({ complaintsList: []})
         }
@@ -180,7 +180,7 @@ class UserComplaintList extends Component {
             <td><button
               className={styles.issueId}
               onClick={() => {
-                this.updateState({ complaint: complaint,
+                this.mounted&&this.setState({ complaint: complaint,
                   popupVisible: true});
               }}
             >
