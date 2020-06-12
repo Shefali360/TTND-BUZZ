@@ -16,6 +16,15 @@ class RecentBuzz extends Component {
     networkErr:false
   };
 
+  mounted=false;
+
+  componentDidMount(){
+    this.mounted=true;
+  }
+
+  componentWillUnmount(){
+    this.mounted=false;
+  }
   timed = (duration) => {
     const timeType = [60, 3600, 86400, 604800, 2419200, 29030400];
     const unit = ["min", "h", "d", "w", "m", "y"];
@@ -40,10 +49,10 @@ class RecentBuzz extends Component {
   };
 
   toggleLike = () => {
-    this.setState({updateReview:true});
+    this.mounted&&this.setState({updateReview:true});
     const liked = !this.state.liked;
     if (liked) {
-      this.setState({
+      this.mounted&&this.setState({
         likeCount: this.state.likeCount + 1,
         liked: liked,
       });
@@ -54,19 +63,19 @@ class RecentBuzz extends Component {
           },
         })
         .then((res) => {
-          this.setState({updateReview:false});
+          this.mounted&& this.setState({updateReview:false});
         })
         .catch((err) => {this.setState({updateReview:false})
         if(err.response.status===401){
-          this.setState({redirect:true});
+          this.mounted&& this.setState({redirect:true});
         }
         if(err.response.status===500){
-          this.setState({networkErr:true});
+          this.mounted&& this.setState({networkErr:true});
         }
       });
 
       if (this.state.disliked) {
-        this.setState({
+        this.mounted&& this.setState({
           dislikeCount: this.state.dislikeCount - 1,
           disliked: false,
         });
@@ -81,19 +90,19 @@ class RecentBuzz extends Component {
             }
           )
           .then((res) => {
-            this.setState({updateReview:false});
+            this.mounted&& this.setState({updateReview:false});
            
           })
           .catch((err) => {this.setState({updateReview:false});
           if(err.response.status===401){
-            this.setState({redirect:true});
+            this.mounted&& this.setState({redirect:true});
           }
           if(err.response.status===500){
-            this.setState({networkErr:true});
+            this.mounted&&this.setState({networkErr:true});
           }});
       }
     } else {
-      this.setState({
+      this.mounted&&this.setState({
         likeCount: this.state.likeCount - 1,
         liked: liked,
       });
@@ -108,22 +117,22 @@ class RecentBuzz extends Component {
           }
         )
         .then((res) => {
-          this.setState({updateReview:false})        })
+          this.mounted&&this.setState({updateReview:false})        })
         .catch((err) => {this.setState({updateReview:false});
         if(err.response.status===401){
-          this.setState({redirect:true});
+          this.mounted&&this.setState({redirect:true});
         }
         if(err.response.status===500){
-          this.setState({networkErr:true});
+          this.mounted&& this.setState({networkErr:true});
         }});
     }
   };
 
   toggleDislike = () => {
     const dislike = !this.state.disliked;
-    this.setState({updateReview:true});
+    this.mounted&&this.setState({updateReview:true});
     if (dislike) {
-      this.setState({
+      this.mounted&&this.setState({
         dislikeCount: this.state.dislikeCount + 1,
         disliked: dislike,
       });
@@ -134,19 +143,19 @@ class RecentBuzz extends Component {
           },
         })
         .then((res) => {
-          this.setState({updateReview:false});
+          this.mounted&& this.setState({updateReview:false});
           
         })
         .catch((err) => {this.setState({updateReview:false});
         if(err.response.status===401){
-          this.setState({redirect:true});
+          this.mounted&&this.setState({redirect:true});
         }
         if(err.response.status===500){
-          this.setState({networkErr:true});
+          this.mounted&& this.setState({networkErr:true});
         }});
 
       if (this.state.liked) {
-        this.setState({
+        this.mounted&& this.setState({
           likeCount: this.state.likeCount - 1,
           liked: false,
         });
@@ -161,19 +170,19 @@ class RecentBuzz extends Component {
             }
           )
           .then((res) => {
-            this.setState({updateReview:false});
+            this.mounted&& this.setState({updateReview:false});
             
           })
           .catch((err) => {this.setState({updateReview:false});
           if(err.response.status===401){
-            this.setState({redirect:true});
+            this.mounted&&this.setState({redirect:true});
           }
           if(err.response.status===500){
-            this.setState({networkErr:true});
+            this.mounted&& this.setState({networkErr:true});
           }});
       }
     } else {
-      this.setState({
+      this.mounted&& this.setState({
         dislikeCount: this.state.dislikeCount - 1,
         disliked: dislike,
       });
@@ -188,14 +197,14 @@ class RecentBuzz extends Component {
           }
         )
         .then((res) => {
-          this.setState({updateReview:false}); 
+          this.mounted&& this.setState({updateReview:false}); 
         })
         .catch((err) => {this.setState({updateReview:false});
         if(err.response.status===401){
-          this.setState({redirect:true});
+          this.mounted&&this.setState({redirect:true});
         }
         if(err.response.status===500){
-          this.setState({networkErr:true});
+          this.mounted&& this.setState({networkErr:true});
         }});
     }
   };

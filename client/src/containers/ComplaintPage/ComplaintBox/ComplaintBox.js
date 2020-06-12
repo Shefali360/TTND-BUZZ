@@ -37,11 +37,11 @@ state = {
         if (this.state.department !== "" && this.state.issue !== "" && this.state.concern !== "")
           this.mounted && this.setState({ submitDisabled: false,departmentEmpty:false,issueEmpty:false,concernEmpty:false });
           if (this.state.department === "")
-          { this.setState({ departmentEmpty:true });}
+          { this.mounted &&this.setState({ departmentEmpty:true });}
           if (this.state.issue === "")
-          { this.setState({ issueEmpty:true });}
+          { this.mounted &&this.setState({ issueEmpty:true });}
           if (this.state.concern === "")
-          { this.setState({ concernEmpty:true });}
+          { this.mounted &&this.setState({ concernEmpty:true });}
       }
     );
   };
@@ -64,8 +64,7 @@ state = {
     formData.append("department",this.state.department);
     formData.append("issue",this.state.issue);
     formData.append("concern",this.state.concern);
-    this.setState({spinner:true});
-    // const token = JSON.parse(localStorage.getItem("token"));
+    this.mounted &&this.setState({spinner:true});
     axios
       .post("http://localhost:3030/complaint",formData,{
         headers:{
@@ -87,10 +86,10 @@ state = {
       })
       .catch((err) => {
         if(err.response.status===401){
-          this.setState({redirect:true});
+          this.mounted &&this.setState({redirect:true});
         }
         if(err.response.status===500){
-          this.setState({networkErr:true});
+          this.mounted &&this.setState({networkErr:true});
         }
       });
 

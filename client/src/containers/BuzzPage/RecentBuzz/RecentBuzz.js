@@ -20,7 +20,7 @@ class RecentBuzzData extends Component {
   }
 
   limit= 5;
-  mounted=true;
+  mounted=false;
 
   getBuzz=(skip)=>{
 
@@ -38,10 +38,10 @@ class RecentBuzzData extends Component {
       }).catch((err)=>{
         this.mounted&&this.setState({error:true,spinner:false})
         if(err.response.status===401){
-          this.setState({redirect:true});
+          this.mounted&&this.setState({redirect:true});
         }
         if(err.response.status===500){
-          this.setState({networkErr:true});
+          this.mounted&&this.setState({networkErr:true});
         }
        
       })

@@ -42,6 +42,17 @@ class AllComplaintsList extends Component {
   };
   timePopupPosition;
   limit=10;
+  mounted=false;
+
+  componentDidMount() {
+    this.getAllComplaintsList();
+    this.mounted=true;
+   }
+ 
+   componentWillUnmount() {
+     this.mounted=false;
+    }
+  
 
   getAllComplaintsList=()=>{
     axios
@@ -53,7 +64,7 @@ class AllComplaintsList extends Component {
     .then((res) => {
       const allComplaintsList = Array.from(this.state.allComplaintsList);
       allComplaintsList.push(...res.data);
-      this.setState({
+      this.mounted&&this.setState({
       allComplaintsList:allComplaintsList,
       skip:this.state.skip + 10,
       hasMore:!(res.data.length<this.limit),
@@ -61,25 +72,20 @@ class AllComplaintsList extends Component {
     })
     })
     .catch((err) => {
-      this.setState({ error: true,spinner:false });
+      this.mounted&&this.setState({ error: true,spinner:false });
       if(err.response.status===401){
-        this.setState({redirect:true});
+        this.mounted&&this.setState({redirect:true});
       }
       if(err.response.status===500){
-        this.setState({networkErr:true});
+        this.mounted&&this.setState({networkErr:true});
       }
     });
   }
 
-  componentDidMount() {
-   this.getAllComplaintsList();
-  }
-
-
   handleEstimatedTimeChange = (event) => {
     const estimatedTime = { ...this.state.estimatedTime };
     estimatedTime[event.target.name] = event.target.value;
-    this.setState(
+    this.mounted&& this.setState(
       {
         estimatedTime: estimatedTime,
       },
@@ -89,16 +95,16 @@ class AllComplaintsList extends Component {
          this.state.estimatedTime.count !== "" &&
           this.state.estimatedTime.timeType !== ""
         )
-         { this.setState({ submitDisabled: false,countEmpty:false });}
+         { this.mounted&&this.setState({ submitDisabled: false,countEmpty:false });}
         if (this.state.estimatedTime.count === "")
-          { this.setState({ countEmpty:true });}
+          { this.mounted&&this.setState({ countEmpty:true });}
       }
     
     );
   };
 
   handleFilterChange=(event)=>{
-    this.setState({
+    this.mounted&&this.setState({
       [event.target.name]:event.target.value
     })
   }
@@ -115,7 +121,7 @@ class AllComplaintsList extends Component {
     if(this.state.search){
       this.state.search==="issueId"?filters[this.state.search]=this.state.searchInput.trim().toUpperCase():filters[this.state.search]=this.state.searchInput.trim();
     }
-    this.setState({filters:filters,skip:0});
+    this.mounted&& this.setState({filters:filters,skip:0});
     
     axios
       .get(`http://localhost:3030/complaint/all?skip=0&limit=${this.limit}&`+stringify(filters),{
@@ -126,26 +132,26 @@ class AllComplaintsList extends Component {
       .then((res) => {
      
         if (res.data.length !== 0) {
-        this.setState({
+          this.mounted&&this.setState({
           allComplaintsList: res.data,
           skip:this.limit
         });}else if (res.data.length === 0) {
-          this.setState({ complaintsList: []})
+          this.mounted&&this.setState({ complaintsList: []})
         }
       })
       .catch((err) => {
-        this.setState({ error: true });
+        this.mounted&& this.setState({ error: true });
         if(err.response.status===401){
-          this.setState({redirect:true});
+          this.mounted&&this.setState({redirect:true});
         }
         if(err.response.status===500){
-          this.setState({networkErr:true});
+          this.mounted&&this.setState({networkErr:true});
         }
       });
   }
 
   resetFilters=()=>{
-    this.setState({filters:{}});
+    this.mounted&& this.setState({filters:{}});
     axios
       .get(`http://localhost:3030/complaint/all?skip=0&limit=${this.limit}`,{
         headers: {
@@ -153,18 +159,18 @@ class AllComplaintsList extends Component {
         },
       })
       .then((res) => {
-        this.setState({
+        this.mounted&&this.setState({
           allComplaintsList: res.data,
           skip:this.limit,
         });
       })
       .catch((err) => {
-        this.setState({ error: true });
+        this.mounted&& this.setState({ error: true });
         if(err.response.status===401){
-          this.setState({redirect:true});
+          this.mounted&&this.setState({redirect:true});
         }
         if(err.response.status===500){
-          this.setState({networkErr:true});
+          this.mounted&&this.setState({networkErr:true});
         }
       });
   }
@@ -177,7 +183,7 @@ class AllComplaintsList extends Component {
       },
       status: this.state.value,
     };
-    this.setState({requesting:true});
+    this.mounted&& this.setState({requesting:true});
     axios
       .patch(`http://localhost:3030/complaint/${this.state.id}`, formData, {
         headers: {
@@ -185,27 +191,27 @@ class AllComplaintsList extends Component {
         },
       })
       .then((res) => {
-        this.setState({
+        this.mounted&&this.setState({
           formSubmitted: true,
           popupVisible:false,
           submitDisabled: true,
           estimatedTime: { count: 0, timeType: "hours" },
           requesting:false
         });
-        setTimeout(() => {this.setState({formSubmitted: false});}, 1000);
+        setTimeout(() => {this.mounted&&this.setState({formSubmitted: false});}, 1000);
       })
       .catch((err) => {
         if(err.response.status===401){
-          this.setState({redirect:true});
+          this.mounted&&this.setState({redirect:true});
         }
         if(err.response.status===500){
-          this.setState({networkErr:true});
+          this.mounted&&this.setState({networkErr:true});
         }
       });
   };
 
   closeDescriptionPopup = () => {
-    this.setState({
+    this.mounted&&this.setState({
       complaint: [],
       descriptionPopupVisible: false,
     });
@@ -220,7 +226,7 @@ class AllComplaintsList extends Component {
       left: "" + positionMeta["x"] - cardX - positionMeta["width"] - 50 + "px",
     };
     if (event.target.value=== "In Progress") {
-      this.setState({
+      this.mounted&&this.setState({
         popupVisible: true,
         id: id,
         issueId: issueId,
@@ -230,7 +236,7 @@ class AllComplaintsList extends Component {
   
   handleChange = (event,id) => {
     if (event.target.value === "In Progress") {
-      this.setState({ value: event.target.value });
+      this.mounted&& this.setState({ value: event.target.value });
     } else 
      {
       axios
@@ -248,10 +254,10 @@ class AllComplaintsList extends Component {
         })
         .catch((err) => {
           if(err.response.status===401){
-            this.setState({redirect:true});
+            this.mounted&& this.setState({redirect:true});
           }
           if(err.response.status===500){
-            this.setState({networkErr:true});
+            this.mounted&&this.setState({networkErr:true});
           }
         });
     }
@@ -267,7 +273,7 @@ class AllComplaintsList extends Component {
   }
 
   hidePopup=()=>{
-    this.setState({popupVisible:false});
+    this.mounted&& this.setState({popupVisible:false});
   }
   render() {
     let tableData = null;

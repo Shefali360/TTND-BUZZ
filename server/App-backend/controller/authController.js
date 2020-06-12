@@ -25,27 +25,6 @@ module.exports.handleAuthTokenRequest = async (req, res,next) => {
   }
 };
 
-module.exports.handleRefreshAuthTokenRequest = async (req, res,next) => {
-  if(!req.body || !req.body['refreshToken'])
-  return next(new RequiredFieldAbsent('refresh token is not present', 400));
-  try {
-    const token = await axios({
-      url: 'https://oauth2.googleapis.com/token',
-      method: "post",
-      data: {
-        client_id: process.env.CLIENT_ID,
-        client_secret: process.env.CLIENT_SECRET,
-        grant_type: "refresh_token",
-        refresh_token: req.body["refreshToken"]
-      },
-    });
-    res.send(token['data']);
-  } catch (err) {
-    return next(new invalidTokenError("Invalid refresh token received",401,err.response.data));
-  }
-  
-};
-
 
 module.exports.handleLogout = async (req, res,next) => {
   if(!req.body || !req.body['refreshToken'])

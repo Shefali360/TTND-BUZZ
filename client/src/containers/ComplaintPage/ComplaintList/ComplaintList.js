@@ -30,9 +30,6 @@ class UserComplaintList extends Component {
   mounted = false;
   limit = 10;
 
-  updateState(arg){
-    this.mounted&&this.setState(arg);
-  }
 
   getComplaints = (skip) => {
     axios
@@ -47,19 +44,19 @@ class UserComplaintList extends Component {
       .then((res) => {
         const complaintsList = Array.from(this.state.complaintsList);
         complaintsList.push(...res.data);
-        this.updateState({complaintsList: complaintsList,
+        this.mounted &&this.setState({complaintsList: complaintsList,
           skip: skip + 10,
           hasMore: !(res.data.length < this.limit),
           spinner:false})
       })
       .catch((err) => {
-        this.updateState({error: true,spinner:false
+        this.mounted &&this.setState({error: true,spinner:false
         })
         if(err.response.status===401){
-          this.setState({redirect:true});
+          this.mounted &&this.setState({redirect:true});
         }
         if(err.response.status===500){
-          this.setState({networkErr:true});
+          this.mounted &&this.setState({networkErr:true});
         }
       
       });
@@ -71,7 +68,7 @@ class UserComplaintList extends Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.submitted.submitted > prevProps.submitted.submitted){
-      this.updateState({complaintsList:[],spinner:true})
+      this.mounted &&this.setState({complaintsList:[],spinner:true})
       this.getComplaints(0);
     }
   }
@@ -85,7 +82,7 @@ class UserComplaintList extends Component {
   };
 
   closePopup = () => {
-    this.updateState({complaint: [],
+    this.mounted &&this.setState({complaint: [],
       popupVisible: false})
   };
 
@@ -110,7 +107,7 @@ class UserComplaintList extends Component {
     if (this.state.searchInput) {
       filters["issueId"] = this.state.searchInput.trim().toUpperCase();
     }
-    this.updateState({ filters: filters,skip:0})
+    this.mounted &&this.setState({ filters: filters,skip:0})
     axios
       .get(`http://localhost:3030/complaint?skip=0&limit=${this.limit}&`+ stringify(filters), {
         headers: {
@@ -119,23 +116,23 @@ class UserComplaintList extends Component {
       })
       .then((res) => {
         if (res.data.length !== 0) {
-          this.updateState({  complaintsList: res.data,skip:this.limit})
+          this.mounted &&this.setState({  complaintsList: res.data,skip:this.limit})
         } else if (res.data.length === 0) {
-          this.updateState({ complaintsList: []})
+          this.mounted && this.setState({ complaintsList: []})
         }
       })
       .catch((err) => {
-        this.updateState({error:true})
+        this.mounted &&this.setState({error:true})
         if(err.response.status===401){
-          this.setState({redirect:true});
+          this.mounted && this.setState({redirect:true});
         }
         if(err.response.status===500){
-          this.setState({networkErr:true});
+          this.mounted &&this.setState({networkErr:true});
         }
       });
   };
   resetFilters = () => {
-    this.updateState({filters: {},skip:0});
+    this.mounted &&this.setState({filters: {},skip:0});
     axios
       .get(`http://localhost:3030/complaint?skip=0&limit=${this.limit}`, {
         headers: {
@@ -143,15 +140,15 @@ class UserComplaintList extends Component {
         },
       })
       .then((res) => {
-        this.setState({ complaintsList: res.data,skip:this.limit})
+        this.mounted &&this.setState({ complaintsList: res.data,skip:this.limit})
       })
       .catch((err) => {
-        this.updateState({error: true })
+        this.mounted && this.setState({error: true })
         if(err.response.status===401){
-          this.setState({redirect:true});
+          this.mounted && this.setState({redirect:true});
         }
         if(err.response.status===500){
-          this.setState({networkErr:true});
+          this.mounted &&this.setState({networkErr:true});
         }
       });
   };

@@ -7,9 +7,18 @@ class BuzzPage extends Component{
     state={
         buzzSubmitted:{submitted:0}
     }
+    mounted=false;
+
+    componentDidMount(){
+        this.mounted=true;
+    }
+
+    componentWillUnmount(){
+        this.mounted=false;
+    }
 
     buzzSubmitted=(event)=>{
-        this.setState({buzzSubmitted:event});
+        this.mounted&&this.setState({buzzSubmitted:event});
       }
     render(){
     return(

@@ -20,7 +20,7 @@ class ComplaintPage extends Component{
     this.mounted = true;
     axios.get(`https://oauth2.googleapis.com/tokeninfo?id_token=${this.props.data.id_token}`)
     .then(res => {
-      this.updateState({
+      this.mounted &&this.setState({
         userName: res.data.name,
         userMail: res.data.email
       });
@@ -42,7 +42,7 @@ class ComplaintPage extends Component{
   }
 
   complaintSubmitted=(event)=>{
-    this.updateState({complaintSubmitted:event});
+    this.mounted &&this.setState({complaintSubmitted:event});
   }
 
   render(){
