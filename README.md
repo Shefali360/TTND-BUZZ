@@ -20,6 +20,6 @@
  - **npm install --save mongoose**
 
 ## How to run the project
-**Navigate to client folder and run : npm start**
-**Navigate to server folder and run:node server.js**
+ - **Navigate to client folder and run : npm start**
+ - **Navigate to server folder and run:node server.js**
 
