@@ -12,14 +12,14 @@
 ## Clone the repository
 
 ## How to install packages
-**sudo apt install nodejs** 
-**sudo apt install npm**
-**npm install --save react**
-**npm install --save redux**
-**npm install --save express**
-**npm install --save mongoose**
+ - **sudo apt install nodejs** 
+ - **sudo apt install npm**
+ - **npm install --save react**
+ - **npm install --save redux**
+ - **npm install --save express**
+ - **npm install --save mongoose**
+
 
 ## How to run the project
-**Navigate to client folder and run : npm start**
-**Navigate to server folder and run:node server.js**
-
+ - **Navigate to client folder and run : npm start**
+ - **Navigate to server folder and run:node server.js**
