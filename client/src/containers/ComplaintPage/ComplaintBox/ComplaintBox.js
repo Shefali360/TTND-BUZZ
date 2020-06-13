@@ -39,11 +39,11 @@ state = {
       () => {
         if (this.state.department !== "" && this.state.issue !== "" && this.state.concern !== "")
            this.setState({ submitDisabled: false,departmentEmpty:false,issueEmpty:false,concernEmpty:false });
-          if (this.state.department === "")
+          if (this.state.department ==="")
           { this.setState({ departmentEmpty:true });}
-          if (this.state.issue === "")
+          if (this.state.issue ==="")
           { this.setState({ issueEmpty:true });}
-          if (this.state.concern === "")
+          if (this.state.concern ==="")
           { this.setState({ concernEmpty:true });}
       }
     );

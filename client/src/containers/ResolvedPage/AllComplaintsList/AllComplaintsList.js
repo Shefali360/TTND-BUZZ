@@ -40,8 +40,7 @@ class AllComplaintsList extends Component {
     spinner:true,
     requesting:false,
     countEmpty:false,
-    networkErr:false,
-    redirect:false
+    networkErr:false
   };
   limit=10;
   departmentArray=[{value:"",name:"Department"},{value:"Admin",name:"Admin"},{value:"IT",name:"IT"},{value:"HR",name:"HR"},{value:"Infra",name:"Infra"}];
@@ -145,7 +144,7 @@ class AllComplaintsList extends Component {
   }
 
   resetFilters=()=>{
-     this.setState({filters:{}});
+     this.setState({filters:{},department:"",status:"",searchInput:"",search:""});
    authorizedRequestsHandler()
       .get(allComplaintsEndpoint+`?skip=0&limit=${this.limit}`)
       .then((res) => {
@@ -176,11 +175,7 @@ class AllComplaintsList extends Component {
     };
      this.setState({requesting:true});
    authorizedRequestsHandler()
-      .patch(complaintsEndpoint+`/${this.state.id}`, formData, {
-        headers: {
-          authorization: `Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`,
-        },
-      })
+      .patch(complaintsEndpoint+`/${this.state.id}`, formData)
       .then((res) => {
         this.setState({
           formSubmitted: true,
@@ -226,12 +221,7 @@ class AllComplaintsList extends Component {
      authorizedRequestsHandler()
         .patch(
           complaintsEndpoint+`/${id}`,
-          { status: event.target.value },
-          {
-            headers: {
-              authorization: `Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`,
-            },
-          }
+          { status: event.target.value }
         )
         .then((res) => {
          
@@ -331,18 +321,18 @@ class AllComplaintsList extends Component {
         <div className={styles.filterFields}>
        
           <div className={dropdownStyles.dropdown}>
-          <Dropdown name="department" change={this.handleFilterChange}
+          <Dropdown name="department" value={this.state.department} change={this.handleFilterChange}
                 array={this.departmentArray}/>
           </div>
           <div className={dropdownStyles.dropdown}>
-          <Dropdown name="status" change={this.handleFilterChange}
+          <Dropdown name="status" value={this.state.status} change={this.handleFilterChange}
                 array={this.statusArray}/>
           </div>
           <div>
           <div className={styles.search}>
-            <input type="search" placeholder="Search" name="searchInput" onChange={this.handleFilterChange}/>
+            <input type="search" placeholder="Search" name="searchInput" value={this.state.searchInput} onChange={this.handleFilterChange}/>
             <div className={dropdownStyles.dropdown}>
-            <Dropdown name="search" change={this.handleFilterChange}
+            <Dropdown name="search" value={this.state.search} change={this.handleFilterChange}
                 array={this.searchArray}/>
             </div>
           </div>

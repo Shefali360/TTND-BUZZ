@@ -8,7 +8,7 @@ const Dropdown=(props)=>{
         })
     return(
         <Aux>
-        <select
+<select
     className={props.class}
     name={props.name}
     value={props.value}

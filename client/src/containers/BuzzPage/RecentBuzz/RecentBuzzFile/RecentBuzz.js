@@ -15,7 +15,6 @@ class RecentBuzz extends Component {
     liked: this.props.liked || false,
     disliked: this.props.disliked || false,
     updateReview:false,
-    redirect:false,
     networkErr:false
   };
 

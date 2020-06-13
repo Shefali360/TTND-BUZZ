@@ -8,7 +8,6 @@ import sharedStyles from "../../../containers/ResolvedPage/AllComplaintsList/All
 import { stringify } from "query-string";
 import InfiniteScroll from "react-infinite-scroller";
 import errorStyles from '../../BuzzPage/RecentBuzz/RecentBuzzFile/RecentBuzz';
-import { Redirect } from "react-router-dom";
 import Dropdown from '../../../components/Dropdown/Dropdown';
 import {authorizedRequestsHandler} from '../../../APIs/APIs';
 import {complaintsEndpoint} from '../../../APIs/APIEndpoints';
@@ -26,7 +25,6 @@ class UserComplaintList extends Component {
     error: false,
     skip: 0,
     spinner:true,
-    redirect:false,
     networkErr:false
   };
   limit = 10;
@@ -124,7 +122,7 @@ class UserComplaintList extends Component {
       });
   };
   resetFilters = () => {
-   this.setState({filters: {},skip:0});
+   this.setState({filters: {},skip:0,department:"",status:"",searchInput:""});
    authorizedRequestsHandler()
       .get(complaintsEndpoint+`?skip=0&limit=${this.limit}`
       )
@@ -185,21 +183,18 @@ class UserComplaintList extends Component {
         );
       });
     }
-    if(this.state.redirect){
-      alert("Timed out!Please login again.")
-      return <Redirect to='/login'/>
-    }else{
+   
     return (
       <div className={styles.complaintsList}>
          {(this.state.networkErr)?alert("Please check your internet connection"):null}
         <h4>Your Complaints</h4>
         <div className={sharedStyles.filterFields}>
           <div className={dropdownStyles.dropdown}>
-          <Dropdown name="department" change={this.handleFilterChange}
+          <Dropdown name="department" value={this.state.department} change={this.handleFilterChange}
                 array={this.departmentArray}/>
           </div>
           <div className={dropdownStyles.dropdown}>
-          <Dropdown name="status" change={this.handleFilterChange}
+          <Dropdown name="status" value={this.state.status} change={this.handleFilterChange}
                 array={this.statusArray}/>
           </div>
           <div className={[sharedStyles.search, styles.search].join(" ")}>
@@ -207,6 +202,7 @@ class UserComplaintList extends Component {
               type="text"
               placeholder="Enter Issue ID"
               name="searchInput"
+              value={this.state.searchInput}
               onChange={this.handleFilterChange}
             />
           </div>
@@ -261,7 +257,7 @@ class UserComplaintList extends Component {
     );
   }
 }
-}
+
 const mapDispatchToProps=(dispatch)=>{
   return{
     errorOccurred:()=>dispatch(errorOccurred())

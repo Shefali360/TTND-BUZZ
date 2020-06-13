@@ -3,15 +3,14 @@ import Complaintbox from './ComplaintBox/ComplaintBox';
 import ComplaintsList from "./ComplaintList/ComplaintList";
 import axios from 'axios';
 import { connect } from "react-redux";
-import { Redirect } from "react-router-dom";
+import { errorOccurred } from "../../store/actions/index";
 
 class ComplaintPage extends Component{
 
   state = {
     userName: '',
     userMail: '',
-    complaintSubmitted:{submitted:0},
-    redirect:false
+    complaintSubmitted:{submitted:0}
   }
 
   componentDidMount() {
@@ -23,10 +22,10 @@ class ComplaintPage extends Component{
       });
     })
     .catch((err) => {
-      // console.log(err.message);
-      // if(err.response.status===400){
-      //   this.setState({redirect:true});
-      // }
+      const errorCode=err.response.data.errorCode;
+      if(errorCode==="INVALID_TOKEN"){
+         this.props.errorOccurred();
+      }
     });
   }
 
@@ -35,10 +34,6 @@ class ComplaintPage extends Component{
   }
 
   render(){
-    if(this.state.redirect){
-      alert("Timed out!Please login again.")
-      return <Redirect to='/login'/>
-    }else
     return (
       <div>
          
@@ -55,4 +50,10 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(ComplaintPage);
+const mapDispatchToProps=(dispatch)=>{
+  return{
+    errorOccurred:()=>dispatch(errorOccurred())
+  }
+  }
+  
+export default connect(mapStateToProps,mapDispatchToProps)(ComplaintPage);
