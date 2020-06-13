@@ -11,7 +11,6 @@ const initialState={
 }
 
 const tokenReceived=(state,action)=>{
-
 return(updateObject(state,{
        token:action.data
 }

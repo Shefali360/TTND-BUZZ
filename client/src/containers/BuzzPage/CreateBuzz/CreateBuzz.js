@@ -2,9 +2,10 @@ import React, { Component } from "react";
 import styles from "./CreateBuzz.module.css";
 import sharedStyles from "../../../components/Dropdown/Dropdown.module.css";
 import { connect } from "react-redux";
-import axios from "axios";
 import SmallSpinner from '../../../components/SmallSpinner/SmallSpinner';
-import { Redirect } from "react-router-dom";
+import {authorizedRequestsHandler} from '../../../APIs/APIs';
+import {buzzEndpoint} from '../../../APIs/APIEndpoints';
+import { errorOccurred } from "../../../store/actions";
 
 class CreateBuzz extends Component {
   state = {
@@ -18,8 +19,7 @@ class CreateBuzz extends Component {
     spinner:false,
     descEmpty:false,
     categoryEmpty:false,
-    networkErr:false,
-    redirect:false
+    networkErr:false
   };
 
   counter=0;
@@ -54,12 +54,8 @@ class CreateBuzz extends Component {
     formData.append("description",this.state.description);
     formData.append("category",this.state.category);
     this.setState({spinner:true})
-    axios
-      .post("http://localhost:3030/buzz",formData,{
-        headers:{
-          authorization:`Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`
-        },
-      })
+    authorizedRequestsHandler()
+      .post(buzzEndpoint,formData)
       .then((res) => {
         this.props.submitted({submitted:++this.counter});
         this.setState({
@@ -75,9 +71,10 @@ class CreateBuzz extends Component {
       })
       .catch((err) => { 
          this.setState({spinner:false});
-        if(err.response.status===401){
-          this.setState({redirect:true});
-        }
+         const errorCode=err.response.data.errorCode;
+         if(errorCode==="INVALID_TOKEN"){
+            this.props.errorOccurred();
+         }
         if(err.response.status===500){
           this.setState({networkErr:true});
         }
@@ -85,10 +82,6 @@ class CreateBuzz extends Component {
       });
   };
   render() {
-    if(this.state.redirect){
-      alert("Timed out!Please login again.")
-      return <Redirect to='/login'/>
-    }else{
     return (
       <div className={styles.createBuzz}>
          {(this.state.networkErr)?alert("Please check your internet connection"):null}
@@ -147,15 +140,16 @@ class CreateBuzz extends Component {
     );
   }
 }
+
+
+
+const mapDispatchToProps=(dispatch)=>{
+return{
+  errorOccurred:()=>dispatch(errorOccurred())
+}
 }
 
-const mapStateToProps = (state) => {
-  return {
-    data: state.auth.token,
-  };
-};
 
-
-export default connect(mapStateToProps)(CreateBuzz);
+export default connect(null,mapDispatchToProps)(CreateBuzz);
 
 

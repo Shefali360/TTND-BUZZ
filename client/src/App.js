@@ -13,6 +13,7 @@ import Aux from './hoc/wrap/wrap';
 import PrivateRoute from './containers/PrivateRoute/PrivateRoute';
 import AuthenticatedRoute from './containers/AuthenticatedRoute/AuthenticatedRoute';
 import NotFound from './components/NotFound/NotFound';
+import Error from './hoc/Error/Error';
 
 const App=()=>{
   return (
@@ -21,6 +22,7 @@ const App=()=>{
       <Route path="/" exact component={Login}/>
       <Route path="/login" component={Login}/>
       <Route path="/authToken" component={AuthToken}/>
+      <Error>
        <Home>
           <Route component={({match})=>
           <Aux>
@@ -35,6 +37,7 @@ const App=()=>{
          </Aux>
           }/>
          </Home>
+      </Error>
          
       </Switch>
     </Router>

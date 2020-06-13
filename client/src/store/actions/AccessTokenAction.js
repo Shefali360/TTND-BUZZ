@@ -1,6 +1,7 @@
 import * as actionTypes from "./actionTypes";
-import axios from "axios";
 import * as queryString from "query-string";
+import {authenticatedRequestsHandler} from '../../APIs/APIs';
+import {authTokenEndpoint} from '../../APIs/APIEndpoints';
 
 export const tokenReceived = (data) => {
   return {
@@ -17,12 +18,11 @@ export const tokenReceiveFailed = (err) => {
 };
 
 export const fetchToken = () => {
-  if(window.location.pathname==="/authToken"){
   const urlParams = queryString.parse(window.location.search);
   return (dispatch) => {
-    axios
+    authenticatedRequestsHandler()
       .get(
-        `http://localhost:3030/authToken/${encodeURIComponent(urlParams.code)}`
+        authTokenEndpoint+`/${encodeURIComponent(urlParams.code)}`
       )
       .then((response) => {
         localStorage.setItem("token",JSON.stringify(response.data));
@@ -32,15 +32,6 @@ export const fetchToken = () => {
         dispatch(tokenReceiveFailed(error));
       });
   };
-}else{
-  const token=JSON.parse(localStorage.getItem("token"));
-  return(dispatch)=>{
-  if(token){
-  dispatch(tokenReceived(token));
-  }else{
-    dispatch(tokenReceiveFailed("Error"));
-  }}
 }
-};
 
 
