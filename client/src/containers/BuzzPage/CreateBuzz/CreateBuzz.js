@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import axios from "axios";
 import SmallSpinner from '../../../components/SmallSpinner/SmallSpinner';
 import { Redirect } from "react-router-dom";
+import Dropdown from '../../../components/Dropdown/Dropdown';
 
 class CreateBuzz extends Component {
   state = {
@@ -21,6 +22,8 @@ class CreateBuzz extends Component {
     networkErr:false,
     redirect:false
   };
+
+  array=[{value:"",name:"Category"},{value:"Activity buzz",name:"Activity"},{value:"Lost and Found buzz",name:"Lost and Found"}]
 
   counter=0;
 
@@ -53,7 +56,8 @@ class CreateBuzz extends Component {
     }
     formData.append("description",this.state.description);
     formData.append("category",this.state.category);
-    this.setState({spinner:true})
+    this.setState({spinner:true});
+
     axios
       .post("http://localhost:3030/buzz",formData,{
         headers:{
@@ -105,15 +109,8 @@ class CreateBuzz extends Component {
           <div className={styles.bottombar}>
             <div>
               <div className={sharedStyles.dropdown}>
-                <select
-                  name="category"
-                  value={this.state.category}
-                  onChange={this.handleChange}
-                >
-                  <option value="" >Category</option>
-                  <option value="Activity buzz" >Activity</option>
-                  <option value="Lost and Found buzz" >Lost and Found</option>
-                </select>
+                <Dropdown name="category" value={this.state.category} change={this.handleChange}
+                array={this.array}/>
               </div>
               <div className={styles.imageUpload}>
                 <input files={this.state.files} type="file" name="images" className={styles.file} accept="image/x-png,image/jpg,image/jpeg" onChange={this.fileChange} multiple/>

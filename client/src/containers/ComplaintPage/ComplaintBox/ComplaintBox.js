@@ -4,6 +4,7 @@ import axios from 'axios';
 import { connect } from "react-redux";
 import SmallSpinner from "../../../components/SmallSpinner/SmallSpinner";
 import { Redirect } from "react-router-dom";
+import Dropdown from '../../../components/Dropdown/Dropdown';
 
 class ComplaintBox extends Component{
 state = {
@@ -22,6 +23,8 @@ state = {
     redirect:false
   }; 
   counter=0;
+  departmentArray=[{value:"",name:"Select Department"},{value:"Admin",name:"Admin"},{value:"IT",name:"IT"},{value:"HR",name:"HR"},{value:"Infra",name:"Infra"}];
+  issueArray=[{value:"",name:"Select Issue Title"},{value:"Hardware",name:"Hardware"},{value:"Infrastructure",name:"Infrastructure"},{value:"Others",name:"Others"}]
 
   fileChange=(event)=>{
      this.setState({files:event.target.files});
@@ -97,22 +100,13 @@ state = {
         <form className={styles.complaintForm}>
         <div className={[styles.item,styles.dropdownMenu].join(' ')}> 
           <label>Select Department</label>
-          <select className={styles.select} name="department" value={this.state.department} onChange={this.handleChange}>
-            <option className={styles.blank}></option>
-            <option value="Admin">Admin</option>
-            <option value="IT">IT</option>
-            <option value="HR">HR</option>
-            <option value="Infra">Infra</option>
-          </select>
+          <Dropdown class={styles.select} name="department" value={this.state.department} change={this.handleChange}
+                array={this.departmentArray}/>
           </div>
           <div className={[styles.item,styles.dropdownMenu].join(' ')}>
           <label>Issue Title</label>
-          <select className={styles.select} name="issue" value={this.state.issue} onChange={this.handleChange}>
-          <option className={styles.blank}></option>
-            <option value="Hardware">Hardware</option>
-            <option value="Infrastructure">Infrastructure</option>
-            <option value="Others">Others</option>
-          </select>
+          <Dropdown class={styles.select} name="issue" value={this.state.issue} change={this.handleChange}
+                array={this.issueArray}/>
           </div>
           <div className={styles.item}>
           <label>Your Name</label>

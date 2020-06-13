@@ -11,6 +11,7 @@ import InfiniteScroll from 'react-infinite-scroller';
 import errorStyles from '../../BuzzPage/RecentBuzz/RecentBuzzFile/RecentBuzz.module.css';
 import SmallSpinner from "../../../components/SmallSpinner/SmallSpinner";
 import { Redirect } from "react-router-dom";
+import Dropdown from '../../../components/Dropdown/Dropdown';
 
 class AllComplaintsList extends Component {
   state = {
@@ -40,8 +41,11 @@ class AllComplaintsList extends Component {
     networkErr:false,
     redirect:false
   };
-  timePopupPosition;
   limit=10;
+  departmentArray=[{value:"",name:"Department"},{value:"Admin",name:"Admin"},{value:"IT",name:"IT"},{value:"HR",name:"HR"},{value:"Infra",name:"Infra"}];
+  statusArray=[{value:"",name:"Status"},{value:"Open",name:"Open"},{value:"In Progress",name:"In Progress"},{value:"Closed",name:"Closed"}];
+  searchArray=[{value:"",name:"Search By"},{value:"issueId",name:"Issue id"},{value:"lockedBy",name:"Locked By"}];
+  timeTypeArray=[{value:"hours",name:"hours"},{value:"days",name:"days"},{value:"weeks",name:"weeks"},{value:"months",name:"months"}]
 
   componentDidMount() {
     this.getAllComplaintsList();
@@ -211,14 +215,6 @@ class AllComplaintsList extends Component {
     });
   };
   openPopupOnDropdownClick = (event, id, issueId) => {
-    let card = document.getElementById("card").getBoundingClientRect();
-    const cardX = card.x;
-    const cardY = card.y;
-    const positionMeta = event.target.getBoundingClientRect();
-    this.timePopupPosition = {
-      top: "" + positionMeta["y"] - cardY + "px",
-      left: "" + positionMeta["x"] - cardX - positionMeta["width"] - 50 + "px",
-    };
     if (event.target.value=== "In Progress") {
       this.setState({
         popupVisible: true,
@@ -341,32 +337,21 @@ class AllComplaintsList extends Component {
           {(this.state.networkErr)?alert("Please check your internet connection"):null}
         <h4>All Complaints</h4>
         <div className={styles.filterFields}>
+       
           <div className={dropdownStyles.dropdown}>
-            <select name="department" onChange={this.handleFilterChange}>
-            <option value="" defaultValue>Department</option>
-            <option value="Admin" defaultValue>Admin</option>
-            <option value="IT" defaultValue>IT</option>
-            <option value="HR" defaultValue>HR</option>
-            <option value="Infra" defaultValue>Infra</option>
-            </select>
+          <Dropdown name="department" change={this.handleFilterChange}
+                array={this.departmentArray}/>
           </div>
           <div className={dropdownStyles.dropdown}>
-            <select name="status"  onChange={this.handleFilterChange}>
-            <option value="" defaultValue>Status</option>
-            <option value="Open" defaultValue>Open</option>
-            <option value="In Progress" defaultValue>In Progress</option>
-            <option value="Closed" defaultValue>Closed</option>
-            </select>
+          <Dropdown name="status" change={this.handleFilterChange}
+                array={this.statusArray}/>
           </div>
           <div>
           <div className={styles.search}>
             <input type="search" placeholder="Search" name="searchInput" onChange={this.handleFilterChange}/>
             <div className={dropdownStyles.dropdown}>
-              <select name="search" onChange={this.handleFilterChange}>
-              <option value="" defaultValue>Search By</option>
-              <option value="issueId" defaultValue>Issue Id</option>
-              <option value="lockedBy" defaultValue>Locked By</option>
-              </select>
+            <Dropdown name="search" change={this.handleFilterChange}
+                array={this.searchArray}/>
             </div>
           </div>
           {(this.state.searchInput!==""&&this.state.search===""?<p className={styles.message}>Please select a field to search by.</p>:null)}
@@ -409,18 +394,18 @@ class AllComplaintsList extends Component {
             " " +
             (this.state.popupVisible ? "null" : styles.display)}>
         <div
-          style={this.timePopupPosition}
           className={
             styles.popup +
             " " +
             (this.state.popupVisible ? "null" : styles.display)
           }
         >
-          <span>
+        
             <h5>
               Estimated Time
             </h5>
-          </span>
+          <p className={styles.popupIssueId}>{this.state.issueId}</p>
+  
           <form className={styles.popupForm}>
             <div className={styles.formdata}>
               <input
@@ -431,17 +416,8 @@ class AllComplaintsList extends Component {
                 onChange={this.handleEstimatedTimeChange}
               />
               <div className={[dropdownStyles.dropdown,styles.dropdown].join(' ')}>
-                <select
-                  className={styles.select}
-                  name="timeType"
-                  value={this.state.estimatedTime.timeType}
-                  onChange={this.handleEstimatedTimeChange}
-                >
-                  <option value="hours">hours</option>
-                  <option value="days">days</option>
-                  <option value="weeks">weeks</option>
-                  <option value="month">months</option>
-                </select>
+              <Dropdown class={styles.select} name="timeType" value={this.state.estimatedTime.count} change={this.handleEstimatedTimeChange}
+                array={this.timeTypeArray}/>
               </div>
             </div>
             <button

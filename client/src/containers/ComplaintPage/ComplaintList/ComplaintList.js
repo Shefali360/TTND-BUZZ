@@ -10,6 +10,7 @@ import { stringify } from "query-string";
 import InfiniteScroll from "react-infinite-scroller";
 import errorStyles from '../../BuzzPage/RecentBuzz/RecentBuzzFile/RecentBuzz';
 import { Redirect } from "react-router-dom";
+import Dropdown from '../../../components/Dropdown/Dropdown';
 
 class UserComplaintList extends Component {
   state = {
@@ -27,6 +28,9 @@ class UserComplaintList extends Component {
     networkErr:false
   };
   limit = 10;
+  departmentArray=[{value:"",name:"Department"},{value:"Admin",name:"Admin"},{value:"IT",name:"IT"},{value:"HR",name:"HR"},{value:"Infra",name:"Infra"}];
+  statusArray=[{value:"",name:"Status"},{value:"Open",name:"Open"},{value:"In Progress",name:"In Progress"},{value:"Closed",name:"Closed"}];
+
 
 
   getComplaints = (skip) => {
@@ -198,21 +202,12 @@ class UserComplaintList extends Component {
         <h4>Your Complaints</h4>
         <div className={sharedStyles.filterFields}>
           <div className={dropdownStyles.dropdown}>
-            <select name="department" onChange={this.handleFilterChange}>
-              <option value="">Department</option>
-              <option value="Admin">Admin</option>
-              <option value="IT">IT</option>
-              <option value="HR">HR</option>
-              <option value="Infra">Infra</option>
-            </select>
+          <Dropdown name="department" change={this.handleFilterChange}
+                array={this.departmentArray}/>
           </div>
           <div className={dropdownStyles.dropdown}>
-            <select name="status" onChange={this.handleFilterChange}>
-              <option value="">Status</option>
-              <option value="Open">Open</option>
-              <option value="In Progress">In Progress</option>
-              <option value="Closed">Closed</option>
-            </select>
+          <Dropdown name="status" change={this.handleFilterChange}
+                array={this.statusArray}/>
           </div>
           <div className={[sharedStyles.search, styles.search].join(" ")}>
             <input

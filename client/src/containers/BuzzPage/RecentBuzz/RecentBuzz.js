@@ -22,7 +22,6 @@ class RecentBuzzData extends Component {
   limit= 5;
 
   getBuzz=(skip)=>{
-
     axios
       .get(
         `http://localhost:3030/buzz?skip=${skip}&limit=${this.limit}`, {headers:{"authorization":`Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token} `}}
