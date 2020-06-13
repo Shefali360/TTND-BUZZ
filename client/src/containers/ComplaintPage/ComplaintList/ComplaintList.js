@@ -12,6 +12,7 @@ import Dropdown from '../../../components/Dropdown/Dropdown';
 import {authorizedRequestsHandler} from '../../../APIs/APIs';
 import {complaintsEndpoint} from '../../../APIs/APIEndpoints';
 import { errorOccurred } from "../../../store/actions";
+import Loader from '../../../components/Loader/Loader';
 
 class UserComplaintList extends Component {
   state = {
@@ -65,7 +66,7 @@ class UserComplaintList extends Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.submitted.submitted > prevProps.submitted.submitted){
-     this.setState({complaintsList:[],spinner:true})
+     this.setState({complaintsList:[],spinner:true,hasMore:false})
       this.getComplaints(0);
     }
   }
@@ -100,12 +101,12 @@ class UserComplaintList extends Component {
     if (this.state.searchInput) {
       filters["issueId"] = this.state.searchInput.trim().toUpperCase();
     }
-   this.setState({ filters: filters,skip:0})
+   this.setState({ filters: filters,skip:0,hasMore:false})
    authorizedRequestsHandler()
       .get(complaintsEndpoint+`?skip=0&limit=${this.limit}&`+ stringify(filters))
       .then((res) => {
         if (res.data.length !== 0) {
-         this.setState({  complaintsList:res.data,skip:this.limit})
+         this.setState({  complaintsList:res.data,skip:this.limit,hasMore:!(res.data.length < this.limit)})
         } else if (res.data.length === 0) {
           this.setState({ complaintsList: []})
         }
@@ -122,15 +123,15 @@ class UserComplaintList extends Component {
       });
   };
   resetFilters = () => {
-   this.setState({filters: {},skip:0,department:"",status:"",searchInput:""});
+   this.setState({filters: {},skip:0,department:"",status:"",searchInput:"",hasMore:false});
    authorizedRequestsHandler()
       .get(complaintsEndpoint+`?skip=0&limit=${this.limit}`
       )
       .then((res) => {
-       this.setState({ complaintsList: res.data,skip:this.limit})
+       this.setState({ complaintsList: res.data,skip:this.limit,hasMore:!(res.data.length < this.limit)})
       })
       .catch((err) => {
-        this.setState({error: true })
+        this.setState({error: true})
         const errorCode=err.response.data.errorCode;
          if(errorCode==="INVALID_TOKEN"){
             this.props.errorOccurred();
@@ -235,6 +236,7 @@ class UserComplaintList extends Component {
               loader={
                 <tr key={1}>
                   <td colSpan={4}>
+                    <Loader/>
                   </td>
                 </tr>
               }

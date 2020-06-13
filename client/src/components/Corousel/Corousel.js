@@ -26,8 +26,11 @@ class Corousel extends Component{
                 <div className={styles.imageContainer}>
                     <img src={serverURI+"/"+ images[this.state.idx]} alt={images[this.state.idx]}/>
                 </div>
-                <button className={[styles.arrow,styles.prev].join(' ')} onClick={this.prev}><i className="fa fa-angle-left"/></button>
-                <button className={[styles.arrow,styles.next].join(' ')} onClick={this.next}><i className="fa fa-angle-right"/></button>
+                {(images.length>1)?
+                <div><button className={[styles.arrow,styles.prev].join(' ')} onClick={this.prev}><i className="fa fa-angle-left"/></button>
+                <button className={[styles.arrow,styles.next].join(' ')} onClick={this.next}><i className="fa fa-angle-right"/></button></div>
+                :null
+                }
             </div>
         );
     }

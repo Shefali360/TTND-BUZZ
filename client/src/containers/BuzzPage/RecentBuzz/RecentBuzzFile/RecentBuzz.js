@@ -47,7 +47,7 @@ class RecentBuzz extends Component {
     if (liked) {
       this.setState({
         likeCount: this.state.likeCount + 1,
-        liked: liked,
+        liked: liked
       });
       authorizedRequestsHandler()
         .patch(buzzLikeEndpoint+`/${this.props.id}`, null)
@@ -193,7 +193,7 @@ class RecentBuzz extends Component {
             {this.props.dayFormat}/{this.props.monthFormat}/{this.props.yearFormat}
           </span>
           <div className={styles.rightDiv}>
-            {this.props.images.length !== 0 ? (
+            {this.props.images.length > 0 ? (
               <Corousel image={this.props.images} />
             ) : null}
             <span className={styles.userId}>{this.props.email}</span>

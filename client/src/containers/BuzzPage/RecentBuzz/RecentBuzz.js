@@ -54,8 +54,9 @@ class RecentBuzzData extends Component {
 
   componentDidUpdate(prevProps){
     if(this.props.submitted.submitted>prevProps.submitted.submitted){
-     this.setState({buzz:[],spinner:true})
-    this.getBuzz(0);}
+     this.setState({buzz:[],spinner:true,hasMore:false});
+    this.getBuzz(0);
+  }
   }
 
   render() {
@@ -90,7 +91,7 @@ class RecentBuzzData extends Component {
         imageData=buzz.images;
       }
       if(buzz.images.length!==0){
-        altData= `${buzz.images[0]}`;
+        altData= buzz.images;
       }
             return (
               <li key={buzz._id} >

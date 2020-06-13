@@ -16,7 +16,6 @@ class CreateBuzz extends Component {
     submitDisabled: true,
     error: false,
     formSubmitted:false,
-    files: null,
     spinner:false,
     descEmpty:false,
     categoryEmpty:false,
@@ -48,7 +47,6 @@ class CreateBuzz extends Component {
   };
 
   submitHandler = (event) => {
-
     event.preventDefault();
     let formData=new FormData();
     for(let i=0;i<this.state.images.length;i++){
@@ -66,7 +64,6 @@ class CreateBuzz extends Component {
           category: '',
           formSubmitted: true,
           submitDisabled: true,
-          files: null,
           images: [],
           spinner:false
         });
@@ -105,7 +102,7 @@ class CreateBuzz extends Component {
                 array={this.array}/>
               </div>
               <div className={styles.imageUpload}>
-                <input files={this.state.files} type="file" name="images" className={styles.file} accept="image/x-png,image/jpg,image/jpeg" onChange={this.fileChange} multiple/>
+                <input files={this.state.images} type="file" name="images" className={styles.file} accept="image/x-png,image/jpg,image/jpeg" onChange={this.fileChange} multiple/>
                 <div className={styles.fakeUpload}>
                   <i className="fa fa-image"></i>
                 </div>

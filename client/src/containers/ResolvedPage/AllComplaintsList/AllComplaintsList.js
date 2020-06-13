@@ -14,6 +14,7 @@ import {authorizedRequestsHandler} from '../../../APIs/APIs';
 import {allComplaintsEndpoint} from '../../../APIs/APIEndpoints';
 import {complaintsEndpoint} from '../../../APIs/APIEndpoints';
 import { errorOccurred } from "../../../store/actions";
+import Loader from '../../../components/Loader/Loader';
 
 class AllComplaintsList extends Component {
   state = {
@@ -117,7 +118,7 @@ class AllComplaintsList extends Component {
     if(this.state.search){
       this.state.search==="issueId"?filters[this.state.search]=this.state.searchInput.trim().toUpperCase():filters[this.state.search]=this.state.searchInput.trim();
     }
-     this.setState({filters:filters,skip:0});
+     this.setState({filters:filters,skip:0,hasMore:false});
     
    authorizedRequestsHandler()
       .get(allComplaintsEndpoint+`?skip=0&limit=${this.limit}&`+stringify(filters))
@@ -126,7 +127,8 @@ class AllComplaintsList extends Component {
         if (res.data.length !== 0) {
           this.setState({
           allComplaintsList: res.data,
-          skip:this.limit
+          skip:this.limit,
+          hasMore:!(res.data.length < this.limit)
         });}else if (res.data.length === 0) {
           this.setState({ complaintsList: []})
         }
@@ -144,13 +146,14 @@ class AllComplaintsList extends Component {
   }
 
   resetFilters=()=>{
-     this.setState({filters:{},department:"",status:"",searchInput:"",search:""});
+     this.setState({filters:{},department:"",status:"",searchInput:"",search:"",hasMore:false});
    authorizedRequestsHandler()
       .get(allComplaintsEndpoint+`?skip=0&limit=${this.limit}`)
       .then((res) => {
         this.setState({
           allComplaintsList: res.data,
           skip:this.limit,
+          hasMore:!(res.data.length < this.limit)
         });
       })
       .catch((err) => {
@@ -358,7 +361,7 @@ class AllComplaintsList extends Component {
           <InfiniteScroll
               loadMore={()=>this.getAllComplaintsList()}
               hasMore={this.state.hasMore}
-              loader={<tr key={1}><td colSpan={4}></td></tr>}
+              loader={<tr key={1}><td colSpan={4}><Loader/></td></tr>}
               threshold={0.8}
               useWindow={false}
               initialLoad={false}
