@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import styles from "./ComplaintBox.module.css";
-import axios from 'axios';
 import { connect } from "react-redux";
 import SmallSpinner from "../../../components/SmallSpinner/SmallSpinner";
-import { Redirect } from "react-router-dom";
+import {authorizedRequestsHandler} from '../../../APIs/APIs';
+import {complaintsEndpoint} from '../../../APIs/APIEndpoints';
+import { errorOccurred } from "../../../store/actions";
 import Dropdown from '../../../components/Dropdown/Dropdown';
 
 class ComplaintBox extends Component{
@@ -59,12 +60,8 @@ state = {
     formData.append("issue",this.state.issue);
     formData.append("concern",this.state.concern);
     this.setState({spinner:true});
-    axios
-      .post("http://localhost:3030/complaint",formData,{
-        headers:{
-          authorization:`Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`
-        }
-      })
+   authorizedRequestsHandler()
+      .post(complaintsEndpoint,formData)
       .then((res) => {
         this.props.submitted({submitted:++this.counter});
          this.setState({
@@ -79,9 +76,10 @@ state = {
         this.handle = setTimeout(() => { this.setState({formSubmitted: false});}, 1000);
       })
       .catch((err) => {
-        if(err.response.status===401){
-          this.setState({redirect:true});
-        }
+        const errorCode=err.response.data.errorCode;
+         if(errorCode==="INVALID_TOKEN"){
+            this.props.errorOccurred();
+         }
         if(err.response.status===500){
           this.setState({networkErr:true});
         }
@@ -90,10 +88,7 @@ state = {
   };
 
   render() {
-    if(this.state.redirect){
-      alert("Timed out!Please login again.")
-      return <Redirect to='/login'/>
-    }else{ return (
+    return (
       <div className={styles.complaintBox}>
          {(this.state.networkErr)?alert("Please check your internet connection"):null}
         <h4>Complaint Box</h4>
@@ -149,18 +144,13 @@ state = {
     );
   }
 }
-}
 
-const mapStateToProps = (state) => {
-  return {
-    data: state.auth.token,
-  };
-};
+const mapDispatchToProps=(dispatch)=>{
+  return{
+    errorOccurred:()=>dispatch(errorOccurred())
+  }
+  }
+  
 
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//     getComplaintsList:()=>dispatch(actions.fetchComplaintList())
-//   };
-// };
 
-export default connect(mapStateToProps)(ComplaintBox);
+export default connect(null,mapDispatchToProps)(ComplaintBox);

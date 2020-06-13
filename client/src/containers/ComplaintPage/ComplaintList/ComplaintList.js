@@ -5,12 +5,14 @@ import styles from "./ComplaintList.module.css";
 import ComplaintPopup from "../../../components/ComplaintPopup/ComplaintPopup";
 import dropdownStyles from "../../../components/Dropdown/Dropdown.module.css";
 import sharedStyles from "../../../containers/ResolvedPage/AllComplaintsList/AllComplaintsList.module.css";
-import axios from "axios";
 import { stringify } from "query-string";
 import InfiniteScroll from "react-infinite-scroller";
 import errorStyles from '../../BuzzPage/RecentBuzz/RecentBuzzFile/RecentBuzz';
 import { Redirect } from "react-router-dom";
 import Dropdown from '../../../components/Dropdown/Dropdown';
+import {authorizedRequestsHandler} from '../../../APIs/APIs';
+import {complaintsEndpoint} from '../../../APIs/APIEndpoints';
+import { errorOccurred } from "../../../store/actions";
 
 class UserComplaintList extends Component {
   state = {
@@ -34,14 +36,9 @@ class UserComplaintList extends Component {
 
 
   getComplaints = (skip) => {
-    axios
+   authorizedRequestsHandler()
       .get(
-        `http://localhost:3030/complaint?skip=${skip}&limit=${this.limit}&`+stringify(this.state.filters),
-        {
-          headers: {
-            authorization: `Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`,
-          }
-        }
+        complaintsEndpoint+`?skip=${skip}&limit=${this.limit}&`+stringify(this.state.filters)
       )
       .then((res) => {
         const complaintsList = Array.from(this.state.complaintsList);
@@ -54,9 +51,10 @@ class UserComplaintList extends Component {
       .catch((err) => {
        this.setState({error: true,spinner:false
         })
-        if(err.response.status===401){
-         this.setState({redirect:true});
-        }
+        const errorCode=err.response.data.errorCode;
+         if(errorCode==="INVALID_TOKEN"){
+            this.props.errorOccurred();
+         }
         if(err.response.status===500){
          this.setState({networkErr:true});
         }
@@ -105,12 +103,8 @@ class UserComplaintList extends Component {
       filters["issueId"] = this.state.searchInput.trim().toUpperCase();
     }
    this.setState({ filters: filters,skip:0})
-    axios
-      .get(`http://localhost:3030/complaint?skip=0&limit=${this.limit}&`+ stringify(filters), {
-        headers: {
-          authorization: `Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`,
-        },
-      })
+   authorizedRequestsHandler()
+      .get(complaintsEndpoint+`?skip=0&limit=${this.limit}&`+ stringify(filters))
       .then((res) => {
         if (res.data.length !== 0) {
          this.setState({  complaintsList:res.data,skip:this.limit})
@@ -120,9 +114,10 @@ class UserComplaintList extends Component {
       })
       .catch((err) => {
        this.setState({error:true})
-        if(err.response.status===401){
-          this.setState({redirect:true});
-        }
+       const errorCode=err.response.data.errorCode;
+       if(errorCode==="INVALID_TOKEN"){
+          this.props.errorOccurred();
+       }
         if(err.response.status===500){
          this.setState({networkErr:true});
         }
@@ -130,20 +125,18 @@ class UserComplaintList extends Component {
   };
   resetFilters = () => {
    this.setState({filters: {},skip:0});
-    axios
-      .get(`http://localhost:3030/complaint?skip=0&limit=${this.limit}`, {
-        headers: {
-          authorization: `Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`,
-        },
-      })
+   authorizedRequestsHandler()
+      .get(complaintsEndpoint+`?skip=0&limit=${this.limit}`
+      )
       .then((res) => {
        this.setState({ complaintsList: res.data,skip:this.limit})
       })
       .catch((err) => {
         this.setState({error: true })
-        if(err.response.status===401){
-          this.setState({redirect:true});
-        }
+        const errorCode=err.response.data.errorCode;
+         if(errorCode==="INVALID_TOKEN"){
+            this.props.errorOccurred();
+         }
         if(err.response.status===500){
          this.setState({networkErr:true});
         }
@@ -269,10 +262,10 @@ class UserComplaintList extends Component {
   }
 }
 }
-const mapStateToProps = (state) => {
-  return {
-    data: state.auth.token,
-  };
-};
-
-export default connect(mapStateToProps)(UserComplaintList);
+const mapDispatchToProps=(dispatch)=>{
+  return{
+    errorOccurred:()=>dispatch(errorOccurred())
+  }
+  }
+  
+export default connect(null,mapDispatchToProps)(UserComplaintList);

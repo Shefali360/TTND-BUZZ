@@ -1,9 +1,12 @@
 import React, { Component } from "react";
 import styles from "./RecentBuzz.module.css";
 import Corousel from "../../../../components/Corousel/Corousel";
-import axios from "axios";
 import { connect } from "react-redux";
-import { Redirect } from "react-router-dom";
+import {authorizedRequestsHandler} from '../../../../APIs/APIs';
+import {buzzLikeEndpoint} from '../../../../APIs/APIEndpoints';
+import {buzzDislikeEndpoint} from '../../../../APIs/APIEndpoints';
+import { errorOccurred } from "../../../../store/actions";
+
 
 class RecentBuzz extends Component {
   state = {
@@ -47,18 +50,15 @@ class RecentBuzz extends Component {
         likeCount: this.state.likeCount + 1,
         liked: liked,
       });
-      axios
-        .patch(`http://localhost:3030/buzz/like/${this.props.id}`, null, {
-          headers: {
-            authorization: `Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`,
-          },
-        })
+      authorizedRequestsHandler()
+        .patch(buzzLikeEndpoint+`/${this.props.id}`, null)
         .then((res) => {
            this.setState({updateReview:false});
         })
         .catch((err) => {this.setState({updateReview:false})
-        if(err.response.status===401){
-           this.setState({redirect:true});
+        const errorCode=err.response.data.errorCode;
+        if(errorCode==="INVALID_TOKEN"){
+           this.props.errorOccurred();
         }
         if(err.response.status===500){
            this.setState({networkErr:true});
@@ -70,23 +70,19 @@ class RecentBuzz extends Component {
           dislikeCount: this.state.dislikeCount - 1,
           disliked: false,
         });
-        axios
+        authorizedRequestsHandler()
           .patch(
-            `http://localhost:3030/buzz/dislike/${this.props.id}?reverse=1`,
-            null,
-            {
-              headers: {
-                authorization: `Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`,
-              },
-            }
+            buzzDislikeEndpoint+`/${this.props.id}?reverse=1`,
+            null
           )
           .then((res) => {
              this.setState({updateReview:false});
            
           })
           .catch((err) => {this.setState({updateReview:false});
-          if(err.response.status===401){
-             this.setState({redirect:true});
+          const errorCode=err.response.data.errorCode;
+          if(errorCode==="INVALID_TOKEN"){
+             this.props.errorOccurred();
           }
           if(err.response.status===500){
             this.setState({networkErr:true});
@@ -97,21 +93,17 @@ class RecentBuzz extends Component {
         likeCount: this.state.likeCount - 1,
         liked: liked,
       });
-      axios
+      authorizedRequestsHandler()
         .patch(
-          `http://localhost:3030/buzz/like/${this.props.id}?reverse=1`,
-          null,
-          {
-            headers: {
-              authorization: `Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`,
-            },
-          }
+          buzzLikeEndpoint+`/${this.props.id}?reverse=1`,
+          null
         )
         .then((res) => {
           this.setState({updateReview:false})        })
         .catch((err) => {this.setState({updateReview:false});
-        if(err.response.status===401){
-          this.setState({redirect:true});
+        const errorCode=err.response.data.errorCode;
+        if(errorCode==="INVALID_TOKEN"){
+           this.props.errorOccurred();
         }
         if(err.response.status===500){
            this.setState({networkErr:true});
@@ -127,19 +119,16 @@ class RecentBuzz extends Component {
         dislikeCount: this.state.dislikeCount + 1,
         disliked: dislike,
       });
-      axios
-        .patch(`http://localhost:3030/buzz/dislike/${this.props.id}`, null, {
-          headers: {
-            authorization: `Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`,
-          },
-        })
+      authorizedRequestsHandler()
+        .patch(  buzzDislikeEndpoint+`/${this.props.id}`, null)
         .then((res) => {
            this.setState({updateReview:false});
           
         })
         .catch((err) => {this.setState({updateReview:false});
-        if(err.response.status===401){
-          this.setState({redirect:true});
+        const errorCode=err.response.data.errorCode;
+        if(errorCode==="INVALID_TOKEN"){
+           this.props.errorOccurred();
         }
         if(err.response.status===500){
            this.setState({networkErr:true});
@@ -150,23 +139,19 @@ class RecentBuzz extends Component {
           likeCount: this.state.likeCount - 1,
           liked: false,
         });
-        axios
+        authorizedRequestsHandler()
           .patch(
-            `http://localhost:3030/buzz/like/${this.props.id}?reverse=1`,
-            null,
-            {
-              headers: {
-                authorization: `Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`,
-              },
-            }
+            buzzLikeEndpoint+`/${this.props.id}?reverse=1`,
+            null
           )
           .then((res) => {
              this.setState({updateReview:false});
             
           })
           .catch((err) => {this.setState({updateReview:false});
-          if(err.response.status===401){
-            this.setState({redirect:true});
+          const errorCode=err.response.data.errorCode;
+          if(errorCode==="INVALID_TOKEN"){
+             this.props.errorOccurred();
           }
           if(err.response.status===500){
              this.setState({networkErr:true});
@@ -177,22 +162,18 @@ class RecentBuzz extends Component {
         dislikeCount: this.state.dislikeCount - 1,
         disliked: dislike,
       });
-      axios
+      authorizedRequestsHandler()
         .patch(
-          `http://localhost:3030/buzz/dislike/${this.props.id}?reverse=1`,
-          null,
-          {
-            headers: {
-              authorization: `Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`,
-            },
-          }
+          buzzDislikeEndpoint+`/${this.props.id}?reverse=1`,
+          null
         )
         .then((res) => {
            this.setState({updateReview:false}); 
         })
         .catch((err) => {this.setState({updateReview:false});
-        if(err.response.status===401){
-          this.setState({redirect:true});
+        const errorCode=err.response.data.errorCode;
+        if(errorCode==="INVALID_TOKEN"){
+           this.props.errorOccurred();
         }
         if(err.response.status===500){
            this.setState({networkErr:true});
@@ -201,10 +182,6 @@ class RecentBuzz extends Component {
   };
 
   render() {
-    if(this.state.redirect){
-      alert("Timed out!Please login again.")
-      return <Redirect to='/login'/>
-    }else
     return (
       <div className={styles.recentBuzz}>
          {(this.state.networkErr)?alert("Please check your internet connection"):null}
@@ -260,10 +237,10 @@ class RecentBuzz extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    data: state.auth.token,
-  };
-};
+const mapDispatchToProps=(dispatch)=>{
+  return{
+    errorOccurred:()=>dispatch(errorOccurred())
+  }
+}
 
-export default connect(mapStateToProps)(RecentBuzz);
+export default connect(null,mapDispatchToProps)(RecentBuzz);

@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import dropdownStyles from "../../../components/Dropdown/Dropdown.module.css";
 import styles from "./AllComplaintsList.module.css";
 import sharedStyles from "../../ComplaintPage/ComplaintList/ComplaintList.module.css";
-import axios from "axios";
 import { connect } from "react-redux";
 import Spinner from "../../../components/Spinner/Spinner";
 import ComplaintPopup from "../../../components/ComplaintPopup/ComplaintPopup";
@@ -10,8 +9,11 @@ import {stringify} from "query-string";
 import InfiniteScroll from 'react-infinite-scroller';
 import errorStyles from '../../BuzzPage/RecentBuzz/RecentBuzzFile/RecentBuzz.module.css';
 import SmallSpinner from "../../../components/SmallSpinner/SmallSpinner";
-import { Redirect } from "react-router-dom";
 import Dropdown from '../../../components/Dropdown/Dropdown';
+import {authorizedRequestsHandler} from '../../../APIs/APIs';
+import {allComplaintsEndpoint} from '../../../APIs/APIEndpoints';
+import {complaintsEndpoint} from '../../../APIs/APIEndpoints';
+import { errorOccurred } from "../../../store/actions";
 
 class AllComplaintsList extends Component {
   state = {
@@ -53,12 +55,8 @@ class AllComplaintsList extends Component {
    }
 
   getAllComplaintsList=()=>{
-    axios
-    .get(`http://localhost:3030/complaint/all?skip=${this.state.skip}&limit=${this.limit}&`+stringify(this.state.filters), {
-      headers: {
-        authorization: `Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`,
-      }
-    })
+   authorizedRequestsHandler()
+    .get(allComplaintsEndpoint+`?skip=${this.state.skip}&limit=${this.limit}&`+stringify(this.state.filters))
     .then((res) => {
       const allComplaintsList = Array.from(this.state.allComplaintsList);
       allComplaintsList.push(...res.data);
@@ -71,8 +69,9 @@ class AllComplaintsList extends Component {
     })
     .catch((err) => {
       this.setState({ error: true,spinner:false });
-      if(err.response.status===401){
-        this.setState({redirect:true});
+      const errorCode=err.response.data.errorCode;
+      if(errorCode==="INVALID_TOKEN"){
+         this.props.errorOccurred();
       }
       if(err.response.status===500){
         this.setState({networkErr:true});
@@ -121,12 +120,8 @@ class AllComplaintsList extends Component {
     }
      this.setState({filters:filters,skip:0});
     
-    axios
-      .get(`http://localhost:3030/complaint/all?skip=0&limit=${this.limit}&`+stringify(filters),{
-        headers: {
-          authorization:`Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`,
-        },
-      })
+   authorizedRequestsHandler()
+      .get(allComplaintsEndpoint+`?skip=0&limit=${this.limit}&`+stringify(filters))
       .then((res) => {
      
         if (res.data.length !== 0) {
@@ -139,9 +134,10 @@ class AllComplaintsList extends Component {
       })
       .catch((err) => {
          this.setState({ error: true });
-        if(err.response.status===401){
-          this.setState({redirect:true});
-        }
+         const errorCode=err.response.data.errorCode;
+         if(errorCode==="INVALID_TOKEN"){
+            this.props.errorOccurred();
+         }
         if(err.response.status===500){
           this.setState({networkErr:true});
         }
@@ -150,12 +146,8 @@ class AllComplaintsList extends Component {
 
   resetFilters=()=>{
      this.setState({filters:{}});
-    axios
-      .get(`http://localhost:3030/complaint/all?skip=0&limit=${this.limit}`,{
-        headers: {
-          authorization:`Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`,
-        },
-      })
+   authorizedRequestsHandler()
+      .get(allComplaintsEndpoint+`?skip=0&limit=${this.limit}`)
       .then((res) => {
         this.setState({
           allComplaintsList: res.data,
@@ -164,9 +156,10 @@ class AllComplaintsList extends Component {
       })
       .catch((err) => {
          this.setState({ error: true });
-        if(err.response.status===401){
-          this.setState({redirect:true});
-        }
+         const errorCode=err.response.data.errorCode;
+         if(errorCode==="INVALID_TOKEN"){
+            this.props.errorOccurred();
+         }
         if(err.response.status===500){
           this.setState({networkErr:true});
         }
@@ -182,8 +175,8 @@ class AllComplaintsList extends Component {
       status: this.state.value,
     };
      this.setState({requesting:true});
-    axios
-      .patch(`http://localhost:3030/complaint/${this.state.id}`, formData, {
+   authorizedRequestsHandler()
+      .patch(complaintsEndpoint+`/${this.state.id}`, formData, {
         headers: {
           authorization: `Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token}`,
         },
@@ -199,8 +192,9 @@ class AllComplaintsList extends Component {
         setTimeout(() => {this.setState({formSubmitted: false});}, 1000);
       })
       .catch((err) => {
-        if(err.response.status===401){
-          this.setState({redirect:true});
+        const errorCode=err.response.data.errorCode;
+        if(errorCode==="INVALID_TOKEN"){
+           this.props.errorOccurred();
         }
         if(err.response.status===500){
           this.setState({networkErr:true});
@@ -229,9 +223,9 @@ class AllComplaintsList extends Component {
        this.setState({ value: event.target.value });
     } else 
      {
-      axios
+     authorizedRequestsHandler()
         .patch(
-          `http://localhost:3030/complaint/${id}`,
+          complaintsEndpoint+`/${id}`,
           { status: event.target.value },
           {
             headers: {
@@ -243,8 +237,9 @@ class AllComplaintsList extends Component {
          
         })
         .catch((err) => {
-          if(err.response.status===401){
-             this.setState({redirect:true});
+          const errorCode=err.response.data.errorCode;
+          if(errorCode==="INVALID_TOKEN"){
+             this.props.errorOccurred();
           }
           if(err.response.status===500){
             this.setState({networkErr:true});
@@ -328,10 +323,7 @@ class AllComplaintsList extends Component {
         );
       });
     }
-    if(this.state.redirect){
-      alert("Timed out!Please login again.")
-      return <Redirect to='/login'/>
-    }else{
+
     return (
       <div id="card" className={sharedStyles.complaintsList}>
           {(this.state.networkErr)?alert("Please check your internet connection"):null}
@@ -440,11 +432,11 @@ class AllComplaintsList extends Component {
     );
   }
 }
-}
 
-const mapStateToProps = (state) => {
-  return {
-    data: state.auth.token,
-  };
-};
-export default connect(mapStateToProps)(AllComplaintsList);
+
+const mapDispatchToProps=(dispatch)=>{
+  return{
+    errorOccurred:()=>dispatch(errorOccurred())
+  }
+  }
+export default connect(null,mapDispatchToProps)(AllComplaintsList);

@@ -5,8 +5,9 @@ import Loader from '../../../components/Loader/Loader';
 import RecentBuzz from './RecentBuzzFile/RecentBuzz';
 import styles from './RecentBuzz.module.css';
 import InfiniteScroll from 'react-infinite-scroller';
-import axios from 'axios';
-import { Redirect } from "react-router-dom";
+import {authorizedRequestsHandler} from '../../../APIs/APIs';
+import {buzzEndpoint} from '../../../APIs/APIEndpoints';
+import { errorOccurred } from "../../../store/actions";
 
 class RecentBuzzData extends Component {
   state={
@@ -15,16 +16,16 @@ class RecentBuzzData extends Component {
     skip:0,
     hasMore:false,
     spinner:true,
-    redirect:false,
     networkErr:false
   }
 
   limit= 5;
 
   getBuzz=(skip)=>{
-    axios
+
+ authorizedRequestsHandler()
       .get(
-        `http://localhost:3030/buzz?skip=${skip}&limit=${this.limit}`, {headers:{"authorization":`Bearer ${this.props.data.access_token},Bearer ${this.props.data.id_token} `}}
+        buzzEndpoint+`?skip=${skip}&limit=${this.limit}`
       ).then((res)=>{
         const buzz = Array.from(this.state.buzz);
         buzz.push(...res.data);
@@ -35,9 +36,10 @@ class RecentBuzzData extends Component {
           spinner:false})
       }).catch((err)=>{
        this.setState({error:true,spinner:false})
-        if(err.response.status===401){
-         this.setState({redirect:true});
-        }
+       const errorCode=err.response.data.errorCode;
+       if(errorCode==="INVALID_TOKEN"){
+          this.props.errorOccurred();
+       }
         if(err.response.status===500){
          this.setState({networkErr:true});
         }
@@ -102,10 +104,6 @@ class RecentBuzzData extends Component {
             );
        });
   }
-  if(this.state.redirect){
-    alert("Timed out!Please login again.")
-    return <Redirect to='/login'/>
-  }else{
  return (
       <div className={styles.mainDiv}>
       {(this.state.networkErr)?alert("Please check your internet connection"):null}
@@ -126,12 +124,11 @@ class RecentBuzzData extends Component {
 }
  }
 
-}
 
-const mapStateToProps = (state) => {
-  return {
-    data: state.auth.token,
-  };
-};
+const mapDispatchToProps=(dispatch)=>{
+  return{
+    errorOccurred:()=>dispatch(errorOccurred())
+  }
+  }
 
-export default connect(mapStateToProps)(RecentBuzzData);
+export default connect(null,mapDispatchToProps)(RecentBuzzData);

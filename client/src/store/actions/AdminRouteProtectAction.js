@@ -1,5 +1,6 @@
 import * as actionTypes from "./actionTypes";
-import axios from "axios";
+import {authorizedRequestsHandler} from '../../APIs/APIs';
+import {adminEndpoint} from '../../APIs/APIEndpoints';
 
 export const isAdmin = (data) => {
   return {
@@ -13,17 +14,12 @@ export const isNotAdmin = (err) => {
     type: actionTypes.IS_NOT_ADMIN,
     error: err,
   };
-};
+}; 
 
 export const checkAdmin = () => {
- 
   return (dispatch) => {
-    const token=JSON.parse(localStorage.getItem("token"));
-
-        axios.get("http://localhost:3030/admin",
-        {headers:{"authorization":`Bearer ${token.access_token},Bearer ${token.id_token}`}})
+       authorizedRequestsHandler().get(adminEndpoint)
       .then((response) => {
-
         localStorage.setItem("adminPrivilege",response.data);
         dispatch(isAdmin(response.data));
       })

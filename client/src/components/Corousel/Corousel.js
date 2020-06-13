@@ -1,5 +1,7 @@
 import React,{Component} from 'react';
 import styles from './Corousel.module.css';
+import {serverURI} from '../../APIs/APIEndpoints';
+
 class Corousel extends Component{
     state = {
         idx: 0
@@ -22,7 +24,7 @@ class Corousel extends Component{
         return(
             <div className={styles.carouselContainer}>
                 <div className={styles.imageContainer}>
-                    <img src={"http://localhost:3030/" + images[this.state.idx]} alt={images[this.state.idx]}/>
+                    <img src={serverURI+"/"+ images[this.state.idx]} alt={images[this.state.idx]}/>
                 </div>
                 <button className={[styles.arrow,styles.prev].join(' ')} onClick={this.prev}><i className="fa fa-angle-left"/></button>
                 <button className={[styles.arrow,styles.next].join(' ')} onClick={this.next}><i className="fa fa-angle-right"/></button>
