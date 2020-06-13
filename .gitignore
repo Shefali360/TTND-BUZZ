@@ -1,1 +1,5 @@
 /node_modules
+server/.env
+server/Images
+server/Attachments
+
