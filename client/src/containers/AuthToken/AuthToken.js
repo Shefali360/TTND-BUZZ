@@ -10,8 +10,8 @@ class AuthToken extends Component {
   }
 
   render(){
-    const a=this.props.data&&this.props.data.access_token;
-    if(a){
+    const validToken=this.props.data&&this.props.data.access_token;
+    if(validToken){
       this.props.checkAdmin();
        return <Redirect to ='/buzz'/>
     }else if(this.props.error){

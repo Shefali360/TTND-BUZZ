@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import * as queryString from 'query-string';
-import styles from './loginButton.module.css';
+import styles from './LoginButton.module.css';
 
 const stringifiedParams = queryString.stringify({
   client_id: '736637874877-l5h8150l95q5sm82ovg00kbqcivtsdlo.apps.googleusercontent.com',

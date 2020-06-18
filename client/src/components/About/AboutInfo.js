@@ -1,7 +1,6 @@
 import React from "react";
 import styles from "./AboutInfo.module.css";
 import TTN from "../../Images/About.png";
-import Aux from "../../hoc/wrap/wrap";
 import CustomerSuccess from "../../Images/Client.png";
 import Agility from "../../Images/Agility.png";
 import EnterprenaurialSpirit from "../../Images/EnterprenaurialSpirit.png";
@@ -11,7 +10,7 @@ import Creativity from "../../Images/Creativity.png";
 
 const AboutInfo = () => {
   return (
-    <Aux>
+    <>
       <div className={styles.Aboutinfo}>
         <h4>Who we are?</h4>
         <div className={styles.who}>
@@ -65,7 +64,7 @@ const AboutInfo = () => {
           </li>
         </ul>
       </div>
-    </Aux>
+    </>
   );
 };
 

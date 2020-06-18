@@ -289,6 +289,7 @@ class AllComplaintsList extends Component {
               {complaint.issueId}
             </td>
             <td>{complaint.lockedBy}</td>
+            <td colSpan={2}>{complaint.email}</td>
             <td>{complaint.assignedTo}</td>
             <td>
               <div className={dropdownStyles.dropdown}>
@@ -354,6 +355,7 @@ class AllComplaintsList extends Component {
               <th>Department</th>
               <th>Issue Id</th>
               <th>Locked By</th>
+              <th colSpan={2}>Logger Email ID</th>
               <th>Assigned To</th>
               <th>Status</th>
             </tr>

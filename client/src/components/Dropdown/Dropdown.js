@@ -1,5 +1,4 @@
 import React from 'react';
-import Aux from '../../hoc/wrap/wrap';
 
 const Dropdown=(props)=>{
     let options=null;
@@ -7,7 +6,6 @@ const Dropdown=(props)=>{
    return <option key={arr.name} value={arr.value}>{arr.name}</option>
         })
     return(
-        <Aux>
 <select
     className={props.class}
     name={props.name}
@@ -16,7 +14,6 @@ const Dropdown=(props)=>{
   >
       {options}
   </select>
-  </Aux>
     )
 }
 

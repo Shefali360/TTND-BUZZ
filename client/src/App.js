@@ -9,7 +9,6 @@ import Help from './components/Help/HelpPage';
 import Login from './components/Login/Login';
 import AuthToken from './containers/AuthToken/AuthToken';
 import Home from './components/Home/Home';
-import Aux from './hoc/wrap/wrap';
 import PrivateRoute from './containers/PrivateRoute/PrivateRoute';
 import AuthenticatedRoute from './containers/AuthenticatedRoute/AuthenticatedRoute';
 import NotFound from './components/NotFound/NotFound';
@@ -25,7 +24,7 @@ const App=()=>{
       <Error>
        <Home>
           <Route component={({match})=>
-          <Aux>
+          <>
         <Switch>
         <PrivateRoute exact path="/buzz"><BuzzPage/></PrivateRoute>
         <PrivateRoute exact path="/complaint"><ComplaintPage/></PrivateRoute>
@@ -34,7 +33,7 @@ const App=()=>{
         <Route exact path="/help" component={Help}/>
         <Route path="" component={NotFound}/>
         </Switch>
-         </Aux>
+         </>
           }/>
          </Home>
       </Error>

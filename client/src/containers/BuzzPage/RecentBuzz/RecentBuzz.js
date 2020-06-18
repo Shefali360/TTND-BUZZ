@@ -55,7 +55,7 @@ class RecentBuzzData extends Component {
   componentDidUpdate(prevProps){
     if(this.props.submitted.submitted>prevProps.submitted.submitted){
      this.setState({buzz:[],spinner:true,hasMore:false});
-    this.getBuzz(0);
+     this.getBuzz(0);
   }
   }
 
@@ -66,7 +66,7 @@ class RecentBuzzData extends Component {
     }else if(this.state.error){
       buzzData=<div className={styles.errorContainer}>
         <i className={["fa fa-exclamation-triangle",styles.error].join(' ')}>
-          <span >Buzz data can't be loaded!</span>
+          <span>Buzz data can't be loaded!</span>
           </i>
           </div>
     }

@@ -2,12 +2,12 @@ const express = require('express');
 const mongoose = require("mongoose");
 const bodyParser = require('body-parser');
 const cors=require('cors');
-const authRoutes = require('./App-backend/Routes/authRoutes');
-const buzzRoutes=require('./App-backend/Routes/buzzRoutes');
-const complaintRoutes=require('./App-backend/Routes/complaintRoutes');
-const adminRoutes=require('./App-backend/Routes/adminRoutes');
-const auth = require("./App-backend/controller/authController");
-const midware = require("./App-backend/midwares/midwares");
+const authRoutes = require('./App-backend/Routes/AuthRoutes');
+const buzzRoutes=require('./App-backend/Routes/BuzzRoutes');
+const complaintRoutes=require('./App-backend/Routes/ComplaintRoutes');
+const adminRoutes=require('./App-backend/Routes/AdminRoutes');
+const auth = require("./App-backend/Controller/AuthController");
+const midware = require("./App-backend/Midwares/Midwares");
 const dotenv=require('dotenv');
 dotenv.config();
 

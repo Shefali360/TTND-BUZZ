@@ -1,14 +1,14 @@
 import React from 'react';
 import {NavLink} from 'react-router-dom';
 import styles from './SidebarItem.module.css';
-import Aux from '../../hoc/wrap/wrap';
+
 
 const NavbarItem=(props)=>{
-    return(<Aux><li className={styles.listItem}>
+    return(<><li className={styles.listItem}>
         <NavLink className={styles.element} to={props.link} exact={props.exact}
         activeClassName={styles.active}
        >{props.children}
-        </NavLink></li></Aux>);
+        </NavLink></li></>);
 }
 
 export default NavbarItem;

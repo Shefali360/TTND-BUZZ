@@ -1,9 +1,8 @@
 import React from "react";
 import styles from "./HelpPage.module.css";
-import Aux from "../../hoc/wrap/wrap";
 const HelpPage = () => {
   return (
-    <Aux>
+    <>
       <div className={styles.Help}>
         <h4>Our Offices</h4>
         <div className={styles.div}>
@@ -78,7 +77,7 @@ const HelpPage = () => {
           </a>
         </div>
       </div>
-    </Aux>
+    </>
   );
 };
 
