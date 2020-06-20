@@ -10,6 +10,7 @@ const { ServerError } = require("../../ErrorHandler/Generic/GenericExceptions");
 const multer = require("multer");
 const {getAdmin}=require("../../App-backend/Services/AdminServices");
 const {UnauthorizedAccess}=require('../../ErrorHandler/Admin/AdminExceptions');
+const jwt=require("jsonwebtoken");
 
 module.exports.verifyTokenMiddleware = async (req, res, next) => {
   
@@ -71,9 +72,7 @@ module.exports.verifyTokenToGetUserData = async (req, res, next) => {
     }
 
     try {
-      req.data = await axios.get(
-        "https://oauth2.googleapis.com/tokeninfo" + `?id_token=${idTokenValue}`
-      );
+      req.data = jwt.verify(idTokenValue, process.env.CLIENT_SECRET);
       return next();
     } catch (err) {
       return next(
@@ -120,7 +119,7 @@ module.exports.imageFileFilter = (req, files, callback) => {
 };
 
 module.exports.checkAdminPrivileges= async (req,res,next)=>{
- try{ const userEmail=req.data.data.email;
+ try{ const userEmail=req.data.email;
   const adminResponse = await getAdmin(userEmail);
   if(adminResponse){
     return next();

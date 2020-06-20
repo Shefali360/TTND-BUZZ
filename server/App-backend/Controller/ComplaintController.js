@@ -3,12 +3,12 @@ const complaintService = require("../Services/ComplaintServices");
 
 module.exports.createComplaint = async (req, res, next) => {
   const myuserdata = req.data;
-  req.body.email = myuserdata.data.email;
-  req.body.name = myuserdata.data.name;
-  req.body.assignedTo = myuserdata.data.name;
-  req.body.lockedBy = myuserdata.data.name;
+  req.body.email = myuserdata.email;
+  req.body.name = myuserdata.name;
+  req.body.assignedTo = myuserdata.name;
+  req.body.lockedBy = myuserdata.name;
   const issueId = customId({
-    email: myuserdata.data.email,
+    email: myuserdata.email,
     randomLength: 2,
   });
   req.body.issueId = issueId;
@@ -44,7 +44,7 @@ module.exports.getAllComplaints = async (req, res, next) => {
   }
 };
 module.exports.getComplaintsByUserEmail = async(req, res, next) => {
-  const userEmail = req.data.data.email;
+  const userEmail = req.data.email;
   req.query["email"]=userEmail;
   const limitCount = req.query.limit;
   delete req.query.limit;
@@ -80,6 +80,3 @@ module.exports.delete = async (req, res) => {
   }
 };
 
-module.exports.handleUnknownRequests = (req, res, next) => {
-  return next(new ResourceNotFound("requested resource not found", 404));
-};

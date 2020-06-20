@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import Complaintbox from './ComplaintBox/ComplaintBox';
 import ComplaintsList from "./ComplaintList/ComplaintList";
-import axios from 'axios';
 import { connect } from "react-redux";
 import { errorOccurred } from "../../store/actions/index";
 
@@ -13,20 +12,24 @@ class ComplaintPage extends Component{
     complaintSubmitted:{submitted:0}
   }
 
-  componentDidMount() {
-    axios.get(`https://oauth2.googleapis.com/tokeninfo?id_token=${this.props.data.id_token}`)
-    .then(res => {
-    this.setState({
-        userName: res.data.name,
-        userMail: res.data.email
+  parseIdToken=()=>{
+    try{
+      const data=JSON.parse(atob(this.props.data.id_token.split('.')[1]));
+      this.setState({
+        userName: data.name,
+        userMail: data.email
       });
-    })
-    .catch((err) => {
+    }catch(err){
       const errorCode=err.response.data.errorCode;
       if(errorCode==="INVALID_TOKEN"){
          this.props.errorOccurred();
       }
-    });
+    }
+
+  }
+
+  componentDidMount() {
+    this.parseIdToken();
   }
 
   complaintSubmitted=(event)=>{

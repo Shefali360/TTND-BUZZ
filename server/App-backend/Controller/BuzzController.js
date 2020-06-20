@@ -1,4 +1,4 @@
-const { ResourceNotFound,ServerError} = require("../../ErrorHandler/Generic/GenericExceptions");
+const {ServerError} = require("../../ErrorHandler/Generic/GenericExceptions");
 const buzzService=require('../Services/BuzzServices');
 
 module.exports.createBuzz = async(req, res,next) => {
@@ -10,7 +10,7 @@ module.exports.createBuzz = async(req, res,next) => {
   req.body.images=paths;
   req.body.createdOn=Date.now();
   const myuserdata = req.data;
-  req.body.userId=myuserdata.data.email;
+  req.body.userId=myuserdata.email;
   try{
     const response=await buzzService.createBuzz(req.body);
     res.send(response);
@@ -20,13 +20,11 @@ module.exports.createBuzz = async(req, res,next) => {
   }
 };
 
-
-
 module.exports.getAll = async (req, res,next) => {
   try {
     const limitCount=req.query.limit;
     const skipCount=req.query.skip;
-    const email = req.data.data.email;
+    const email = req.data.email;
     const response = await buzzService.getAll(email,Number(limitCount), Number(skipCount));
     res.send(response);
   } catch (err) {
@@ -36,7 +34,7 @@ module.exports.getAll = async (req, res,next) => {
 
 module.exports.updateLikes = async (req, res) => {
   try {
-    const email = req.data.data.email;
+    const email = req.data.email;
     const response = await buzzService.updateLikes(req.params,email,req.query.reverse);
     res.send(response);
   } catch (err) {
@@ -46,7 +44,7 @@ module.exports.updateLikes = async (req, res) => {
 
 module.exports.updateDislikes = async (req, res) => {
   try {
-    const email = req.data.data.email;
+    const email = req.data.email;
     const response = await buzzService.updateDislikes(req.params,email,req.query.reverse);
     res.send(response);
   } catch (err) {
@@ -64,7 +62,4 @@ module.exports.delete = async (req, res) => {
   }
 };
 
-module.exports.handleUnknownRequests = (req, res, next) => {
-  return next(new ResourceNotFound("requested resource not found", 404));
-};
 

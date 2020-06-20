@@ -6,6 +6,7 @@ const authRoutes = require('./App-backend/Routes/AuthRoutes');
 const buzzRoutes=require('./App-backend/Routes/BuzzRoutes');
 const complaintRoutes=require('./App-backend/Routes/ComplaintRoutes');
 const adminRoutes=require('./App-backend/Routes/AdminRoutes');
+const departmentRoutes=require('./App-backend/Routes/DepartmentRoutes');
 const auth = require("./App-backend/Controller/AuthController");
 const midware = require("./App-backend/Midwares/Midwares");
 const dotenv=require('dotenv');
@@ -24,6 +25,7 @@ app.use("/images", express.static('Images'));
 app.use('/buzz',midware.verifyTokenMiddleware,buzzRoutes);
 app.use('/complaint',midware.verifyTokenMiddleware,complaintRoutes);
 app.use('/admin',midware.verifyTokenMiddleware, adminRoutes);
+app.use('/department',midware.verifyTokenMiddleware,departmentRoutes);
 app.use(auth.handleUnknownRequests);
 app.use(midware.errorHandlingMiddleware);
 

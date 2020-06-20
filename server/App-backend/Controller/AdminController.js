@@ -1,12 +1,11 @@
 const {
-  ResourceNotFound,
   ServerError,
 } = require("../../ErrorHandler/Generic/GenericExceptions");
 const adminService = require("../Services/AdminServices");
 
 module.exports.createAdmin = async (req, res, next) => {
   const myuserdata = req.data;
-  req.body.email = myuserdata.data.email;
+  req.body.email = myuserdata.email;
   try {
     const response = await adminService.createAdmin(req.body);
     res.send(response);
@@ -17,7 +16,7 @@ module.exports.createAdmin = async (req, res, next) => {
 
 module.exports.getAdmin = async (req, res, next) => {
   try {
-    const email = req.data.data.email;
+    const email = req.data.email;
     const response = await adminService.getAdmin(email);
     res.send(response);
   } catch (err) {
@@ -32,8 +31,4 @@ module.exports.delete = async (req, res) => {
   } catch (err) {
     res.status(500).send(err);
   }
-};
-
-module.exports.handleUnknownRequests = (req, res, next) => {
-  return next(new ResourceNotFound("requested resource not found", 404));
 };
